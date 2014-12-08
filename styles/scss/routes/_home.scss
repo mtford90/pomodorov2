@@ -1,0 +1,52 @@
+/*
+Styles for the Home route.
+*/
+@import "../_responsive";
+@import "../variables";
+
+$margin: 20px;
+#home {
+  .error {
+    color: #cf1919;
+  }
+  width: 100%;
+  #inner-home {
+    text-align: center;
+    img {
+      width: 160px;
+      margin: $margin;
+    }
+    #banner {
+      margin-bottom: $margin;
+
+    }
+    form {
+      input {
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        width: 240px;
+        display: block;
+        padding: 10px !important;
+        margin-bottom: 2px;
+        &[type='text'], &[type='password'] {
+          border: none;
+          padding: 5px;
+        }
+        &[type='submit'] {
+          background-color: rgb(242, 128, 22);
+          border: none;
+          color: white;
+          margin-bottom: $margin;
+          &:hover {
+            background-color: rgb(204, 102, 22);
+          }
+        }
+        &:focus {
+          outline: 0;
+        }
+      }
+    }
+  }
+
+}

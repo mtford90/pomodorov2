@@ -1,0 +1,78 @@
+@import "../variables";
+@import "../responsive";
+@import "../mixins";
+
+#settings {
+  .col-xs-12 {
+    padding-left: 0;
+    padding-right: 0;
+    // TODO: Gotta be a nicer way to handle the right/left padding
+    // medium is the width at which settings take 2 columns.
+    @include breakpoint('medium') {
+      &.left-padded {
+        padding-left: 10px;
+      }
+      &.right-padded {
+        padding-right: 10px;
+      }
+    }
+
+  }
+  .settings-panel {
+    background-color: white;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-bottom: $bottom-border-height solid $tertiary;
+  }
+
+  .title {
+    margin-bottom: 20px;
+    .title-text {
+      margin-left: 6px;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+  }
+
+  .settings-logo {
+    width: 14px;
+    &.pomodoro-logo {
+      position: relative;
+      top: 2px;
+    }
+    &.asana-logo {
+      position: relative;
+      top: 5px;
+    }
+  }
+
+  .inputs-table {
+    width: 100%;
+    tr {
+      td {
+        padding-bottom: 10px;
+        &:first-child {
+          padding-right: 20px;
+        }
+        input {
+          width: 100%;
+          padding: 10px;
+          border-color: $tertiary;
+          border-style: solid;
+          border-width: 2px;
+          &:focus {
+            border-color: $primary;
+            outline: 0;
+          }
+        }
+      }
+      &:last-child {
+        td {
+          padding-bottom: 0 !important;
+        }
+      }
+
+    }
+
+  }
+}

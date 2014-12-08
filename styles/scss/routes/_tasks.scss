@@ -1,0 +1,50 @@
+@import "../variables";
+
+
+#tasks {
+  $padding: 20px;
+  //noinspection CssOptimizeSimilarProperties
+  .task {
+    background-color: white;
+    margin-bottom: 20px;
+    padding-top: $padding;
+    padding-right: $padding;
+    padding-left: $padding;
+    padding-bottom: $padding - $bottom-border-height;
+    border-bottom: $bottom-border-height solid $tertiary;
+    position: relative;
+    &:hover {
+      cursor: pointer;
+      border-bottom: $bottom-border-height solid $primary;
+    }
+    .buttons {
+      position: absolute;
+      right: 0;
+      top: $padding;
+      margin-right: 20px;
+      i {
+        font-size: 20px;
+        font-weight: normal;
+        z-index: 1000;
+        &.done {
+          color: green;
+          margin-right: 10px;
+        }
+        &.cancel {
+          color: $primary;
+        }
+        &:hover {
+          color: black;
+        }
+      }
+    }
+    .tag {
+      margin-left: 6px;
+    }
+    .tag-asana {
+      width: 12px;
+      position: relative;
+      top: -1px;
+    }
+  }
+}

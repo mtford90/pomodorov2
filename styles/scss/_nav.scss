@@ -1,0 +1,88 @@
+@import "transitions";
+@import "colours";
+@import "mixins";
+@import "responsive";
+@import "variables";
+
+@mixin navbar-brand() {
+  text-transform: uppercase;
+  font-weight: 600;
+  color: $brand-color;
+  &:hover {
+    color: inherit;
+  }
+}
+
+.navbar {
+
+  .timer {
+    margin-top: 16px;
+    display: inline-block;
+    color: white;
+    font-size: 12px;
+  }
+
+  .logo {
+    width: 30px;
+    display: inline-block;
+    margin-top: 10px;
+    margin-right: 8px;
+  }
+
+  .navbar-header:before, .navbar-header:after {
+    content: none;
+    display: block !important;
+  }
+
+  //  @include breakpoint('small') {
+  //    height: 0;
+  //  }
+  .navbar-collapse {
+    padding: 0;
+  }
+
+  .nav-list {
+    padding-left: 0;
+    margin-top: 15px;
+    li {
+      display: inline;
+      &.active {
+        a {
+          background-color: white;
+          color: black;
+        }
+      }
+      a {
+        transition: background-color $transition-time, color $transition-time;
+        -webkit-transition: background-color $transition-time, color $transition-time;
+        white-space: nowrap;
+        color: $link-color;
+        &:focus, &:hover {
+          background-color: white;
+          color: black;
+          text-decoration: none;
+        }
+        font-size: 11px;
+        @include navItem();
+        margin-top: 15px !important;
+        margin-left: 10px;
+        height: 20px;
+        padding: 0 5px;
+      }
+    }
+  }
+  .navbar-brand {
+    @include navbar-brand();
+  }
+
+}
+
+.navbar-brand {
+  @include navbar-brand();
+}
+
+.navbar-inverse {
+  background-color: $primary;
+  border: none;
+}
+

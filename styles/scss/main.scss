@@ -1,0 +1,46 @@
+/*
+Point of entry for scss bundling
+*/
+// Moving bootstrap to styles.js speeds up considerably.
+// In our scss, we can then just import individual bootstrap components
+// when necessary. The downside to this is that we can end up with duplication of styling in our bundle.
+// If doing tons of bootstrap imports within your scss you should uncomment the below and remove bootstrap
+// from scripts/styles/vendor.js
+//@import "../../vendor/bootstrap-sass-official/assets/stylesheets/_bootstrap.scss";
+@import "variables";
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700);
+
+html, body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  font-family: 'Open Sans', sans-serif;
+}
+
+a {
+  outline: none !important;
+  &:active {
+    outline: none !important;
+  }
+  &:hover {
+    outline: none !important;
+  }
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
+  background-color: $background-color;
+}
+
+input::-moz-focus-inner {
+  border: 0;
+}
+
+@import "routes/home";
+@import "routes/settings";
+@import "routes/tasks";
+@import "nav";
+@import "colorPicker";
