@@ -9,6 +9,7 @@ var React = require('react')
     , config = require('../../app.config')
     , _ = require('underscore')
     , ColorPicker = require('../colorPicker')
+    , colors = require('../colors')
     , DocumentTitle = require('react-document-title');
 
 
@@ -55,6 +56,9 @@ var Settings = React.createClass({
                     <Row>
                         <Col xs={12} sm={12} md={6} lg={6} className="right-padded">
                             <Panel title={pomodoroTitle}>
+                                <p>
+                                Customise the Pomodoro timings.
+                                </p>
                                 <form>
                                     <table className="inputs-table">
                                         <tr>
@@ -96,13 +100,46 @@ var Settings = React.createClass({
                         </Col>
                         <Col xs={12} sm={12} md={6} lg={6} className="left-padded">
                             <Panel title={coloursTitle}>
-                                <ColorPicker/>
+                                <p>
+                                    Use <a href="http://paletton.com/#uid=10K0u0kllllaFw0g0qFqFg0w0aF">CSS colours</a> to customise the theme.
+                                </p>
+                                <form>
+                                    <table className="inputs-table">
+                                        <tr>
+                                            <td>
+                                            Primary
+                                            </td>
+                                            <td>
+                                                <ColorPicker defaultColor={colors.primary}/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                            Short Break
+                                            </td>
+                                            <td>
+                                                <ColorPicker defaultColor={colors.shortBreak}/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                            Long Break
+                                            </td>
+                                            <td>
+                                                <ColorPicker defaultColor={colors.longBreak}/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </form>
                             </Panel>
                         </Col>
                     </Row>
                     <Row>
                         <Col xs={12} sm={12} md={6} lg={6} className="right-padded">
                             <Panel title={asanaTitle}>
+                                <p>
+                                Enable Asana integration by providing an API key.
+                                </p>
                                 <form>
                                     <table className="inputs-table">
                                         <tr>

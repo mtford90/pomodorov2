@@ -23,7 +23,7 @@ var ColorPicker = React.createClass({
     },
     getInitialState: function () {
         return {
-            color: '#c0ffee'
+            color: this.props['defaultColor'] || '#c0ffee'
         }
     },
     onChange: function (e) {

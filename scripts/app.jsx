@@ -22,7 +22,7 @@ var ContentWrapper = React.createClass({
     render: function () {
         return (
             <div>
-                <div className="navbar navbar-inverse navbar-static-top" role="navigation">
+                <div id="navbar" className="navbar navbar-inverse navbar-static-top" role="navigation">
                     <div className="container">
                         <Link to="app" className="pull-left">
                             <img className="logo " src="img/tomato.png"/>

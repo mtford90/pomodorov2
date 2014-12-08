@@ -25,6 +25,11 @@
     border-bottom: $bottom-border-height solid $tertiary;
   }
 
+  p {
+    margin-bottom: 20px;
+  }
+
+
   .title {
     margin-bottom: 20px;
     .title-text {
@@ -74,5 +79,24 @@
 
     }
 
+  }
+
+  .color-picker {
+    position: relative;
+    #color {
+      width: 20px;
+      height: 20px;
+      display: inline-block;
+      position: absolute;
+      right: 12px;
+      top: 12px;
+    }
+    .fa-times-circle {
+      color: $primary;
+      position: absolute;
+      right: 12px;
+      top: 12px;
+      font-size: 20px;
+    }
   }
 }
