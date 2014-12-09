@@ -3,41 +3,27 @@
 @import "../mixins";
 
 #settings {
-  .col-xs-12 {
-    padding-left: 0;
-    padding-right: 0;
-    // TODO: Gotta be a nicer way to handle the right/left padding
-    // medium is the width at which settings take 2 columns.
-    @include breakpoint('medium') {
-      &.left-padded {
-        padding-left: 10px;
+  .row {
+    padding-left: 20px;
+    padding-right: 20px;
+    .col-xs-12 {
+      padding-left: 0;
+      padding-right: 0;
+      // TODO: Gotta be a nicer way to handle the right/left padding
+      // medium is the width at which settings take 2 columns.
+      @include breakpoint('medium') {
+        &.left-padded {
+          padding-left: 10px;
+        }
+        &.right-padded {
+          padding-right: 10px;
+        }
       }
-      &.right-padded {
-        padding-right: 10px;
-      }
-    }
 
-  }
-  .settings-panel {
-    background-color: white;
-    margin-bottom: 20px;
-    padding: 20px;
-    border-bottom: $bottom-border-height solid $tertiary;
-  }
-
-  p {
-    margin-bottom: 20px;
-  }
-
-
-  .title {
-    margin-bottom: 20px;
-    .title-text {
-      margin-left: 6px;
-      text-transform: uppercase;
-      font-size: 12px;
     }
   }
+
+
 
   .settings-logo {
     width: 14px;

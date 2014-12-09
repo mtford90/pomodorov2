@@ -1,9 +1,24 @@
 @import "../variables";
 
-
 #tasks {
   $padding: 20px;
   //noinspection CssOptimizeSimilarProperties
+  #filters {
+    position: fixed;
+    border-style: solid;
+    border-right-width: 2px;
+    border-left-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    border-color: $tertiary;
+    padding-right: 10px;
+    height: 100%;
+    font-size: 18px;
+    .filter {
+      margin-bottom: 6px;
+      color: grey;
+    }
+  }
   .task {
     background-color: white;
     margin-bottom: 20px;
@@ -46,5 +61,53 @@
       position: relative;
       top: -1px;
     }
+  }
+}
+
+#tasks-footer {
+  padding-top: 7px;
+  color: white;
+  div {
+    display: inline-block;
+    &.filter {
+      &:hover {
+        background-color: white;
+        cursor: pointer;
+        &.asana {
+          background-image: url(/img/asana-minimal-black.png);
+        }
+        i {
+          color: black;
+        }
+        .num-tags {
+          color: white;
+        }
+      }
+      margin-left: 5px;
+      &.asana {
+        position: relative;
+        bottom: 5px;
+        background-image: url(/img/asana-minimal-white.png);
+        background-repeat: no-repeat;
+        background-size: 25px 20px;
+        .asana-filter {
+          width: 24px;
+        }
+      }
+      &.tags {
+        .num-tags {
+          color: black;
+          position: relative;
+          right: 17px;
+          font-size: 10px;
+          bottom: 4px;
+          cursor: default;
+        }
+      }
+    }
+
+  }
+  i {
+    font-size: 24px;
   }
 }

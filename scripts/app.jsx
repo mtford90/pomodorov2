@@ -1,6 +1,9 @@
 var React = require('react')
     , router = require('react-router')
     , _ = require('underscore')
+    , RouteHandler = router.RouteHandler
+    , location = require('./location')
+    , footer = require('./footer/index.jsx')
     , Link = router.Link;
 
 var Timer = React.createClass({
@@ -17,6 +20,7 @@ var Timer = React.createClass({
         return comp;
     }
 });
+
 
 var ContentWrapper = React.createClass({
     render: function () {
@@ -40,23 +44,20 @@ var ContentWrapper = React.createClass({
                         </ul>
                         <Timer className="pull-right"/>
                     </div>
-
                 </div>
-
-                <div className="container" role="main">
-                    {this.props.children}
+                <div className="container" id="main-content" role="main">
+                    <RouteHandler ref="handler"/>
                 </div>
             </div>
         )
     }
 });
 
+                //{footer.hook}
 var App = React.createClass({
     render: function () {
         return (
-            <ContentWrapper>
-                <this.props.activeRouteHandler/>
-            </ContentWrapper>
+            <ContentWrapper/>
         )
     }
 });

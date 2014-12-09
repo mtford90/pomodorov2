@@ -142,6 +142,7 @@ gulp.task('watch-js', function () {
     }));
 });
 
+
 // This task compiles the production bundle.
 gulp.task('compile', function () {
     var webpackConf = require('./webpack.config.js');
