@@ -1,0 +1,34 @@
+@import "../variables";
+
+.tagger {
+  height: 20px;
+  border: 1px solid black;
+  display: inline-block;
+  margin-left: 10px;
+  .editable {
+    width: 200px;
+    height: 100%;
+    overflow: scroll;
+    display: inline-block;
+  }
+  .tag {
+    background-color: $primary;
+    color: white;
+    margin-right: 5px;
+    display: inline-block;
+    i {
+      font-size: 12px !important;
+      position: relative;
+      bottom: 2px;
+      margin-left: 4px;
+      margin-right: 4px;
+    }
+    .title {
+      margin-left: 4px;
+      position: relative;
+      bottom: 2px;
+    }
+  }
+
+
+}
