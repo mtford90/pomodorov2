@@ -15,9 +15,11 @@ var Home = React.createClass({
         return (
             <div>
                 <DocumentTitle title={config.brand}>
-                    <div id="home">
-                    </div>
+
                 </DocumentTitle>
+                <div id="home">
+                    <div className="timer">25:00</div>
+                </div>
                 <Footer>
                 Home footer!
                 </Footer>

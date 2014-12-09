@@ -8,8 +8,6 @@ var React = require('react')
     , Row = bootstrap.Row
     , config = require('../../app.config')
     , _ = require('underscore')
-    , Footer = require('../footer/index.jsx').Footer
-    , TasksFooter = require('./tasks/TasksFooter')
     , Filters = require('./tasks/Filters')
     , DocumentTitle = require('react-document-title');
 
@@ -88,7 +86,7 @@ var Tasks = React.createClass({
                 {this.state.tasks.map(function (o, i) {
                     return (
                         <Row>
-                            <Col sm="12" md="12" lg="12">
+                            <Col sm={12} md={12} lg={12}>
                                 <Task title={o.title} asana={o.asana} key={i}/>
                             </Col>
                         </Row>
@@ -113,18 +111,15 @@ var TasksPage = React.createClass({
                 </DocumentTitle>
                 <div id="tasks">
                     <Row>
-                        <Col xs="12" sm="1">
+                        <Col xs={12} sm={1}>
                             <Filters/>
                         </Col>
-                        <Col xs="12" sm="11">
+                        <Col xs={12} sm={11}>
                             <Tasks/>
                         </Col>
                     </Row>
 
                 </div>
-                <Footer>
-                    <TasksFooter></TasksFooter>
-                </Footer>
             </div>
         );
     }

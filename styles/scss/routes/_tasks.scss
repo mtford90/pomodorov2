@@ -1,113 +1,115 @@
 @import "../variables";
 
+$padding: 20px;
+
 #tasks {
-  $padding: 20px;
   //noinspection CssOptimizeSimilarProperties
-  #filters {
-    position: fixed;
-    border-style: solid;
-    border-right-width: 2px;
-    border-left-width: 0;
-    border-top-width: 0;
-    border-bottom-width: 0;
-    border-color: $tertiary;
-    padding-right: 10px;
-    height: 100%;
-    font-size: 18px;
-    .filter {
-      margin-bottom: 6px;
-      color: grey;
-    }
-  }
-  .task {
-    background-color: white;
-    margin-bottom: 20px;
-    padding-top: $padding;
-    padding-right: $padding;
-    padding-left: $padding;
-    padding-bottom: $padding - $bottom-border-height;
-    border-bottom: $bottom-border-height solid $tertiary;
-    position: relative;
-    &:hover {
-      cursor: pointer;
-      border-bottom: $bottom-border-height solid $primary;
-    }
-    .buttons {
-      position: absolute;
-      right: 0;
-      top: $padding;
-      margin-right: 20px;
+  .filter-config {
+    position: absolute;
+    left: 0;
+    .content {
+      background-color: white;
+      position: fixed;
+      padding-left: 10px;
+      margin-left: -10px;
+      padding-top: 5px;
+      margin-top: -5px;
+      margin-bottom: -3px;
+      padding-bottom: 3px;
+      padding-right: 10px;
       i {
-        font-size: 20px;
-        font-weight: normal;
-        z-index: 1000;
-        &.done {
-          color: green;
-          margin-right: 10px;
-        }
-        &.cancel {
-          color: $primary;
-        }
-        &:hover {
-          color: black;
-        }
+        font-size: 18px;
+        cursor: pointer;
+      }
+
+      z-index: 13;
+    }
+    &.tags-filter {
+      input {
+        margin-left: 20px;
+        position: relative;
+        bottom: 1px;
       }
     }
-    .tag {
-      margin-left: 6px;
+
+  }
+
+  #filters {
+    position: fixed;
+    height: 100%;
+    padding-top: 20px;
+
+    #inner-filters {
+      height: 100%;
+      border: 0 solid $tertiary;
+      border-right-width: 2px;
+      padding-right: 10px;
+      font-size: 18px;
+      overflow: visible;
+      .logo {
+        color: #aaaaaa;
+        position: absolute;
+        left: 25px;
+        top: -4px;
+        font-size: 14px;
+      }
+      .filter {
+        margin-bottom: 6px;
+        color: grey;
+        cursor: pointer;
+        &:hover {
+          i {
+            color: black;
+          }
+
+        }
+      }
+
     }
-    .tag-asana {
-      width: 12px;
-      position: relative;
-      top: -1px;
-    }
+
   }
 }
 
-#tasks-footer {
-  padding-top: 7px;
-  color: white;
-  div {
-    display: inline-block;
-    &.filter {
+.task {
+  background-color: white;
+  margin-bottom: 20px;
+  padding-top: $padding;
+  padding-right: $padding;
+  padding-left: $padding;
+  padding-bottom: $padding - $bottom-border-height;
+  border-bottom: $bottom-border-height solid $tertiary;
+  position: relative;
+  &:hover {
+    cursor: pointer;
+    border-bottom: $bottom-border-height solid $primary;
+  }
+  .buttons {
+    position: absolute;
+    right: 0;
+    top: $padding;
+    margin-right: 20px;
+    i {
+      font-size: 20px;
+      font-weight: normal;
+      z-index: 1000;
+      &.done {
+        color: green;
+        margin-right: 10px;
+      }
+      &.cancel {
+        color: $primary;
+      }
       &:hover {
-        background-color: white;
-        cursor: pointer;
-        &.asana {
-          background-image: url(/img/asana-minimal-black.png);
-        }
-        i {
-          color: black;
-        }
-        .num-tags {
-          color: white;
-        }
-      }
-      margin-left: 5px;
-      &.asana {
-        position: relative;
-        bottom: 5px;
-        background-image: url(/img/asana-minimal-white.png);
-        background-repeat: no-repeat;
-        background-size: 25px 20px;
-        .asana-filter {
-          width: 24px;
-        }
-      }
-      &.tags {
-        .num-tags {
-          color: black;
-          position: relative;
-          right: 17px;
-          font-size: 10px;
-          bottom: 4px;
-          cursor: default;
-        }
+        color: black;
       }
     }
-
   }
-  i {
-    font-size: 24px;
+  .tag {
+    margin-left: 6px;
+  }
+  .tag-asana {
+    width: 12px;
+    position: relative;
+    top: -1px;
   }
 }
