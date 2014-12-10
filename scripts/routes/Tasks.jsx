@@ -8,8 +8,8 @@ var React = require('react')
     , Row = bootstrap.Row
     , config = require('../../app.config')
     , _ = require('underscore')
-    , Filters = require('./tasks/Filters')
-    , DocumentTitle = require('react-document-title')
+//, Filters = require('./tasks/Filters')
+//, DocumentTitle = require('react-document-title')
     , Task = require('./tasks/Task');
 
 

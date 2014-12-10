@@ -15,7 +15,6 @@ var Timer = React.createClass({
                         onDoubleClick={this.onDblClick}
                         onBlur={this.onBlur}>00</span>
                 </span>
-                <i className="fa fa-play"></i>
             </div>
         );
         // TODO: JSX harmony apparently has a better way of passing on props.

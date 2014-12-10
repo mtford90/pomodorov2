@@ -1,0 +1,29 @@
+.pomodoro-controls {
+  border: 2px solid black;
+  border-radius: 1000px;
+  width: 50px;
+  height: 50px;
+  position: relative;
+  .underlay {
+    display: inline-block;
+    background-color: #ababab;
+    width: 44px;
+    height: 44px;
+    border-radius: 1000px;
+  }
+  i {
+    display: inline-block;
+  }
+}
+
+
+
+.display-table {
+  display: table;
+}
+
+.display-table-cell {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}

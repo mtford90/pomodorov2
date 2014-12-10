@@ -12,6 +12,7 @@ var React = require('react'),
     conf = require('../app.config'),
     bootstrap = require('react-bootstrap'),
     App = require('./app'),
+    Tasks = require('./routes/Tasks'),
     routesData = require('./routes');
 
 
@@ -47,9 +48,9 @@ var routes = (
     </Route>
 );
 
+
 Router.run(routes, require('./location'), function (Handler, x, y) {
-    var toRender = (
-        <Handler/>
-    );
-    React.render(toRender, document.getElementById('wrapper'));
+    var view = <Handler/>;
+    console.log('handler', view);
+    React.render(view, document.getElementById('wrapper'));
 });

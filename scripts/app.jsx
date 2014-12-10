@@ -5,6 +5,7 @@ var React = require('react')
     , location = require('./location')
     , footer = require('./footer/index.jsx')
     , Timer = require('./Timer')
+    , Modal = require('./Modal')
     , Link = router.Link;
 
 var ContentWrapper = React.createClass({
@@ -21,9 +22,6 @@ var ContentWrapper = React.createClass({
                                 <Link to="Tasks">Tasks</Link>
                             </li>
                             <li>
-                                <Link to="Analysis">Analysis</Link>
-                            </li>
-                            <li>
                                 <Link to="Settings">Settings</Link>
                             </li>
                         </ul>
@@ -33,6 +31,7 @@ var ContentWrapper = React.createClass({
                 <div className="container" id="main-content" role="main">
                     <RouteHandler ref="handler"/>
                 </div>
+                <Modal/>
             </div>
         )
     }

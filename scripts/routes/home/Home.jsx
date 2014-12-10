@@ -7,7 +7,8 @@ var React = require('react')
     , config = require('../../../app.config')
     , _ = require('underscore')
     , Footer = require('../../footer/Footer')
-    , Timer = require('../../Timer')
+    , PomodoroTimer = require('../../PomodoroTimer')
+    , PomodoroControls = require('../../PomodoroControls')
     , Row = bootstrap.Row
     , router = require('react-router')
     , Link = router.Link
@@ -41,7 +42,8 @@ var Home = React.createClass({
                 <div id="home" >
                     <Row className="timer-row">
                         <Col sm={12}>
-                            <Timer></Timer>
+                            <PomodoroTimer></PomodoroTimer>
+                            <PomodoroControls/>
                         </Col>
                     </Row>
                     <Row>

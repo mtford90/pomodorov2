@@ -6,7 +6,6 @@ var React = require('react');
 
 var navigationItems = [
     {text: 'Home', handler: require('./routes/home/Home')},
-    {text: 'Analysis', handler: require('./routes/Analysis')},
     {text: 'Settings', handler: require('./routes/Settings')},
     {text: 'Tasks', handler: require('./routes/Tasks')}
 ];
