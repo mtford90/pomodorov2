@@ -6,10 +6,12 @@
   display: inline-block;
   margin-left: 10px;
   .editable {
-    width: 200px;
-    height: 100%;
-    overflow: scroll;
     display: inline-block;
+    height: 20px;
+    &:focus {
+      outline: none;
+    }
+    border: none;
   }
   .tag {
     background-color: $primary;

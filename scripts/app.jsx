@@ -53,7 +53,6 @@ var ContentWrapper = React.createClass({
     }
 });
 
-                //{footer.hook}
 var App = React.createClass({
     render: function () {
         return (

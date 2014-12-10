@@ -3,8 +3,6 @@ var React = require('react'),
     Tagger = require('./Tagger'),
     FilterConfig = require('./FilterConfig');
 
-
-
 var TagsFilter = React.createClass({
     render: function () {
         var elem = (

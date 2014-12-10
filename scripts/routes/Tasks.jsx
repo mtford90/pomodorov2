@@ -118,7 +118,6 @@ var TasksPage = React.createClass({
                             <Tasks/>
                         </Col>
                     </Row>
-
                 </div>
             </div>
         );

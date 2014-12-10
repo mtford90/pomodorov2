@@ -43,6 +43,8 @@ var Filters = React.createClass({
                 onCancel={this.cancelFilterConfig}
                 yPos={marginTop}/>
         );
+
+
         this.setState({
             filterConfig: filterConfig
         })

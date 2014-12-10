@@ -27,11 +27,7 @@ html {
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
     background-color: $background-color;
     #wrapper {
-//      margin-bottom: $footer-height;
       padding-top: $navbar-height + 20px;
-//      #main-content {
-//        margin-top: $navbar-height + 20px;
-//      }
     }
     a {
       outline: none !important;

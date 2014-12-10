@@ -6,7 +6,6 @@ var KeyCode = {
     Enter: 13
 };
 
-
 var Tagger = React.createClass({
     render: function () {
         var self = this;
@@ -18,35 +17,53 @@ var Tagger = React.createClass({
                             <Tag title={t} key={i} onDelete={self.onDeleteTag}></Tag>
                         </span>
                     })}
-                    <div id="editable" className="editable"
-                        contentEditable="true"
+                    <input
+                        id="editable"
+                        className="editable"
                         onKeyDown={this.onKeyDown}
-                        onKeyUp={this.onKeyUp}
-                        onBlur={this.onBlur}>
-                    </div>
+                        onKeyPress={this.onChange}
+                        onChange={this.onChange}
+                        onBlur={this.onBlur}
+                        value={this.state.text}
+                        ref="contentEditable">
+                    </input>
+                    <span ref="auxSpan"></span>
                 </div>
             </div>
         )
     },
     onKeyDown: function (e) {
         var native = e.nativeEvent;
+        console.log('keyDown', native);
         if (e.keyCode == KeyCode.Tab || e.keyCode == KeyCode.Enter) {
             native.preventDefault();
             // Generate the tag.
             $(e.target).blur();
+            // Refocus.
+            this.focus();
         }
     },
-    onKeyUp: function (e) {
-        e.preventDefault();
-        // innerText for I.E, textContent for other browsers.
-        var text = e.target.innerText || e.target.textContent;
-        console.log('text', text);
+    onChange: function (e) {
         this.setState({
-            text: text
+            text: e.target.value
+        }, function () {
+            this.resizeInput(e.target);
         });
     },
-    onChange: function () {
-        console.log('on change');
+    /**
+     * Use an auxiliary span to calculate the ideal size of the input element.
+     * @param [inputElem]
+     */
+    resizeInput: function (inputElem) {
+        if (!inputElem) inputElem = this.refs.contentEditable.getDOMNode();
+        var $inputElem = $(inputElem);
+        var text = $inputElem.val();
+        var $span = $(this.refs.auxSpan.getDOMNode());
+        $span.text(text);
+        var size = $span.width();
+        $span.text('');
+        console.log('size', size);
+        $inputElem.width(size);
     },
     onClick: function (e) {
         /* If Tagger is clicked anywhere other than the tags, we want to focus
@@ -54,18 +71,21 @@ var Tagger = React.createClass({
         $(e.target).find('#editable').focus();
     },
     onBlur: function (e) {
-        var text = e.target.innerText || e.target.textContent;
+        var text = e.target.value;
         text = text.trim();
         if (text.length) {
             this.setState({
                 tags: this.state.tags.concat(text)
             })
         }
-        // Clear any white space away.
+        this.clearInput();
+    },
+    clearInput: function () {
         this.setState({
             text: ''
+        }, function () {
+            this.resizeInput();
         });
-        e.target.innerText = e.target.textContent = '';
     },
     getInitialState: function () {
         return {
@@ -81,6 +101,15 @@ var Tagger = React.createClass({
         this.setState({
             tags: tags
         });
+    },
+    focus: function () {
+        var contentEditableNode = this.refs.contentEditable.getDOMNode();
+        $(contentEditableNode).focus();
+    },
+    componentDidMount: function () {
+        // Ensure that the user can start typing straight away.
+        this.focus();
+        this.resizeInput();
     }
 });
 

@@ -47,8 +47,9 @@ var routes = (
     </Route>
 );
 
-
 Router.run(routes, require('./location'), function (Handler, x, y) {
-    var handler = <Handler/>;
-    React.render(handler, document.getElementById('wrapper'));
+    var toRender = (
+        <Handler/>
+    );
+    React.render(toRender, document.getElementById('wrapper'));
 });
