@@ -8,61 +8,16 @@ var React = require('react')
     , Row = bootstrap.Row
     , config = require('../../app.config')
     , _ = require('underscore')
-//, Filters = require('./tasks/Filters')
-//, DocumentTitle = require('react-document-title')
+    , Filters = require('./tasks/Filters')
+    , DocumentTitle = require('react-document-title')
+    , tasksStore = require('../flux/tasks').store
+    , reflux = require('reflux')
     , Task = require('./tasks/Task');
 
 
-var tasks = [
-    {
-        title: 'Hook into Mongoose to track query generation!!!',
-        asana: true
-    },
-    {
-        title: 'how browsers work (rendering, webkit, performance), do a pres on this'
-    },
-    {
-        title: 'Silk: How to contribute? Guide on setting up dev environment etc'
-    },
-    {
-        title: 'learn the react lifecycle REALLY REALLY well (as in write a blog post)'
-    },
-    {
-        title: 'Silk: How to contribute? Guide on setting up dev environment etc'
-    },
-    {
-        title: 'Steal the django-queryinspect idea and put profiling in headers too'
-    },
-    {
-        title: 'learn the react lifecycle REALLY REALLY well (as in write a blog post)'
-    },
-    {
-        title: 'Silk: How to contribute? Guide on setting up dev environment etc'
-    },
-    {
-        title: 'Steal the django-queryinspect idea and put profiling in headers too'
-    },
-    {
-        title: 'learn the react lifecycle REALLY REALLY well (as in write a blog post)'
-    },
-    {
-        title: 'Silk: How to contribute? Guide on setting up dev environment etc'
-    },
-    {
-        title: 'Steal the django-queryinspect idea and put profiling in headers too'
-    },
-    {
-        title: 'learn the react lifecycle REALLY REALLY well (as in write a blog post)'
-    },
-    {
-        title: 'Silk: How to contribute? Guide on setting up dev environment etc'
-    },
-    {
-        title: 'Steal the django-queryinspect idea and put profiling in headers too'
-    }
-];
 
 var Tasks = React.createClass({
+    mixins: [reflux.ListenerMixin],
     render: function () {
         return (
             <div >
@@ -78,9 +33,19 @@ var Tasks = React.createClass({
             </div>
         )
     },
+    componentDidMount: function () {
+        this.cancelListen = this.listenTo(tasksStore, function (payload) {
+            this.setState({
+                tasks: payload.tasks
+            });
+        });
+    },
+    componentDidUnmount: function () {
+        this.cancelListen();
+    },
     getInitialState: function () {
         return {
-            tasks: tasks
+            tasks: tasksStore.getDefaultData()
         }
     }
 });
@@ -107,5 +72,6 @@ var TasksPage = React.createClass({
     }
 
 });
+
 
 module.exports = TasksPage;

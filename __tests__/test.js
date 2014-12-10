@@ -1,19 +1,13 @@
+jest.dontMock('../scripts/flux/tasks');
+
+
 //noinspection JSUnusedGlobalSymbols
-var React = require('react');
+var React = require('react'),
+    tasks = require('../scripts/flux/tasks');
 
-//describe('sum', function() {
-//    it('adds 1 + 2 to equal 3', function() {
-//        function sum(value1, value2) {
-//            return value1 + value2;
-//        }
-//        expect(sum(1, 2)).toBe(3);
-//    });
-//});
-//
-//describe('jsx', function () {
-//    it('xyz', function () {
-//        var elem = (<div></div>);
-//        console.log('Checkout this element', elem);
-//    });
-//});
 
+describe('123', function () {
+    it('123', function (done) {
+        console.log('store', tasks);
+    });
+});

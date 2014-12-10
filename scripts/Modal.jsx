@@ -8,6 +8,4 @@ var Modal = React.createClass({
     }
 });
 
-module.exports = {
-
-};
+module.exports = Modal;

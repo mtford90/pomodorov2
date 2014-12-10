@@ -1,6 +1,7 @@
 var React = require('react'),
     _ = require('underscore'),
     FilterConfig = require('./FilterConfig'),
+    taskActions = require('../../flux/tasks').actions,
     TagsFilter = require('./TagsFilter');
 
 var Filters = React.createClass({
@@ -14,6 +15,9 @@ var Filters = React.createClass({
                         <div className="logo">
                             <i className="fa fa-filter"></i>
                         </div>
+                        <div className="filter" onClick={this.onNewPressed}>
+                            <i className="fa fa-plus"></i>
+                        </div>
                         <div className="filter tags-filter" onClick={this.onTagsPressed}>
                             <i className="fa fa-tags"></i>
                         </div>
@@ -26,6 +30,9 @@ var Filters = React.createClass({
         return {
             filterConfig: ''
         }
+    },
+    onNewPressed: function () {
+        taskActions.newTask({title: 'A new task!'});
     },
     onTagsPressed: function (e) {
         this.cancelFilterConfig();
