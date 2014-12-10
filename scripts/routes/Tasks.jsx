@@ -9,25 +9,8 @@ var React = require('react')
     , config = require('../../app.config')
     , _ = require('underscore')
     , Filters = require('./tasks/Filters')
-    , DocumentTitle = require('react-document-title');
-
-
-var Task = React.createClass({
-    render: function () {
-        return (
-            <div className="task">
-                <span className="title">
-                    {this.props.title}
-                </span>
-                {this.props.asana ? <img className="tag-asana tag" src="img/asana-minimal.png"/> : ''}
-                <div className="buttons">
-                    <i className="fa fa-check-circle-o done" title="Complete"></i>
-                    <i className="fa fa-clock-o cancel" title="Later"></i>
-                </div>
-            </div>
-        )
-    }
-});
+    , DocumentTitle = require('react-document-title')
+    , Task = require('./tasks/Task');
 
 
 var tasks = [

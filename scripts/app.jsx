@@ -4,23 +4,8 @@ var React = require('react')
     , RouteHandler = router.RouteHandler
     , location = require('./location')
     , footer = require('./footer/index.jsx')
+    , Timer = require('./Timer')
     , Link = router.Link;
-
-var Timer = React.createClass({
-    render: function () {
-        var comp = (
-            <div>
-                <span className="timer">
-                25:00
-                </span>
-            </div>
-        );
-        // TODO: JSX harmony apparently has a better way of passing on props.
-        _.extend(comp.props, this.props);
-        return comp;
-    }
-});
-
 
 var ContentWrapper = React.createClass({
     render: function () {

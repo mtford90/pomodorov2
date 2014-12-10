@@ -5,7 +5,17 @@ Styles for the Home route.
 @import "../variables";
 
 #home {
- .timer {
-    font-size: 80px;
- }
+  .timer-row {
+    text-align: center;
+    .timer {
+      display: block;
+      font-size: 80px;
+      padding-bottom: 18px;
+      .segment {
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+  }
 }
