@@ -21,6 +21,9 @@ var Filters = React.createClass({
                         <div className="filter tags-filter" onClick={this.onTagsPressed}>
                             <i className="fa fa-tags"></i>
                         </div>
+                        <div className="filter tags-filter">
+                            <i className="fa fa-refresh"></i>
+                        </div>
                     </div>
                 </div>
             </div>

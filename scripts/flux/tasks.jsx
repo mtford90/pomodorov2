@@ -12,15 +12,16 @@ console.log('taskActions', taskActions);
 var taskStore = reflux.createStore({
     listenables: [taskActions],
     onNewTask: function (task) {
-        console.log('onNewTask', task);
         this.tasks.splice(0, 0, task);
         this._trigger();
     },
     _trigger: function () {
         this.trigger({currentTask: this.currentTask, tasks: this.tasks});
     },
-    onRemoveTask: function (task) {
-        console.log('onRemoveTask', task);
+    onRemoveTask: function (key) {
+        console.log('Removing task at index ', key);
+        this.tasks.splice(key, 1);
+        this._trigger();
     },
     onReorderTask: function (oldIndex, newIndex) {
         console.log('onReorderTask', {

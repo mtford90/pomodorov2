@@ -11,26 +11,39 @@ var React = require('react')
     , Filters = require('./tasks/Filters')
     , DocumentTitle = require('react-document-title')
     , tasksStore = require('../flux/tasks').store
+    , tasksActions = require('../flux/tasks').actions
     , reflux = require('reflux')
     , Task = require('./tasks/Task');
 
+
+var colors = ["Red", "Green", "Blue", "Yellow", "Black", "White", "Orange"];
+
+var placeholder = document.createElement("li");
+placeholder.className = "placeholder";
 
 
 var Tasks = React.createClass({
     mixins: [reflux.ListenerMixin],
     render: function () {
+        var self = this;
         return (
-            <div >
+            <ul onDragOver={this.dragOver}>
                 {this.state.tasks.map(function (o, i) {
                     return (
-                        <Row>
+                        <Row componentClass={React.DOM.li}
+                            data-id={i}
+                            key={i}
+                            draggable="true"
+                            onDragEnd={self.dragEnd}
+                            onDragStart={self.dragStart}
+                            >
                             <Col sm={12} md={12} lg={12}>
-                                <Task title={o.title} asana={o.asana} key={i}/>
+                                <Task title={o.title} asana={o.asana} key={o._id} index={i} onCancel={self.onCancel}/>
                             </Col>
                         </Row>
                     )
                 })}
-            </div>
+            </ul>
         )
     },
     componentDidMount: function () {
@@ -40,12 +53,59 @@ var Tasks = React.createClass({
             });
         });
     },
+    onCancel: function (task) {
+        // TODO: Why isn't key in props?
+        var index = task.props.index;
+        tasksActions.removeTask(index);
+    },
     componentDidUnmount: function () {
         this.cancelListen();
     },
     getInitialState: function () {
         return {
             tasks: tasksStore.getDefaultData()
+        }
+    },
+    dragEnd: function (e) {
+        this.dragged.style.display = "block";
+        this.dragged.parentNode.removeChild(placeholder);
+        var tasks = this.state.tasks;
+        var from = Number(this.dragged.dataset.id);
+        var to = Number(this.over.dataset.id);
+        if (from < to) to--;
+        if (this.nodePlacement == "after") to++;
+        tasks.splice(to, 0, tasks.splice(from, 1)[0]);
+        this.setState({tasks: tasks});
+    },
+    dragStart: function (e) {
+        console.log('dragStart', e);
+        this.dragged = e.currentTarget;
+        e.dataTransfer.effectAllowed = 'move';
+        // Firefox requires dataTransfer data to be set
+        e.dataTransfer.setData("text/html", e.currentTarget);
+    },
+    dragOver: function (e) {
+        e.preventDefault();
+        var target = e.target;
+        var name = target.tagName;
+        console.log('name', name);
+        if (name == 'LI') {
+            this.dragged.style.display = "none";
+            if (target.className == "placeholder") return;
+            this.over = target;
+            // Inside the dragOver method
+            var relY = e.clientY - this.over.offsetTop;
+            var height = this.over.offsetHeight / 2;
+            var parent = target.parentNode;
+
+            if (relY > height) {
+                this.nodePlacement = "after";
+                parent.insertBefore(placeholder, target.nextElementSibling);
+            }
+            else if (relY < height) {
+                this.nodePlacement = "before";
+                parent.insertBefore(placeholder, target);
+            }
         }
     }
 });
