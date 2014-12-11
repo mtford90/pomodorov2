@@ -13,7 +13,6 @@ var gulp = require('gulp'),
 // Jest provides gulp integration for running tests written in Facebook's jest framework.
 // Jest is built on top of the jasmine test framework and provides advanced support for React
 // and a more natural asynchronous testing methodology than plain jasmine
-    jest = require('gulp-jest'),
 // Gulp watch is used by gulp to watch for changes to files and perform the appropriate action.
     watch = require('gulp-watch'),
 // Task listing provides the gulp help facility that lists all available gulp tasks
@@ -54,39 +53,6 @@ var JS_FILES = (function () {
  */
 var HTML_FILES = ['./index.html'];
 
-/**
- * Configuration for the Jest testing framework from facebook.
- */
-var TEST_CONFIG = {
-    // The script used to pre-process all spec files. In our case, we're compiling jsx into
-    // js.
-    scriptPreprocessor: "./support/preprocessor.js",
-    // Jest features the ability to mock modules. Here we specify those modules that will
-    // not be mocked.
-    unmockedModulePathPatterns: [
-        "node_modules/react"
-    ],
-    // Where our tests lie. This is configured within dev.config.js
-    testDirectoryName: conf.tests,
-    // We do not want to load any tests from within our dependencies and we also want to exclude
-    // all supporting files from the test build as these are only used to preprocess the specs.
-    // They contain no logic important to the tests themselves.
-    testPathIgnorePatterns: [
-        "node_modules",
-        conf.tests + "/support"
-    ],
-    // What file extensions test specifications will have. In our case this is likely to be
-    // .js, .jsx or .react
-    moduleFileExtensions: conf.ext.spec
-};
-
-/**
- * Run the Jest tests using the above test config.
- */
-function test() {
-    return gulp.src(conf.tests).pipe(jest(TEST_CONFIG));
-}
-
 // Configure the gulp help tasks, excluding any unnecessary cruft.
 (function configureHelp() {
     var HELP_EXCLUSIONS = ['default'];
@@ -97,19 +63,6 @@ function test() {
 
     gulp.task('help', taskListing.withFilters(null, excludeFilter));
 })();
-
-// Simply run the tests
-gulp.task('test', function () {
-    return test();
-});
-
-// Run integration tests e.g. hitting the Hacker News API directly.
-gulp.task('int-test', function () {
-    var testconfig = _.extend({}, TEST_CONFIG);
-    testconfig.testDirectoryName = 'int_tests';
-    delete testconfig.scriptPreprocessor;
-    return gulp.src('int_tests').pipe(jest(testconfig));
-});
 
 gulp.task('watch', ['watch-js', 'watch-server']);
 
@@ -138,7 +91,6 @@ if (!gulp.task('watch-server', function () {
 // When JSX/JS files change, we want to run the Jest tests.
 gulp.task('watch-js', function () {
     gulp.src(JS_FILES).pipe(watch(JS_FILES, function () {
-        //return test();
     }));
 });
 
