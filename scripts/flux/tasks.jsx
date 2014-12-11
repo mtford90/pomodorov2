@@ -16,7 +16,7 @@ var taskStore = reflux.createStore({
         this._trigger();
     },
     _trigger: function () {
-        this.trigger({currentTask: this.currentTask, tasks: this.tasks});
+        this.trigger(this.tasks);
     },
     onRemoveTask: function (key) {
         console.log('Removing task at index ', key);

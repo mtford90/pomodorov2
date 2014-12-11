@@ -14,27 +14,17 @@ var React = require('react')
     , Link = router.Link
     , Col = bootstrap.Col
     , DocumentTitle = require('react-document-title')
+    , taskFlux = require('../../flux/tasks')
+    , taskActions = taskFlux.actions
+    , taskStore = taskFlux.store
     , Task = require('../tasks/Task');
 
-var currentTask = {
-    title: 'Hook into Mongoose to track query generation!!!',
-    asana: true
-};
-
-var queuedTasks = [
-    {
-        title: 'how browsers work (rendering, webkit, performance), do a pres on this'
-    },
-    {
-        title: 'Silk: How to contribute? Guide on setting up dev environment etc'
-    },
-    {
-        title: 'learn the react lifecycle REALLY REALLY well (as in write a blog post)'
-    }
-];
 
 var Home = React.createClass({
     render: function () {
+        var tasks = this.state.tasks;
+        var currentTask = tasks.length ? tasks[0] : null;
+        var restOfTasks = tasks.length ? tasks.slice(1, 4) : [];
         return (
             <div>
                 <DocumentTitle title={config.brand}>
@@ -53,7 +43,7 @@ var Home = React.createClass({
                     </Row>
                     <Row>
                         <Col sm={12}>
-                            <Task title={this.state.currentTask.title} asana={this.state.currentTask.asana}/>
+                            <Task title={currentTask.title} asana={currentTask.asana}/>
                         </Col>
                     </Row>
                     <Row>
@@ -61,7 +51,7 @@ var Home = React.createClass({
                             <h3>Next</h3>
                         </Col>
                     </Row>
-                    {this.state.queuedTasks.map(function (o, i) {
+                    {restOfTasks.map(function (o, i) {
                         return (
                             <Row>
                                 <Col sm={12}>
@@ -82,14 +72,19 @@ var Home = React.createClass({
             </div>
         );
     },
-
     componentDidMount: function () {
-        console.log('componentDidMount');
+        this.cancelListen = this.listenTo(taskStore, function (tasks) {
+            this.setState({
+                tasks: _.extend([], tasks)
+            });
+        });
+    },
+    componentDidUnmount: function () {
+        this.cancelListen();
     },
     getInitialState: function () {
         return {
-            currentTask: currentTask,
-            queuedTasks: queuedTasks
+            tasks: taskStore.getDefaultData()
         }
     }
 });

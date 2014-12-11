@@ -47,20 +47,21 @@ var Tasks = React.createClass({
         )
     },
     componentDidMount: function () {
-        this.cancelListen = this.listenTo(tasksStore, function (payload) {
+        this.cancelListen = this.listenTo(tasksStore, function (tasks) {
             this.setState({
-                tasks: _.extend([], payload.tasks)
+                tasks: _.extend([], tasks)
             });
         });
+    },
+    componentDidUnmount: function () {
+        this.cancelListen();
     },
     onCancel: function (task) {
         // TODO: Why isn't key in props?
         var index = task.props.index;
         tasksActions.removeTask(index);
     },
-    componentDidUnmount: function () {
-        this.cancelListen();
-    },
+
     getInitialState: function () {
         return {
             tasks: tasksStore.getDefaultData()
