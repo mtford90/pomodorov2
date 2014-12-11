@@ -36,7 +36,7 @@ var Tasks = React.createClass({
                             draggable="true"
                             onDragEnd={self.dragEnd}
                             onDragStart={self.dragStart}
-                            >
+                        >
                             <Col sm={12} md={12} lg={12}>
                                 <Task title={o.title} asana={o.asana} key={o._id} index={i} onCancel={self.onCancel}/>
                             </Col>
@@ -86,23 +86,28 @@ var Tasks = React.createClass({
     },
     dragOver: function (e) {
         e.preventDefault();
-        var target = e.target;
-        var name = target.tagName;
-        console.log('name', name);
-        if (name == 'LI') {
+        var task = e.target;
+        if (task.className == 'task') {
             this.dragged.style.display = "none";
+            var target = task;
+            while (target.tagName != 'LI') {
+                target = target.parentNode;
+            }
             if (target.className == "placeholder") return;
             this.over = target;
             // Inside the dragOver method
-            var relY = e.clientY - this.over.offsetTop;
-            var height = this.over.offsetHeight / 2;
+            var taskRect = task.getBoundingClientRect(),
+                taskTop = taskRect.top,
+                taskBottom = taskRect.bottom,
+                taskMid = taskBottom - (task.offsetHeight / 2);
+            var dragY = e.clientY;
             var parent = target.parentNode;
-
-            if (relY > height) {
+            $(placeholder).height(target.offsetHeight);
+            if (dragY > taskMid) {
                 this.nodePlacement = "after";
                 parent.insertBefore(placeholder, target.nextElementSibling);
             }
-            else if (relY < height) {
+            else if (dragY < taskMid) {
                 this.nodePlacement = "before";
                 parent.insertBefore(placeholder, target);
             }
