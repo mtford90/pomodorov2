@@ -24,10 +24,8 @@ var taskStore = reflux.createStore({
         this._trigger();
     },
     onReorderTask: function (oldIndex, newIndex) {
-        console.log('onReorderTask', {
-            oldIndex: oldIndex,
-            newIndex: newIndex
-        });
+        this.tasks.splice(newIndex, 0, this.tasks.splice(oldIndex, 1)[0]);
+        this._trigger();
     },
     setCurrentTask: function (task) {
         this.currentTask = task;

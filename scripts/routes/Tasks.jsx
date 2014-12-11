@@ -49,7 +49,7 @@ var Tasks = React.createClass({
     componentDidMount: function () {
         this.cancelListen = this.listenTo(tasksStore, function (payload) {
             this.setState({
-                tasks: payload.tasks
+                tasks: _.extend([], payload.tasks)
             });
         });
     },
@@ -69,13 +69,17 @@ var Tasks = React.createClass({
     dragEnd: function (e) {
         this.dragged.style.display = "block";
         this.dragged.parentNode.removeChild(placeholder);
-        var tasks = this.state.tasks;
-        var from = Number(this.dragged.dataset.id);
-        var to = Number(this.over.dataset.id);
+        var from = Number(this.dragged.dataset.id),
+            to = Number(this.over.dataset.id);
         if (from < to) to--;
         if (this.nodePlacement == "after") to++;
+
+        var tasks = this.state.tasks;
         tasks.splice(to, 0, tasks.splice(from, 1)[0]);
+        // Ensure that task order changes straight away, despite the fact that we'll receive a notification from
+        // from the task store.
         this.setState({tasks: tasks});
+        tasksActions.reorderTask(from, to, false);
     },
     dragStart: function (e) {
         console.log('dragStart', e);
@@ -97,7 +101,6 @@ var Tasks = React.createClass({
             this.over = target;
             // Inside the dragOver method
             var taskRect = task.getBoundingClientRect(),
-                taskTop = taskRect.top,
                 taskBottom = taskRect.bottom,
                 taskMid = taskBottom - (task.offsetHeight / 2);
             var dragY = e.clientY;
