@@ -49,7 +49,7 @@ var Tasks = React.createClass({
     componentDidMount: function () {
         this.cancelListen = this.listenTo(tasksStore, function (tasks) {
             this.setState({
-                tasks: _.extend([], tasks)
+                tasks: tasks
             });
         });
     },
@@ -61,7 +61,6 @@ var Tasks = React.createClass({
         var index = task.props.index;
         tasksActions.removeTask(index);
     },
-
     getInitialState: function () {
         return {
             tasks: tasksStore.getDefaultData()
@@ -74,7 +73,6 @@ var Tasks = React.createClass({
             to = Number(this.over.dataset.id);
         if (from < to) to--;
         if (this.nodePlacement == "after") to++;
-
         var tasks = this.state.tasks;
         tasks.splice(to, 0, tasks.splice(from, 1)[0]);
         // Ensure that task order changes straight away, despite the fact that we'll receive a notification from
@@ -83,7 +81,6 @@ var Tasks = React.createClass({
         tasksActions.reorderTask(from, to, false);
     },
     dragStart: function (e) {
-        console.log('dragStart', e);
         this.dragged = e.currentTarget;
         e.dataTransfer.effectAllowed = 'move';
         // Firefox requires dataTransfer data to be set

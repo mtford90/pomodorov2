@@ -16,7 +16,7 @@ var taskStore = reflux.createStore({
         this._trigger();
     },
     _trigger: function () {
-        this.trigger(this.tasks);
+        this.trigger(this._getClonedTasks());
     },
     onRemoveTask: function (key) {
         console.log('Removing task at index ', key);
@@ -31,9 +31,12 @@ var taskStore = reflux.createStore({
         this.currentTask = task;
         this._trigger();
     },
+    _getClonedTasks: function () {
+        return _.extend([], this.tasks);
+    },
     getDefaultData: function () {
         if (!this.tasks) this.tasks = fixtures.tasks;
-        return this.tasks;
+        return this._getClonedTasks();
     }
 });
 
