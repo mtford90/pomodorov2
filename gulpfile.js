@@ -30,9 +30,8 @@ var gulp = require('gulp'),
 // and the live editing functionality that will make our lives so much easier.
     webpack = require('webpack'),
 // dev.config is the user settings
-    conf = require('./dev.config');
-// browserify is used to package up the hnsearch script. It allows us to use node http/https etc in the browser.
-// prob not very efficient but this is just a POC anyway...
+    conf = require('./dev.config'),
+    livereload = require('gulp-livereload');
 
 /**
  * A list of globs of all Javascript files (both app and test specifications)
@@ -64,7 +63,7 @@ var HTML_FILES = ['./index.html'];
     gulp.task('help', taskListing.withFilters(null, excludeFilter));
 })();
 
-gulp.task('watch', ['watch-js', 'watch-server']);
+gulp.task('watch', ['watch-js', 'watch-server', 'livereload-listen']);
 
 // If any dev server related configuration changes, we need to relaunch as opposed to hot reloading.
 if (!gulp.task('watch-server', function () {
@@ -90,10 +89,29 @@ if (!gulp.task('watch-server', function () {
 
 // When JSX/JS files change, we want to run the Jest tests.
 gulp.task('watch-js', function () {
-    gulp.src(JS_FILES).pipe(watch(JS_FILES, function () {
-    }));
+    gulp.watch(JS_FILES, ['test-bundle']).on('change', livereload.changed);
 });
 
+gulp.task('livereload-listen', function () {
+    livereload.listen();
+});
+
+gulp.task('livereload-changed', function () {
+    livereload.changed();
+});
+
+
+gulp.task('test-bundle', function () {
+    var webpackConf = require('./webpack.test.config.js');
+    webpackConf.output = {
+        filename: 'testBundle.js'
+    };
+    var dest = conf.compilation.dir;
+    var publicDest = dest + '/test/';
+    gulp.src('tests/test.js')
+        .pipe(gulpWebpack(webpackConf))
+        .pipe(gulp.dest(publicDest));
+});
 
 // This task compiles the production bundle.
 gulp.task('compile', function () {

@@ -19,6 +19,9 @@ app.use('/scripts', proxy(url.parse('http://localhost:' + conf.webPack.port.toSt
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
+app.get('/test', function (req, res) {
+    res.sendFile(__dirname + '/tests/index.html')
+});
 
 var webpackServer = new WebpackDevServer(webpack(webpackConfig), {
     publicPath: webpackConfig.output.publicPath,
@@ -30,4 +33,5 @@ var webpackServer = new WebpackDevServer(webpack(webpackConfig), {
 });
 
 app.listen(conf.port);
+
 webpackServer.listen(conf.webPack.port, 'localhost', function () {});

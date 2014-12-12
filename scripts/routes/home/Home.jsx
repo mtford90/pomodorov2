@@ -17,10 +17,12 @@ var React = require('react')
     , taskFlux = require('../../flux/tasks')
     , taskActions = taskFlux.actions
     , taskStore = taskFlux.store
+    , reflux = require('reflux')
     , Task = require('../tasks/Task');
 
 
 var Home = React.createClass({
+    mixins: [reflux.ListenerMixin],
     render: function () {
         var tasks = this.state.tasks;
         var currentTask = tasks.length ? tasks[0] : null;

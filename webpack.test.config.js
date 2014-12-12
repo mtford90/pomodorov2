@@ -1,35 +1,10 @@
-var webpack = require('webpack'),
-    conf = require('./dev.config'),
-    _ = require('underscore');
-
-
-var ext = _.map(conf.ext.js, function (x) {return '.' + x});
-ext = ext.concat('');
+var path = require('path');
 
 module.exports = {
-    entry: [
-        'webpack-dev-server/client?http://localhost:' + conf.webPack.port.toString(),
-        'webpack/hot/dev-server',
-        conf.entry
-    ],
-
-    output: {
-        path: __dirname,
-        filename: 'bundle.js',
-        publicPath: 'http://localhost:' + conf.webPack.port.toString() + '/' + conf.scripts + '/'
-    },
-
-    plugins: [
-        new webpack.HotModuleReplacementPlugin()
-    ],
-
-    resolve: {
-        extensions: ext
-    },
-
-    devtool: "inline-source-map",
-
     module: {
+
+        output: 'testBundle.js',
+
         loaders: [
             {
                 test: /\.jsx$/,
@@ -69,9 +44,18 @@ module.exports = {
             },
             {
                 test: /\.spec.js$/,
-                loader: "mocha"
+                loader: "mocha-loader"
             }
-
         ]
+    },
+    resolve: {
+        root: [
+            path.resolve('scripts')
+        ],
+        modulesDirectories: [
+            'node_modules'
+        ],
+        extensions: ['', '.js', '.json', '.jsx']
     }
+
 };
