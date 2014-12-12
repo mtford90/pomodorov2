@@ -9,12 +9,11 @@ var React = require('react')
     , config = require('../../app.config')
     , _ = require('underscore')
     , ColorPicker = require('../colorPicker')
-    , colors = require('../colors')
     , Footer = require('../footer/index.jsx').Footer
     , Panel = require('../Panel')
     , pomodoroFlux = require('../flux/pomodoro')
+    , coloursFlux = require('../flux/colours')
     , DocumentTitle = require('react-document-title');
-
 
 
 // TODO: Gotta be a nicer way to handle the right/left padding
@@ -40,12 +39,13 @@ var Settings = React.createClass({
         );
         var cssUrl = "http://paletton.com/#uid=10K0u0kllllaFw0g0qFqFg0w0aF";
         var options = this.state.options;
+        var colors = this.state.colours;
         return (
             <div>
                 <DocumentTitle title={config.brand}>
                     <div id="settings">
-                        <Row>
-                            <Col xs={12} sm={12} md={6} lg={6} className="right-padded">
+                        <Row componentClass={React.DOM.div}>
+                            <Col xs={12} sm={12} md={6} lg={6} className="right-padded" componentClass={React.DOM.div}>
                                 <Panel title={pomodoroTitle}>
                                     <p>
                                     Customise the Pomodoro timings.
@@ -89,7 +89,7 @@ var Settings = React.createClass({
 
                                 </Panel>
                             </Col>
-                            <Col xs={12} sm={12} md={6} lg={6} className="left-padded">
+                            <Col xs={12} sm={12} md={6} lg={6} className="left-padded" componentClass={React.DOM.div}>
                                 <Panel title={coloursTitle}>
                                     <p>
                                     Use
@@ -103,7 +103,10 @@ var Settings = React.createClass({
                                                 Primary
                                                 </td>
                                                 <td>
-                                                    <ColorPicker defaultColor={colors.primary}/>
+                                                    <ColorPicker color={colors.primary}
+                                                        onChange={this.onColorPickerChange}
+                                                        onSuccessfulChange={this.onSuccessfulColorPickerChange}
+                                                        ref="primary"/>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -111,7 +114,10 @@ var Settings = React.createClass({
                                                 Short Break
                                                 </td>
                                                 <td>
-                                                    <ColorPicker defaultColor={colors.shortBreak}/>
+                                                    <ColorPicker color={colors.shortBreak}
+                                                        onChange={this.onColorPickerChange}
+                                                        onSuccessfulChange={this.onSuccessfulColorPickerChange}
+                                                        ref="shortBreak"/>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -119,7 +125,10 @@ var Settings = React.createClass({
                                                 Long Break
                                                 </td>
                                                 <td>
-                                                    <ColorPicker defaultColor={colors.longBreak}/>
+                                                    <ColorPicker color={colors.longBreak}
+                                                        onChange={this.onColorPickerChange}
+                                                        onSuccessfulChange={this.onSuccessfulColorPickerChange}
+                                                        ref="longBreak"/>
                                                 </td>
                                             </tr>
                                         </table>
@@ -127,8 +136,8 @@ var Settings = React.createClass({
                                 </Panel>
                             </Col>
                         </Row>
-                        <Row>
-                            <Col xs={12} sm={12} md={6} lg={6} className="right-padded">
+                        <Row componentClass={React.DOM.div}>
+                            <Col xs={12} sm={12} md={6} lg={6} className="right-padded" componentClass={React.DOM.div}>
                                 <Panel title={asanaTitle}>
                                     <p>
                                     Enable Asana integration by providing an API key.
@@ -157,16 +166,55 @@ var Settings = React.createClass({
 
         );
     },
+    getProp: function (picker) {
+        var prop;
+        if (picker == this.refs.primary) {
+            prop = 'primary';
+        }
+        else if (picker == this.refs.shortBreak) {
+            prop = 'shortBreak';
+        }
+        else if (picker == this.refs.longBreak) {
+            prop = 'longBreak';
+        }
+        return prop;
+    },
+    onColorPickerChange: function (change) {
+        var prop = this.getProp(change.picker);
+        if (prop) {
+            var opts = {};
+            opts[prop] = change.color;
+            var partialState = {
+                colours: _.extend(this.state.colours, opts)
+            };
+            this.setState(partialState);
+        }
+        else {
+            console.warn('Unknown color picker', change);
+        }
+    },
     componentDidMount: function () {
         console.log('componentDidMount');
 
     },
     getInitialState: function () {
         return {
-            options: pomodoroFlux.store.getOptions()
+            options: pomodoroFlux.store.getOptions(),
+            colours: coloursFlux.store.getOptions()
+        }
+    },
+    onSuccessfulColorPickerChange: function (change) {
+        var prop = this.getProp(change.picker);
+        if (prop) {
+            var opts = {};
+            opts[prop] = change.color;
+            console.log('Successful color picker change', opts);
+            coloursFlux.actions.mergeOptions(opts);
+        }
+        else {
+            console.warn('Unknown color picker', change);
         }
     }
-
 });
 
 module.exports = Settings;

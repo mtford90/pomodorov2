@@ -6,13 +6,14 @@ var React = require('react')
     , footer = require('./footer/index.jsx')
     , Timer = require('./Timer')
     , Modal = require('./Modal')
-    , Link = router.Link;
+    , Link = router.Link
+    , NavBar = require('./NavBar');
 
 var ContentWrapper = React.createClass({
     render: function () {
         return (
             <div>
-                <div id="navbar" className="navbar navbar-inverse navbar-static-top" role="navigation">
+                <NavBar>
                     <div className="container">
                         <Link to="app" className="pull-left">
                             <img className="logo " src="img/tomato.png"/>
@@ -27,7 +28,7 @@ var ContentWrapper = React.createClass({
                         </ul>
                         <Timer className="pull-right"/>
                     </div>
-                </div>
+                </NavBar>
                 <div className="container" id="main-content" role="main">
                     <RouteHandler ref="handler"/>
                 </div>

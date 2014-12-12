@@ -71,7 +71,7 @@ if (!gulp.task('watch-server', function () {
         // changes.
         var ignore = _.map(_.keys(conf.styles), function (x) {
             return conf.styles[x]
-        }).concat('gulpfile.js', 'app.config.js', 'index.html', '__tests__/**/*.js');
+        }).concat('gulpfile.js', 'app.config.js', 'index.html', 'tests/**/*.js', 'bin/**/*');
         // Node monitor provides us with the ability to react to changes that affect node applications.
         // In our case this node application is the dev server that provides us with webpack's
         // hot module replacement.

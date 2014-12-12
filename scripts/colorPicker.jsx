@@ -7,7 +7,7 @@ var ColorPicker = React.createClass({
     render: function () {
         var validColor = this.testColor(this.state.color);
         var style = {
-            'background-color': validColor ? this.state.color : 'transparent'
+            'backgroundColor': validColor ? this.state.color : 'transparent'
         };
         return (
             <div className="color-picker">
@@ -23,25 +23,59 @@ var ColorPicker = React.createClass({
     },
     getInitialState: function () {
         return {
-            color: this.props['defaultColor'] || '#c0ffee'
+            color: this.props['color'] || '#c0ffee'
         }
     },
     onChange: function (e) {
         var color = e.target.value;
-        this.setState({
-            color: color
-        })
+        var oldColor = this.state.color;
+        //this.setState({
+        //    color: color
+        //});
+        var onChange = this.props.onChange,
+            onSuccessfulChange = this.props.onSuccessfulChange,
+            onFailedChange = this.props.onFailedChange;
+        var change = {
+            oldColor: oldColor,
+            color: color,
+            picker: this
+        };
+        if (onChange) {
+            onChange(change);
+        }
+        if (onSuccessfulChange || onFailedChange) {
+            if (this.testColor(color)) {
+                if (onSuccessfulChange) {
+                    onSuccessfulChange(change);
+                }
+            }
+            else {
+                if (onFailedChange) {
+                    onFailedChange(change);
+                }
+            }
+        }
     },
     testColor: function (color) {
         // e.g. rgb(0,   0, 0) === rgb(0,0,0)
-        color = color.toLowerCase().trim().replace(/ /g, '');
-        if (WHITE_CSS.indexOf(color) == -1) {
-            var dummyElement = document.createElement('div');
-            dummyElement.style.color = 'white';
-            dummyElement.style.color = color;
-            return dummyElement.style.color != 'white';
+        if (color) {
+            color = color.toLowerCase().trim().replace(/ /g, '');
+            if (WHITE_CSS.indexOf(color) == -1) {
+                var dummyElement = document.createElement('div');
+                dummyElement.style.color = 'white';
+                dummyElement.style.color = color;
+                return dummyElement.style.color != 'white';
+            }
+            return true;
         }
-        return true;
+        return false;
+    },
+    componentWillReceiveProps: function (nextProps) {
+        var newState = {
+            color: nextProps.color
+        };
+        console.log('componentWillReceiveProps', newState);
+        this.setState(newState);
     }
 });
 

@@ -5,9 +5,11 @@ var actions = reflux.createActions([
     'mergeOptions'
 ]);
 
+
 var store = reflux.createStore({
     listenables: [actions],
     onMergeOptions: function (options) {
+        console.log('mergeOptions', options);
         this.options = _.extend(this.getOptions(), options);
         this._trigger();
     },
@@ -17,10 +19,9 @@ var store = reflux.createStore({
     getOptions: function () {
         if (!this.options) {
             this.options = {
-                pomodoroLength: 25,
-                longBreakLength: 15,
-                shortBreakLength: 5,
-                roundLength: 4
+                primary: '#df423c',
+                shortBreak: '#37a2c4',
+                longBreak: '#292f37'
             }
         }
         return _.extend({}, this.options);
