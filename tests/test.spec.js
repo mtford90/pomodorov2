@@ -1,4 +1,4 @@
-var pomodoro = require('../scripts/pomodoro');
+var pomodoro = require('../scripts/flux/pomodoro');
 var chai = require('chai'),
     assert = chai.assert;
 

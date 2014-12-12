@@ -18,7 +18,7 @@ module.exports = {
         css: 'styles/css'
     },
     // Location of specs.
-    tests: '__tests__',
+    tests: 'tests',
     // Folder to output bundle when running gulp compile
     bin: 'bin',
     // File extensions to look for.

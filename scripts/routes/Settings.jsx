@@ -12,6 +12,7 @@ var React = require('react')
     , colors = require('../colors')
     , Footer = require('../footer/index.jsx').Footer
     , Panel = require('../Panel')
+    , pomodoroFlux = require('../flux/pomodoro')
     , DocumentTitle = require('react-document-title');
 
 
@@ -38,6 +39,7 @@ var Settings = React.createClass({
             </span>
         );
         var cssUrl = "http://paletton.com/#uid=10K0u0kllllaFw0g0qFqFg0w0aF";
+        var options = this.state.options;
         return (
             <div>
                 <DocumentTitle title={config.brand}>
@@ -55,7 +57,7 @@ var Settings = React.createClass({
                                                 Pomodoro Length
                                                 </td>
                                                 <td>
-                                                    <input type="text"/>
+                                                    <input type="text" value={options.pomodoroLength}/>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -63,7 +65,7 @@ var Settings = React.createClass({
                                                 Long Break Length
                                                 </td>
                                                 <td>
-                                                    <input type="text"/>
+                                                    <input type="text" value={options.longBreakLength}/>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -71,7 +73,7 @@ var Settings = React.createClass({
                                                 Short Break Length
                                                 </td>
                                                 <td>
-                                                    <input type="text"/>
+                                                    <input type="text" value={options.shortBreakLength}/>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -79,7 +81,7 @@ var Settings = React.createClass({
                                                 Round Length
                                                 </td>
                                                 <td>
-                                                    <input type="text"/>
+                                                    <input type="text" value={options.roundLength}/>
                                                 </td>
                                             </tr>
                                         </table>
@@ -160,8 +162,11 @@ var Settings = React.createClass({
 
     },
     getInitialState: function () {
-        return {}
+        return {
+            options: pomodoroFlux.store.getOptions()
+        }
     }
+
 });
 
 module.exports = Settings;
