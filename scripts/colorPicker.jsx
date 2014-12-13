@@ -9,14 +9,15 @@ var ColorPicker = React.createClass({
         var style = {
             'backgroundColor': validColor ? this.state.color : 'transparent'
         };
+        var ComponentClass = this.props.componentClass || React.DOM.input;
         return (
             <div className="color-picker">
                 <div id="color" style={style}>
                 </div>
-                <input type="text"
+                <ComponentClass type="text"
                     id="code"
                     onChange={this.onChange}
-                    value={this.state.color}></input>
+                    value={this.state.color}></ComponentClass>
                 {validColor ? '' : <i className="fa fa-times-circle"></i>}
             </div>
         )

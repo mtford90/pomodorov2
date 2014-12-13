@@ -97,7 +97,7 @@ var Settings = React.createClass({
                                                 Pomodoro Length
                                                 </td>
                                                 <td>
-                                                    <ColouredInput type="text" value={options.pomodoroLength}/>
+                                                    <ColouredInput  type="text" value={options.pomodoroLength}/>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -105,7 +105,7 @@ var Settings = React.createClass({
                                                 Long Break Length
                                                 </td>
                                                 <td>
-                                                    <ColouredInput type="text" value={options.longBreakLength}/>
+                                                    <ColouredInput  type="text" value={options.longBreakLength}/>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -146,6 +146,7 @@ var Settings = React.createClass({
                                                     <ColorPicker color={colors.primary}
                                                         onChange={this.onColorPickerChange}
                                                         onSuccessfulChange={this.onSuccessfulColorPickerChange}
+                                                        componentClass={ColouredInput}
                                                         ref="primary"/>
                                                 </td>
                                             </tr>
@@ -157,6 +158,7 @@ var Settings = React.createClass({
                                                     <ColorPicker color={colors.shortBreak}
                                                         onChange={this.onColorPickerChange}
                                                         onSuccessfulChange={this.onSuccessfulColorPickerChange}
+                                                        componentClass={ColouredInput}
                                                         ref="shortBreak"/>
                                                 </td>
                                             </tr>
@@ -168,6 +170,7 @@ var Settings = React.createClass({
                                                     <ColorPicker color={colors.longBreak}
                                                         onChange={this.onColorPickerChange}
                                                         onSuccessfulChange={this.onSuccessfulColorPickerChange}
+                                                        componentClass={ColouredInput}
                                                         ref="longBreak"/>
                                                 </td>
                                             </tr>
