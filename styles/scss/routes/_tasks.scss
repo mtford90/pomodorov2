@@ -92,10 +92,7 @@ $padding: 20px;
   padding-bottom: $padding - $bottom-border-height;
   border-bottom: $bottom-border-height solid $tertiary;
   position: relative;
-  &:hover {
-    cursor: pointer;
-    border-bottom: $bottom-border-height solid $primary;
-  }
+  cursor: pointer;
   .buttons {
     position: absolute;
     right: 0;
