@@ -10,8 +10,6 @@ var React = require('react')
     , PomodoroTimer = require('../../PomodoroTimer')
     , PomodoroControls = require('../../PomodoroControls')
     , Row = bootstrap.Row
-    , router = require('react-router')
-    , Link = router.Link
     , Col = bootstrap.Col
     , DocumentTitle = require('react-document-title')
     , taskFlux = require('../../flux/tasks')
@@ -56,7 +54,7 @@ var Home = React.createClass({
                         </div>) : ''}
                     {restOfTasks.length ? ( <Row componentClass={React.DOM.div}>
                         <Col sm={12} componentClass={React.DOM.div}>
-                            <h3>Next</h3>
+                            <h3>Coming Up</h3>
                         </Col>
                     </Row>) : '' }
                     {restOfTasks.map(function (o, i) {
@@ -68,11 +66,6 @@ var Home = React.createClass({
                             </Row>
                         )
                     })}
-                    <Row componentClass={React.DOM.div}>
-                        <Col sm={12} componentClass={React.DOM.div}>
-                            <Link to="Tasks">Configure Tasks</Link>
-                        </Col>
-                    </Row>
                 </div>
                 <Footer>
                 Home footer!

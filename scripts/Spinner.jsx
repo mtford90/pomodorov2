@@ -8,39 +8,30 @@ var React = require('react'),
     q = require('q');
 
 
-var FADE_TIME = 2000;
+var FADE_TIME = 400;
 
 var Spinner = React.createClass({
     render: function () {
-        var self = this,
-            defaultSpinnerClass = 'sk-spinner-rotating-plane',
+        var defaultSpinnerClass = 'sk-spinner-rotating-plane',
             spinnerClass = this.props['spinnerClass'] || defaultSpinnerClass,
             spinner = <div className={"sk-spinner " + spinnerClass}></div>,
-            content = this.props.children,
-            classes = self.getAdditionalClasses();
-        console.log('classes', classes);
+            content = this.props.children;
         return (
-            <div className={"spinner-wrapper " + classes}>
+            <div className="spinner-wrapper" ref="wrapper">
                 {this.state.finishedLoading ? content : spinner}
             </div>
         );
     },
     fade: function (fadeOutCallback, fadeInCallback) {
-        this.setState({
-            additionalClasses: ['hidden']
-        }, function () {
-            setTimeout(function () {
-                if (fadeOutCallback) fadeOutCallback();
-                this.setState({
-                    additionalClasses: ['visible']
-                }, function () {
-                    setTimeout(fadeInCallback ? fadeInCallback : function () {}, FADE_TIME);
-                })
-            }.bind(this), FADE_TIME);
-        })
-    },
-    getAdditionalClasses: function () {
-        return _.reduce(this.state.additionalClasses, function (m, x) {return m + x + ' '}, '')
+        var domNode = this.refs.wrapper.getDOMNode();
+        console.log('domNode', domNode);
+        var $domNode = $(domNode);
+        $domNode.fadeOut(FADE_TIME, function () {
+            if (fadeOutCallback) fadeOutCallback();
+            $domNode.fadeIn(FADE_TIME, function () {
+                if (fadeInCallback) fadeInCallback();
+            });
+        });
     },
     startTimer: function () {
         if (!this.state.timing) {
@@ -67,8 +58,7 @@ var Spinner = React.createClass({
     getInitialState: function () {
         return {
             timing: false,
-            finishedLoading: this.props.finishedLoading,
-            additionalClasses: ['visible']
+            finishedLoading: this.props.finishedLoading
         }
     },
     finishLoading: function () {
@@ -76,11 +66,15 @@ var Spinner = React.createClass({
         if (!this.state.finishedLoading) {
             var _finishLoading = function () {
                 console.log('_finishLoading');
-                this.fade(function () {
-                    this.setState({
-                        finishedLoading: true
-                    })
-                }.bind(this));
+                this.setState({
+                    finishedLoading: true
+                });
+                // TODO: Get fade working with the spinners.
+                //this.fade(function () {
+                //    this.setState({
+                //        finishedLoading: true
+                //    })
+                //}.bind(this));
             }.bind(this);
 
             if (!this.state.timing) {
