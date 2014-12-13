@@ -16,6 +16,7 @@ var React = require('react')
     , taskActions = taskFlux.actions
     , taskStore = taskFlux.store
     , reflux = require('reflux')
+    , Spinner = require('../../Spinner')
     , Task = require('../tasks/Task');
 
 
@@ -27,7 +28,6 @@ var Home = React.createClass({
         console.log('currentTask', currentTask);
         var restOfTasks = tasks.length ? tasks.slice(1, 4) : [];
         console.log('restOfTasks', restOfTasks);
-        var loading = this.state.loading;
         return (
             <div>
                 <DocumentTitle title={config.brand}>
@@ -39,33 +39,35 @@ var Home = React.createClass({
                             <PomodoroControls/>
                         </Col>
                     </Row>
-                    {currentTask ? (
-                        <div>
-                            <Row componentClass={React.DOM.div}>
-                                <Col sm={12} componentClass={React.DOM.div}>
-                                    <h3>Current</h3>
-                                </Col>
-                            </Row>
-                            <Row componentClass={React.DOM.div}>
-                                <Col sm={12} componentClass={React.DOM.div}>
-                                    <Task title={currentTask.title} asana={currentTask.asana}/>
-                                </Col>
-                            </Row>
-                        </div>) : ''}
-                    {restOfTasks.length ? ( <Row componentClass={React.DOM.div}>
-                        <Col sm={12} componentClass={React.DOM.div}>
-                            <h3>Coming Up</h3>
-                        </Col>
-                    </Row>) : '' }
-                    {restOfTasks.map(function (o, i) {
-                        return (
-                            <Row componentClass={React.DOM.div}>
-                                <Col sm={12} componentClass={React.DOM.div}>
-                                    <Task title={o.title} asana={o.asana} key={i}/>
-                                </Col>
-                            </Row>
-                        )
-                    })}
+                    <Spinner ref="spinner" finishedLoading={taskStore.isLoaded()} >
+                        {currentTask ? (
+                            <div>
+                                <Row componentClass={React.DOM.div}>
+                                    <Col sm={12} componentClass={React.DOM.div}>
+                                        <h3>Current</h3>
+                                    </Col>
+                                </Row>
+                                <Row componentClass={React.DOM.div}>
+                                    <Col sm={12} componentClass={React.DOM.div}>
+                                        <Task title={currentTask.title} asana={currentTask.asana}/>
+                                    </Col>
+                                </Row>
+                            </div>) : ''}
+                        {restOfTasks.length ? ( <Row componentClass={React.DOM.div}>
+                            <Col sm={12} componentClass={React.DOM.div}>
+                                <h3>Coming Up</h3>
+                            </Col>
+                        </Row>) : '' }
+                        {restOfTasks.map(function (o, i) {
+                            return (
+                                <Row componentClass={React.DOM.div}>
+                                    <Col sm={12} componentClass={React.DOM.div}>
+                                        <Task title={o.title} asana={o.asana} key={i}/>
+                                    </Col>
+                                </Row>
+                            )
+                        })}
+                    </Spinner>
                 </div>
                 <Footer>
                 Home footer!
@@ -75,10 +77,15 @@ var Home = React.createClass({
     },
     componentDidMount: function () {
         console.log('Home mounting');
+        if (!taskStore.isLoaded()) this.refs.spinner.startTimer();
         taskStore.data().then(function (tasks) {
             console.log('home tasks', tasks);
             this.setState({
                 tasks: tasks
+            }, function () {
+                var spinner = this.refs.spinner;
+                console.log('spinner', spinner);
+                spinner.finishLoading()
             });
         }.bind(this), function (err) {
             console.error('Error getting tasks for home page', err);
@@ -94,8 +101,7 @@ var Home = React.createClass({
     },
     getInitialState: function () {
         return {
-            tasks: [],
-            loading: true
+            tasks: []
         }
     }
 });
