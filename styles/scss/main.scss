@@ -36,9 +36,14 @@ html {
 @import "routes/tasks";
 @import "components/tagger";
 @import "components/panel";
+@import "components/spinner";
 @import "nav";
 @import "colorPicker";
 @import "footer";
 @import "components/pomodorTimer";
 @import "components/pomodoroControls";
 @import '../../vendor/spinkit/scss/spinners/1-rotating-plane';
+
+.sk-spinner {
+  background-color: $primary !important;
+}

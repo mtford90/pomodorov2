@@ -25,36 +25,40 @@ placeholder.className = "placeholder";
 
 var Tasks = React.createClass({
     mixins: [reflux.ListenerMixin],
-    renderTaskList: function () {
+    render: function () {
         var self = this;
         return (
-            <ul onDragOver={this.dragOver}>
-                {this.state.tasks.map(function (o, i) {
-                    return (
-                        <Row componentClass={React.DOM.li}
-                            data-id={i}
-                            key={i}
-                            draggable="true"
-                            onDragEnd={self.dragEnd}
-                            onDragStart={self.dragStart}
-                        >
-                            <Col sm={12} md={12} lg={12}>
-                                <Task title={o.title} asana={o.asana} key={o._id} index={i} onCancel={self.onCancel}/>
-                            </Col>
-                        </Row>
-                    )
-                })}
-            </ul>
-        );
-    },
-    render: function () {
-        return this.state.loading ? <Spinner/> : this.renderTaskList();
+            <Spinner ref="spinner" finishedLoading={tasksStore.tasks} >
+                <ul onDragOver={this.dragOver}>
+                    {this.state.tasks.map(function (o, i) {
+                        return (
+                            <Row componentClass={React.DOM.li}
+                                data-id={i}
+                                key={i}
+                                draggable="true"
+                                onDragEnd={self.dragEnd}
+                                onDragStart={self.dragStart}>
+                                <Col sm={12} md={12} lg={12}>
+                                    <Task title={o.title} asana={o.asana} key={o._id} index={i} onCancel={self.onCancel}/>
+                                </Col>
+                            </Row>
+                        )
+                    })}
+                </ul>
+            </Spinner>
+        )
     },
     componentDidMount: function () {
+        // Minimum time.
+        if (!tasksStore.tasks) this.refs.spinner.startTimer();
         tasksStore.data().then(function (tasks) {
             this.setState({
                 tasks: tasks
-            });
+            }, function () {
+                var spinner = this.refs.spinner;
+                console.log('spinner', spinner);
+                spinner.finishLoading()
+            }.bind(this));
         }.bind(this), function (err) {
             console.error('error getting tasks', err);
         });
@@ -74,8 +78,7 @@ var Tasks = React.createClass({
     },
     getInitialState: function () {
         return {
-            tasks: [],
-            loading: true
+            tasks: []
         }
     },
     dragEnd: function (e) {

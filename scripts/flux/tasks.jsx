@@ -10,6 +10,8 @@ var taskActions = reflux.createActions([
     'reorderTask'
 ]);
 
+
+
 /**
  * Load tasks from PouchDB.
  * @return {*}
@@ -99,6 +101,10 @@ var taskStore = reflux.createStore({
         }
     })
     ;
+
+Object.defineProperty(taskStore, 'isLoaded', function () {
+    return !!this.tasks;
+});
 
 module.exports = {
     store: taskStore,
