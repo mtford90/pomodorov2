@@ -1,0 +1,27 @@
+@import '../../vendor/bootstrap-sass-official/assets/stylesheets/bootstrap';
+@import '../../styles/scss/shared';
+@import '../../styles/scss/variables';
+
+body {
+  background-color: $background-color;
+  text-align: center;
+  .button {
+    border-bottom-style: solid;
+    border-bottom-width: 3px;
+    border-bottom-color: $tertiary;
+    cursor: pointer;
+    padding: 10px;
+    &:hover {
+      border-bottom-color: $primary;
+    }
+    background-color: #ffffff;
+    margin-top: 10px;
+    &#get-started-button {
+      margin-right:5px;
+    }
+    &#github-button {
+      margin-left: 5px;
+    }
+  }
+}
+

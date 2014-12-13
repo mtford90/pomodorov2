@@ -8,24 +8,10 @@ Point of entry for scss bundling
 // from scripts/styles/vendor.js
 //@import "../../vendor/bootstrap-sass-official/assets/stylesheets/_bootstrap.scss";
 @import "variables";
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700);
 
-@mixin htmlAndBody {
-  padding: 0;
-  margin: 0;
-  height: 100%;
-  width: 100%;
-  font-family: 'Open Sans', sans-serif;
-}
 
 html {
-  @include htmlAndBody();
   body {
-    @include htmlAndBody();
-    font-family: 'Open Sans', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
-    background-color: $background-color;
     #wrapper {
       padding-top: $navbar-height + 20px;
     }
@@ -44,6 +30,7 @@ html {
   }
 }
 
+@import "shared";
 @import "routes/home";
 @import "routes/settings";
 @import "routes/tasks";
