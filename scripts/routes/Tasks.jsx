@@ -47,11 +47,18 @@ var Tasks = React.createClass({
         )
     },
     componentDidMount: function () {
+        tasksStore.data().then(function (tasks) {
+            this.setState({
+                tasks: tasks
+            });
+        }.bind(this), function (err) {
+            console.error('error getting tasks', err);
+        });
         this.cancelListen = this.listenTo(tasksStore, function (tasks) {
             this.setState({
                 tasks: tasks
             });
-        });
+        }.bind(this));
     },
     componentDidUnmount: function () {
         this.cancelListen();
@@ -63,7 +70,7 @@ var Tasks = React.createClass({
     },
     getInitialState: function () {
         return {
-            tasks: tasksStore.getDefaultData()
+            tasks: []
         }
     },
     dragEnd: function (e) {

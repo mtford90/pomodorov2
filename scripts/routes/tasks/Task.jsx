@@ -9,7 +9,6 @@ var Task = React.createClass({
     render: function () {
         var onCancel = this.props.onCancel ? _.partial(this.props.onCancel, this) : undefined;
         var style = this.state.hover ? {borderColor: this.state.color} : {};
-        console.log('style', style);
         var self = this;
         return (
             <div className="task" onMouseOver={self.onMouseOver} onMouseOut={self.onMouseOut} style={style}>
@@ -35,13 +34,11 @@ var Task = React.createClass({
         this.cancelListen();
     },
     onMouseOver: function () {
-        console.log('mouseover')
         this.setState({
             hover: true
         })
     },
     onMouseOut: function () {
-        console.log('mouseout')
         this.setState({
             hover: false
         })

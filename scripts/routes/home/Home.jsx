@@ -26,44 +26,49 @@ var Home = React.createClass({
     render: function () {
         var tasks = this.state.tasks;
         var currentTask = tasks.length ? tasks[0] : null;
+        console.log('currentTask', currentTask);
         var restOfTasks = tasks.length ? tasks.slice(1, 4) : [];
+        console.log('restOfTasks', restOfTasks);
         return (
             <div>
                 <DocumentTitle title={config.brand}>
                 </DocumentTitle>
                 <div id="home" >
-                    <Row className="timer-row">
-                        <Col sm={12}>
+                    <Row className="timer-row" componentClass={React.DOM.div}>
+                        <Col sm={12} componentClass={React.DOM.div}>
                             <PomodoroTimer></PomodoroTimer>
                             <PomodoroControls/>
                         </Col>
                     </Row>
-                    <Row>
-                        <Col sm={12}>
-                            <h3>Current</h3>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col sm={12}>
-                            <Task title={currentTask.title} asana={currentTask.asana}/>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col sm={12}>
+                    {currentTask ? (
+                        <div>
+                            <Row componentClass={React.DOM.div}>
+                                <Col sm={12} componentClass={React.DOM.div}>
+                                    <h3>Current</h3>
+                                </Col>
+                            </Row>
+                            <Row componentClass={React.DOM.div}>
+                                <Col sm={12} componentClass={React.DOM.div}>
+                                    <Task title={currentTask.title} asana={currentTask.asana}/>
+                                </Col>
+                            </Row>
+                        </div>) : ''}
+                    {restOfTasks.length ? ( <Row componentClass={React.DOM.div}>
+                        <Col sm={12} componentClass={React.DOM.div}>
                             <h3>Next</h3>
                         </Col>
-                    </Row>
+                    </Row>) : '' }
                     {restOfTasks.map(function (o, i) {
                         return (
-                            <Row>
-                                <Col sm={12}>
+                            <Row componentClass={React.DOM.div}>
+                                <Col sm={12} componentClass={React.DOM.div}>
                                     <Task title={o.title} asana={o.asana} key={i}/>
                                 </Col>
                             </Row>
                         )
                     })}
-                    <Row>
-                        <Col sm={12}>
+                    <Row componentClass={React.DOM.div}>
+                        <Col sm={12} componentClass={React.DOM.div}>
                             <Link to="Tasks">Configure Tasks</Link>
                         </Col>
                     </Row>
@@ -75,18 +80,27 @@ var Home = React.createClass({
         );
     },
     componentDidMount: function () {
+        console.log('Home mounting');
+        taskStore.data().then(function (tasks) {
+            console.log('home tasks', tasks);
+            this.setState({
+                tasks: tasks
+            });
+        }.bind(this), function (err) {
+            console.error('Error getting tasks for home page', err);
+        });
         this.cancelListen = this.listenTo(taskStore, function (tasks) {
             this.setState({
-                tasks: _.extend([], tasks)
+                tasks: tasks
             });
-        });
+        }.bind(this));
     },
     componentDidUnmount: function () {
         this.cancelListen();
     },
     getInitialState: function () {
         return {
-            tasks: taskStore.getDefaultData()
+            tasks: []
         }
     }
 });
