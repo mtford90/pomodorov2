@@ -13,7 +13,47 @@ var React = require('react')
     , Panel = require('../Panel')
     , pomodoroFlux = require('../flux/pomodoro')
     , coloursFlux = require('../flux/colours')
+    , reflux = require('reflux')
     , DocumentTitle = require('react-document-title');
+
+// TODO: Once ReactJS has the capability to use inline hover styles we can avoid having to do the focus/blur
+var ColouredInput = React.createClass({
+    mixins: [reflux.ListenerMixin],
+    render: function () {
+        var style = this.state.focused ? {borderColor: this.state.color} : {};
+        var comp = (
+            <input style={style} onFocus={this.onFocus} onBlur={this.onBlur}></input>
+        );
+        _.extend(comp.props, this.props);
+        return comp
+    },
+    getInitialState: function () {
+        return {
+            color: coloursFlux.store.getOptions().primary,
+            hovering: false
+        }
+    },
+    onFocus: function () {
+        this.setState({
+            focused: true
+        });
+    },
+    onBlur: function () {
+        this.setState({
+            focused: false
+        });
+    },
+    componentDidMount: function () {
+        this.cancelListen = this.listenTo(coloursFlux.store, function (payload) {
+            this.setState({
+                color: payload.primary
+            });
+        });
+    },
+    componentDidUnmount: function () {
+        this.cancelListen();
+    }
+});
 
 
 // TODO: Gotta be a nicer way to handle the right/left padding
@@ -57,7 +97,7 @@ var Settings = React.createClass({
                                                 Pomodoro Length
                                                 </td>
                                                 <td>
-                                                    <input type="text" value={options.pomodoroLength}/>
+                                                    <ColouredInput type="text" value={options.pomodoroLength}/>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -65,7 +105,7 @@ var Settings = React.createClass({
                                                 Long Break Length
                                                 </td>
                                                 <td>
-                                                    <input type="text" value={options.longBreakLength}/>
+                                                    <ColouredInput type="text" value={options.longBreakLength}/>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -73,7 +113,7 @@ var Settings = React.createClass({
                                                 Short Break Length
                                                 </td>
                                                 <td>
-                                                    <input type="text" value={options.shortBreakLength}/>
+                                                    <ColouredInput type="text" value={options.shortBreakLength}/>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -81,7 +121,7 @@ var Settings = React.createClass({
                                                 Round Length
                                                 </td>
                                                 <td>
-                                                    <input type="text" value={options.roundLength}/>
+                                                    <ColouredInput type="text" value={options.roundLength}/>
                                                 </td>
                                             </tr>
                                         </table>
@@ -149,7 +189,7 @@ var Settings = React.createClass({
                                                 API
                                                 </td>
                                                 <td>
-                                                    <input type="text"/>
+                                                    <ColouredInput type="text"/>
                                                 </td>
                                             </tr>
                                         </table>
