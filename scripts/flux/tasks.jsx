@@ -98,13 +98,13 @@ var taskStore = reflux.createStore({
                 deferred.resolve(_.extend([], self.tasks));
             }, deferred.reject).catch(deferred.reject);
             return deferred.promise;
+        },
+        isLoaded: function () {
+            return !!this.tasks;
         }
     })
     ;
 
-Object.defineProperty(taskStore, 'isLoaded', function () {
-    return !!this.tasks;
-});
 
 module.exports = {
     store: taskStore,

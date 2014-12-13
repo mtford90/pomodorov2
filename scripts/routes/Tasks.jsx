@@ -28,7 +28,7 @@ var Tasks = React.createClass({
     render: function () {
         var self = this;
         return (
-            <Spinner ref="spinner" finishedLoading={tasksStore.tasks} >
+            <Spinner ref="spinner" finishedLoading={tasksStore.isLoaded()} >
                 <ul onDragOver={this.dragOver}>
                     {this.state.tasks.map(function (o, i) {
                         return (
@@ -50,7 +50,7 @@ var Tasks = React.createClass({
     },
     componentDidMount: function () {
         // Minimum time.
-        if (!tasksStore.tasks) this.refs.spinner.startTimer();
+        if (!tasksStore.isLoaded()) this.refs.spinner.startTimer();
         tasksStore.data().then(function (tasks) {
             this.setState({
                 tasks: tasks
