@@ -13,6 +13,7 @@ var React = require('react')
     , tasksStore = require('../flux/tasks').store
     , tasksActions = require('../flux/tasks').actions
     , reflux = require('reflux')
+    , Spinner = require('../Spinner')
     , Task = require('./tasks/Task');
 
 
@@ -24,7 +25,7 @@ placeholder.className = "placeholder";
 
 var Tasks = React.createClass({
     mixins: [reflux.ListenerMixin],
-    render: function () {
+    renderTaskList: function () {
         var self = this;
         return (
             <ul onDragOver={this.dragOver}>
@@ -44,7 +45,10 @@ var Tasks = React.createClass({
                     )
                 })}
             </ul>
-        )
+        );
+    },
+    render: function () {
+        return this.state.loading ? <Spinner/> : this.renderTaskList();
     },
     componentDidMount: function () {
         tasksStore.data().then(function (tasks) {
@@ -70,7 +74,8 @@ var Tasks = React.createClass({
     },
     getInitialState: function () {
         return {
-            tasks: []
+            tasks: [],
+            loading: true
         }
     },
     dragEnd: function (e) {

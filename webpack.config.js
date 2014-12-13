@@ -37,11 +37,11 @@ module.exports = {
             },
             {
                 test: /\.scss$/,
-                loader: "style!css!sass?outputStyle=expanded"
+                loader: "style!css!autoprefixer-loader!sass?outputStyle=expanded"
             },
             {
                 test: /\.sass$/,
-                loader: "style!css!sass?outputStyle=expanded"
+                loader: "style!css!autoprefixer-loader!sass?outputStyle=expanded"
             },
             {
                 test: /\.css$/,

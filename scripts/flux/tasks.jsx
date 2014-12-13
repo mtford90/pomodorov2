@@ -15,25 +15,25 @@ var taskActions = reflux.createActions([
  * @return {*}
  */
 function tasksFromStorage() {
-    console.log('tasksFromStorage');
     var deferred = q.defer();
     var errHandler = function (err) {
         console.error('Error getting tasks from storage', err);
         deferred.reject(err);
     };
-    console.log('querying...')
-    pouch.query(function (doc) {
-        if (doc.type == Type.Task) {
-            emit(doc);
+    var queryFunc = function (doc) {
+        if (doc.type == "$1") {
+            emit(doc._id, doc);
         }
-    }).then(function (res) {
-        console.log('tasksFromStorage completed');
-        deferred.resolve(res.rows);
+    }.toString().replace('$1', Type.Task);
+    pouch.query({map: queryFunc}).then(function (res) {
+        var rows = res.rows;
+        deferred.resolve(_.map(rows, function (x) {return x.value}));
     }, errHandler).catch(errHandler);
     return deferred.promise;
 }
 
 function createTask(task) {
+    task.type = Type.Task;
     pouch.post(task).then(function (resp) {
         task._id = resp.id;
         task._rev = resp.rev;
@@ -43,7 +43,6 @@ function createTask(task) {
     })
 }
 
-console.log('taskActions', taskActions);
 
 // TODO: Cleaner way of using reflux async storage? The below is so ugly.
 var taskStore = reflux.createStore({

@@ -29,6 +29,7 @@ var Home = React.createClass({
         console.log('currentTask', currentTask);
         var restOfTasks = tasks.length ? tasks.slice(1, 4) : [];
         console.log('restOfTasks', restOfTasks);
+        var loading = this.state.loading;
         return (
             <div>
                 <DocumentTitle title={config.brand}>
@@ -100,7 +101,8 @@ var Home = React.createClass({
     },
     getInitialState: function () {
         return {
-            tasks: []
+            tasks: [],
+            loading: true
         }
     }
 });

@@ -17,6 +17,7 @@
   ],
   "directory": "app/vendor",
   "dependencies": {
-    "bootstrap-sass-official": "~3.3.0"
+    "bootstrap-sass-official": "~3.3.0",
+    "spinkit": "~1.0.0"
   }
 }

@@ -31,7 +31,9 @@ var gulp = require('gulp'),
     webpack = require('webpack'),
 // dev.config is the user settings
     conf = require('./dev.config'),
+// Used in combination with the mocha in-browser test runner to execute tests on change.
     livereload = require('gulp-livereload'),
+// Used for sass compilation for the landing page
     sass = require('gulp-sass');
 
 /**
