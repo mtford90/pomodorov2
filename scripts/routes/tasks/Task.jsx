@@ -17,7 +17,7 @@ var Task = React.createClass({
         if (this.state.editing) className += ' task-editing';
         var notEditingButtons = (
             <div>
-                <i className="fa fa-check-circle-o done" title="Complete"></i>
+                <i className="fa fa-check-circle-o done" ref="complete" title="Complete"></i>
                 <i className="fa fa-times-circle-o cancel" ref="cancel" title="Hide"></i>
             </div>
         );
@@ -95,46 +95,32 @@ var Task = React.createClass({
     componentDidUnmount: function () {
         this.cancelListen();
     },
-    /**
-     * Returns true if the target element is part of the sumemrnote editor
-     * @param [target] - The elem that has been clicked.
-     * @return {boolean}
-     */
-    isEditor: function (target) {
-        var $target = $(target)
-            , isDescription = this.refs.description && target == this.refs.description.getDOMNode()
-            , isEditor = $target.hasClass('summernote-placeholder') ||
-                $target.hasClass('note-air-editor');
-        return isDescription || isEditor;
-    },
     onClick: function (e) {
         /*
          TODO: Move these branches into onClick events.
          The reason it's implemented this way at the moment is that I couldn't figure out a way to prevent the
          parent onClick event from triggering when nested onClick events were present.
          */
-        var onCancel = this.props.onCancel ? _.partial(this.props.onCancel, this) : undefined;
-        e.preventDefault();
+        var onCancel = this.props.onCancel ? _.partial(this.props.onCancel, this) : undefined
+            , onComplete = this.props.onComplete ? _.partial(this.props.onComplete, this) : undefined;
         if (this.refs.cancel && e.target == this.refs.cancel.getDOMNode() && onCancel) {
+            e.preventDefault();
             onCancel();
         }
+        else if (this.refs.complete && e.target == this.refs.complete.getDOMNode() && onComplete) {
+            e.preventDefault();
+            onComplete(this);
+        }
         else {
-            var $target = $(e.target);
+            var $target = $(e.nativeEvent.target);
             if (this.state.editing) {
-                console.log('refs', this.refs);
-                console.log('target', e.target);
-                if (this.refs.title && e.target == this.refs.title.getDOMNode()) {
-                    // Do nothing for now.
-                }
-                else if (this.isEditor(e.target)) {
-                    console.log('description');
-                    // Do nothing for now.
-                }
-                else if ($target.hasClass('description')) {
+                if ($target.hasClass('description')) {
+                    e.preventDefault();
                     // If the user clicks in the padding around the description summernote, we want to start editing.
                     this.refs.summernote.focus();
                 }
-                else {
+                else if ($target.hasClass('task')) {
+                    e.preventDefault();
                     this.setState({
                         editing: false
                     }, function () {
@@ -145,6 +131,7 @@ var Task = React.createClass({
                 }
             }
             else {
+                e.preventDefault();
                 this.setState({
                     editing: true
                 }, function () {

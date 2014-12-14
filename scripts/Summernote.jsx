@@ -32,6 +32,7 @@ var placeholder = '<i class="summernote-placeholder">Click here to add notes</i>
 var Summernote = React.createClass({
     render: function () {
         var html = this.state.html;
+        console.log('rendering html', html);
         var comp = (
             <div className="description">
                 <div onClick={this.onClick} ref="summernote" dangerouslySetInnerHTML={html ? {__html: html} : {}}>
@@ -53,7 +54,7 @@ var Summernote = React.createClass({
         $(node).summernote(options);
     },
     onClick: function () {
-        console.log('onClick');
+        console.log('summernote on click');
         if (this.existingOnBlur) this.existingOnBlur();
         var $summernote = $(this.refs.summernote.getDOMNode());
         if ($summernote.find('i.summernote-placeholder').length) {
@@ -69,6 +70,8 @@ var Summernote = React.createClass({
         $summernote.destroy();
     },
     onBlur: function () {
+        console.log('summernote on blur');
+
         if (this.existingOnBlur) this.existingOnBlur();
         var $summernote = $(this.refs.summernote.getDOMNode());
 
@@ -105,9 +108,12 @@ var Summernote = React.createClass({
     shouldComponentUpdate: function (nextProps) {
         // Component should only update if the html is different.
         var $summernote = $(this.refs.summernote.getDOMNode());
-        return nextProps.innerHTML != $summernote.html();
+        var shouldUpdate = nextProps.innerHTML != $summernote.html();
+        console.log(shouldUpdate ? 'updating summernote' : 'not updating summernote');
+        return shouldUpdate;
     },
     componentWillReceiveProps: function (nextProps) {
+        console.log('componentWillReceiveProps', nextProps);
         this.setState({
             html: nextProps.innerHTML || placeholder,
             summernoteProps: this.props.summernoteProps

@@ -47,6 +47,7 @@ var Tasks = React.createClass({
                                         index={i}
                                         onCancel={self.onCancel}
                                         onChange={self.onChange}
+                                        onComplete={self.onComplete}
                                         onEditing={self.onEditing}
                                         onDiscard={self.onDiscard}
                                         editing={o.editing}
@@ -80,6 +81,11 @@ var Tasks = React.createClass({
     onChange: function (task, changes) {
         var index = task.props.index;
         tasksActions.updateTask(index, changes);
+    },
+    onComplete: function (taskElem) {
+        var index = taskElem.props.index;
+        var task = tasksStore.tasks[index];
+        task.completed = true;
     },
     onEditing: function (taskElem) {
         var index = taskElem.props.index,
