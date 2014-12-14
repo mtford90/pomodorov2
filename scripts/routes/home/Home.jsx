@@ -74,20 +74,6 @@ var Home = React.createClass({
         );
     },
     componentDidMount: function () {
-        console.log('Home mounting');
-        if (!taskStore.isLoaded()) this.refs.spinner.startTimer();
-        taskStore.data().then(function (tasks) {
-            console.log('home tasks', tasks);
-            this.setState({
-                tasks: tasks
-            }, function () {
-                var spinner = this.refs.spinner;
-                console.log('spinner', spinner);
-                spinner.finishLoading()
-            });
-        }.bind(this), function (err) {
-            console.error('Error getting tasks for home page', err);
-        });
         this.cancelListen = this.listenTo(taskStore, function (tasks) {
             this.setState({
                 tasks: tasks
@@ -99,7 +85,7 @@ var Home = React.createClass({
     },
     getInitialState: function () {
         return {
-            tasks: []
+            tasks: taskStore.data()
         }
     }
 });

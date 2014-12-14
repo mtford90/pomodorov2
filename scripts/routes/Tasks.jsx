@@ -25,7 +25,6 @@ var placeholder = document.createElement("li");
 placeholder.className = "placeholder";
 
 
-var editingTasks = [];
 
 var Tasks = React.createClass({
     mixins: [reflux.ListenerMixin, router.Navigation],
@@ -52,7 +51,6 @@ var Tasks = React.createClass({
                                         onChange={self.onChange}
                                         onEditing={self.onEditing}
                                         onDiscard={self.onDiscard}
-                                        editing={editingTasks.indexOf(o) > -1}
                                     />
                                 </Col>
                             </Row>
@@ -64,18 +62,6 @@ var Tasks = React.createClass({
     },
     componentDidMount: function () {
         // Minimum time.
-        if (!tasksStore.isLoaded()) this.refs.spinner.startTimer();
-        tasksStore.data().then(function (tasks) {
-            this.setState({
-                tasks: tasks
-            }, function () {
-                var spinner = this.refs.spinner;
-                console.log('spinner', spinner);
-                spinner.finishLoading()
-            }.bind(this));
-        }.bind(this), function (err) {
-            console.error('error getting tasks', err);
-        });
         this.cancelListen = this.listenTo(tasksStore, function (tasks) {
             console.log('received listen', tasks);
             this.setState({
@@ -94,28 +80,15 @@ var Tasks = React.createClass({
         tasksActions.updateTask(index, changes);
     },
     onEditing: function (task) {
-        editingTasks.push(task);
     },
     onCancel: function (task) {
-        // TODO: Why isn't key in props?
-        console.log('onxCancel');
-        var index = task.props.index;
-        this.state.tasks.splice(index, 1);
-        // Ensure that the user does not have the ability to click cancel twice by accident by removing the
-        // task from the state even before the reflux store emits an event.
-        this.setState({
-            tasks: this.state.tasks
-        }, function (){
-            tasksActions.removeTask(index);
-        });
+        tasksActions.removeTask(task.props.index);
     },
     onDiscard: function  (task) {
-        var i = editingTasks.indexOf(task);
-        editingTasks.splice(i, 1);
     },
     getInitialState: function () {
         return {
-            tasks: []
+            tasks: tasksStore.data()
         }
     },
     dragEnd: function (e) {
@@ -160,7 +133,7 @@ var Tasks = React.createClass({
                 this.nodePlacement = "after";
                 parent.insertBefore(placeholder, target.nextElementSibling);
             }
-            else if (dragY < taskMid) {x
+            else if (dragY < taskMid) {
                 this.nodePlacement = "before";
                 parent.insertBefore(placeholder, target);
             }

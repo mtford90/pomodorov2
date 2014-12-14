@@ -16,7 +16,7 @@ var Task = React.createClass({
         var notEditingButtons = (
             <div>
                 <i className="fa fa-check-circle-o done" title="Complete"></i>
-                <i className="fa fa-times-circle-o cancel" onClick={self.onClick} ref="cancel" title="Hide"></i>
+                <i className="fa fa-times-circle-o cancel" ref="cancel" title="Hide"></i>
             </div>
         );
         var editingButtons = (
@@ -26,7 +26,8 @@ var Task = React.createClass({
             </div>
         );
         return (
-            <div className={className} onMouseOver={self.onMouseOver}
+            <div className={className}
+                onMouseOver={ self.onMouseOver}
                 onMouseOut={self.onMouseOut}
                 onClick={this.onClick}
                 style={style}>
@@ -112,12 +113,24 @@ var Task = React.createClass({
         }
     },
     onMouseOver: function () {
-        this.setState({
-            hover: true
-        })
+        // No need to rerender if editing, as the border is already set.
+        if (!this.state.editing) {
+            this.setState({
+                hover: true
+            })
+        }
     },
     onMouseOut: function () {
+        // No need to rerender if editing, as the border is already set.
+        if (!this.state.editing) {
+            this.setState({
+                hover: false
+            })
+        }
+    },
+    componentWillReceiveProps: function (nextProps) {
         this.setState({
+            editing: nextProps.editing,
             hover: false
         })
     },
