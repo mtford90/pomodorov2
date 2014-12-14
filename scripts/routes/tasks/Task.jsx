@@ -2,6 +2,7 @@ var React = require('react'),
     _ = require('underscore'),
     reflux = require('reflux'),
     Summernote = require('../../Summernote'),
+    tasksFlux = require('../../flux/tasks'),
     colourFlux = require('../../flux/colours');
 
 // TODO: Once ReactJS has the ability to perform inline hover styles, we can get rid of the awkward mouseout/mouseover handlers
@@ -27,7 +28,7 @@ var Task = React.createClass({
         );
         return (
             <div className={className}
-                onMouseOver={ self.onMouseOver}
+                onMouseOver={self.onMouseOver}
                 onMouseOut={self.onMouseOut}
                 onClick={this.onClick}
                 style={style}>

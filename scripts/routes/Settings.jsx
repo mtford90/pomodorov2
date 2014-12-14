@@ -140,24 +140,28 @@ var Settings = React.createClass({
                                         <table className="inputs-table">
                                             <tr>
                                                 <td>
-                                                Primary
+                                                    Primary
                                                 </td>
                                                 <td>
                                                     <ColorPicker color={colors.primary}
                                                         onChange={this.onColorPickerChange}
                                                         onSuccessfulChange={this.onSuccessfulColorPickerChange}
-                                                        ref="primary"/>
+                                                        ref="primary"
+                                                        componentClass={ColouredInput}
+                                                    />
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>
-                                                Short Break
+                                                    Short Break
                                                 </td>
                                                 <td>
                                                     <ColorPicker color={colors.shortBreak}
                                                         onChange={this.onColorPickerChange}
                                                         onSuccessfulChange={this.onSuccessfulColorPickerChange}
-                                                        ref="shortBreak"/>
+                                                        ref="shortBreak"
+                                                        componentClass={ColouredInput}
+                                                    />
                                                 </td>
                                             </tr>
                                             <tr>
@@ -168,7 +172,9 @@ var Settings = React.createClass({
                                                     <ColorPicker color={colors.longBreak}
                                                         onChange={this.onColorPickerChange}
                                                         onSuccessfulChange={this.onSuccessfulColorPickerChange}
-                                                        ref="longBreak"/>
+                                                        ref="longBreak"
+                                                        componentClass={ColouredInput}
+                                                    />
                                                 </td>
                                             </tr>
                                         </table>

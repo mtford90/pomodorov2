@@ -8,6 +8,9 @@ var React = require('react'),
     _ = require('underscore');
 
 
+// TODO: This is a hack, uncontrolled and not using the Virtual DOM...
+
+
 var placeholder = '<i class="summernote-placeholder">Click here to add notes</i>';
 
 var Summernote = React.createClass({
@@ -34,7 +37,6 @@ var Summernote = React.createClass({
         $(node).summernote(options);
     },
     onClick: function () {
-        console.log('onClick');
         if (this.existingOnBlur) this.existingOnBlur();
         var $summernote = $(this.refs.summernote.getDOMNode());
         if ($summernote.find('i.summernote-placeholder').length) {
@@ -42,12 +44,6 @@ var Summernote = React.createClass({
         }
     },
     onBlur: function () {
-        console.log('summernote onBlur');
-        /*
-         TODO: Clean up.
-         Probably a better way of using React to deal with this bullshit? JQuery extensions seem
-         kind of awkward to integrate.
-         */
         if (this.existingOnBlur) this.existingOnBlur();
         var $summernote = $(this.refs.summernote.getDOMNode());
 
@@ -80,14 +76,17 @@ var Summernote = React.createClass({
             html: this.props.innerHTML || placeholder
         }
     },
+    shouldComponentUpdate: function (nextProps) {
+        // Component should only update if the html is different.
+        var $summernote = $(this.refs.summernote.getDOMNode());
+        return nextProps.innerHTML != $summernote.html();
+    },
     componentWillReceiveProps: function (nextProps) {
-        console.log('componentWillReceiveProps', nextProps);
         this.setState({
             html: nextProps.innerHTML || placeholder
         })
     },
     onFocus: function () {
-        console.log('summernote onFocus');
         if (this.existingOnFocus) this.existingOnFocus();
     }
 });

@@ -24,8 +24,6 @@ var colors = ["Red", "Green", "Blue", "Yellow", "Black", "White", "Orange"];
 var placeholder = document.createElement("li");
 placeholder.className = "placeholder";
 
-
-
 var Tasks = React.createClass({
     mixins: [reflux.ListenerMixin, router.Navigation],
     render: function () {
@@ -34,8 +32,10 @@ var Tasks = React.createClass({
             <Spinner ref="spinner" finishedLoading={tasksStore.isLoaded()} >
                 <ul onDragOver={this.dragOver}>
                     {this.state.tasks.map(function (o, i) {
+                        var isEditing = tasksStore.isTaskEditing(o._id);
+                        console.log('isEditing', isEditing);
                         return (
-                            <Row
+                            <Row componentClass={React.DOM.li}
                                 data-id={i}
                                 key={i}
                                 draggable="true"
@@ -51,6 +51,7 @@ var Tasks = React.createClass({
                                         onChange={self.onChange}
                                         onEditing={self.onEditing}
                                         onDiscard={self.onDiscard}
+                                        editing={isEditing}
                                     />
                                 </Col>
                             </Row>
@@ -80,11 +81,15 @@ var Tasks = React.createClass({
         tasksActions.updateTask(index, changes);
     },
     onEditing: function (task) {
+        var index = task.props.index;
+        tasksActions.setEditing(index);
     },
     onCancel: function (task) {
         tasksActions.removeTask(task.props.index);
     },
-    onDiscard: function  (task) {
+    onDiscard: function (task) {
+        var index = task.props.index;
+        tasksActions.unsetEditing(index);
     },
     getInitialState: function () {
         return {
@@ -117,8 +122,16 @@ var Tasks = React.createClass({
         if (task.className == 'task') {
             this.dragged.style.display = "none";
             var target = task;
-            while (target.tagName != 'LI') {
+            console.log('initial target', target);
+            var tagName = target.tagName;
+            while (tagName != 'LI') {
+                var oldTarget = target;
                 target = target.parentNode;
+                if (!target) {
+                    console.error('wtf', oldTarget);
+                    throw Error('uh oh');
+                }
+                tagName = target.tagName;
             }
             if (target.className == "placeholder") return;
             this.over = target;
