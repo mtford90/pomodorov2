@@ -29,7 +29,7 @@ var Tasks = React.createClass({
     render: function () {
         var self = this;
         return (
-            <Spinner ref="spinner" finishedLoading={this.state.loaded} >
+            <Spinner ref="spinner" finishedLoading={tasksStore.isLoaded()} >
                 <ul onDragOver={this.dragOver}>
                     {this.state.tasks.map(function (o, i) {
                         var isEditing = tasksStore.isTaskEditing(o._id);
@@ -62,7 +62,7 @@ var Tasks = React.createClass({
         )
     },
     componentDidMount: function () {
-        this.refs.spinner.startTimer();
+        if (!tasksStore.isLoaded()) this.refs.spinner.startTimer();
         this.cancelListen = this.listenTo(tasksStore, function (tasks) {
             console.log('received listen', tasks);
             this.setState({

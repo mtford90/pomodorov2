@@ -79,11 +79,15 @@ var taskStore = reflux.createStore({
             this.tasks = [];
             this.promise = Task.all().then(function (tasks) {
                 this.tasks.concat.call(this.tasks, tasks);
+                this.loaded = true;
                 this._trigger();
             }.bind(this));
         }
         if (!this.editingTasks) this.editingTasks = {};
         return _.extend([], this.tasks);
+    },
+    isLoaded: function () {
+        return this.loaded;
     }
 });
 

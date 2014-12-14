@@ -74,9 +74,13 @@ var Home = React.createClass({
         );
     },
     componentDidMount: function () {
+        if (!taskStore.isLoaded()) this.refs.spinner.startTimer();
         this.cancelListen = this.listenTo(taskStore, function (tasks) {
             this.setState({
-                tasks: tasks
+                tasks: tasks,
+                loaded: true
+            }, function () {
+                this.refs.spinner.finishLoading();
             });
         }.bind(this));
     },
@@ -85,7 +89,8 @@ var Home = React.createClass({
     },
     getInitialState: function () {
         return {
-            tasks: taskStore.data()
+            tasks: taskStore.data(),
+            loaded: false
         }
     }
 });
