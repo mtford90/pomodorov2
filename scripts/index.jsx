@@ -40,7 +40,7 @@ var basePath = dev ? conf.basePath.dev : conf.basePath.prod;
 var routes = (
     <Route name="app" path={basePath} handler={App}>
         {routesData.navigationItems.map(function (item, idx) {
-            return (<Route name={item.text} handler={item.handler} key={idx}/>);
+            return (<Route path={item.path}  name={item.text} handler={item.handler} key={idx}/>);
         })}
         <DefaultRoute handler={routesData.NotFound}/>
         <NotFoundRoute handler={routesData.NotFound}/>

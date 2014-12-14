@@ -93,6 +93,11 @@ $padding: 20px;
   border-bottom: $bottom-border-height solid $tertiary;
   position: relative;
   cursor: pointer;
+  .description {
+    border: 1px dotted black;
+    margin-top: 20px;
+    padding: 10px;
+  }
   .buttons {
     position: absolute;
     right: 0;
@@ -102,11 +107,11 @@ $padding: 20px;
       font-size: 20px;
       font-weight: normal;
       z-index: 1000;
-      &.done {
+      &.done, &.save {
         color: green;
         margin-right: 10px;
       }
-      &.cancel {
+      &.cancel, &.discard {
         color: $primary;
       }
       &:hover {

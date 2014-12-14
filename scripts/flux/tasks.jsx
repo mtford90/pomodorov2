@@ -60,10 +60,10 @@ var taskStore = reflux.createStore({
         _trigger: function () {
             this.trigger(_.extend([], this.tasks));
         },
-        onRemoveTask: function (key) {
+        onRemoveTask: function (index) {
             this.init().then(function () {
-                console.log('Removing task at index ', key);
-                this.tasks.splice(key, 1);
+                console.log('Removing task at index ', index);
+                this.tasks.splice(index, 1);
                 this._trigger();
             }.bind(this));
         },

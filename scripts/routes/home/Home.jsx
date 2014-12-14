@@ -25,9 +25,7 @@ var Home = React.createClass({
     render: function () {
         var tasks = this.state.tasks;
         var currentTask = tasks.length ? tasks[0] : null;
-        console.log('currentTask', currentTask);
         var restOfTasks = tasks.length ? tasks.slice(1, 4) : [];
-        console.log('restOfTasks', restOfTasks);
         return (
             <div>
                 <DocumentTitle title={config.brand}>

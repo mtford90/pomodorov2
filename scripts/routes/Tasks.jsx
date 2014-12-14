@@ -13,6 +13,8 @@ var React = require('react')
     , tasksStore = require('../flux/tasks').store
     , tasksActions = require('../flux/tasks').actions
     , reflux = require('reflux')
+    , router = require('react-router')
+    , Link = router.Link
     , Spinner = require('../Spinner')
     , Task = require('./tasks/Task');
 
@@ -24,7 +26,7 @@ placeholder.className = "placeholder";
 
 
 var Tasks = React.createClass({
-    mixins: [reflux.ListenerMixin],
+    mixins: [reflux.ListenerMixin, router.Navigation],
     render: function () {
         var self = this;
         return (
@@ -39,7 +41,12 @@ var Tasks = React.createClass({
                                 onDragEnd={self.dragEnd}
                                 onDragStart={self.dragStart}>
                                 <Col sm={12} md={12} lg={12}>
-                                    <Task title={o.title} asana={o.asana} key={o._id} index={i} onCancel={self.onCancel}/>
+                                    <Task title={o.title}
+                                        asana={o.asana}
+                                        key={o._id}
+                                        index={i}
+                                        onCancel={self.onCancel}
+                                    />
                                 </Col>
                             </Row>
                         )
@@ -67,6 +74,9 @@ var Tasks = React.createClass({
                 tasks: tasks
             });
         }.bind(this));
+    },
+    onClick: function (task) {
+        this.transitionTo('AddOrEditTask', {taskId: task._id})
     },
     componentDidUnmount: function () {
         this.cancelListen();
