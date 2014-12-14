@@ -3,7 +3,8 @@ var React = require('react'),
     reflux = require('reflux'),
     Summernote = require('../../Summernote'),
     tasksFlux = require('../../flux/tasks'),
-    colourFlux = require('../../flux/colours');
+    colourFlux = require('../../flux/colours'),
+    ContentEditable = require('../../ContentEditable');
 
 // TODO: Once ReactJS has the ability to perform inline hover styles, we can get rid of the awkward mouseout/mouseover handlers
 var Task = React.createClass({
@@ -31,10 +32,10 @@ var Task = React.createClass({
                 onMouseOver={self.onMouseOver}
                 onMouseOut={self.onMouseOut}
                 onClick={this.onClick}
-                style={style}>
-                <span className="title">
-                    {this.props.title}
-                </span>
+                style={style}
+                >
+            {self.state.editing ? <ContentEditable className="title" onChange={this.onTitleChange} text={this.props.title}>
+                </ContentEditable> : <span>{this.props.title}</span>}
                 {this.props.asana ? <img className="tag-asana tag" src="img/asana-minimal.png"/> : ''}
                 <div className="buttons">
                 {self.state.editing ? editingButtons : notEditingButtons}
@@ -52,6 +53,11 @@ var Task = React.createClass({
                 this.props.onDiscard(this);
             }
         })
+    },
+    onTitleChange: function (title) {
+        if (this.props.onChange) {
+            this.props.onChange(this, {title: title});
+        }
     },
     renderEditing: function () {
         var comp,

@@ -98,6 +98,12 @@ $padding: 20px;
     margin-top: 20px;
     padding: 10px;
   }
+  .title {
+
+    &:focus {
+      outline: 0;
+    }
+  }
   .buttons {
     position: absolute;
     right: 0;
