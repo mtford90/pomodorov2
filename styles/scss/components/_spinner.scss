@@ -10,4 +10,14 @@
   &.hidden {
     opacity: 0;
   }
+  &.vertically-centred {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    min-width: 100vw;
+    text-align: center;
+  }
 }

@@ -81,7 +81,7 @@ var Settings = React.createClass({
         var options = this.state.options;
         var colors = this.state.colours;
         return (
-            <div>
+            <div className="container">
                 <DocumentTitle title={config.brand}>
                     <div id="settings">
                         <Row>

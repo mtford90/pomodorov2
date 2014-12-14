@@ -32,7 +32,7 @@ var Home = React.createClass({
             <div>
                 <DocumentTitle title={config.brand}>
                 </DocumentTitle>
-                <div id="home" className={this.state.spinnerFinished ? '' : "loading"}>
+                <div id="home">
                     <div className="container">
                         <Spinner ref="spinner" finishedLoading={ taskStore.isLoaded()} timerEnded={this.timerEnded} >
                             <Row className="timer-row" >

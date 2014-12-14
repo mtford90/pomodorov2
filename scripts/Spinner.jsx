@@ -17,7 +17,7 @@ var Spinner = React.createClass({
             spinner = <div className={"sk-spinner " + spinnerClass}></div>,
             content = this.props.children;
         return (
-            <div className="spinner-wrapper" ref="wrapper">
+            <div className={"spinner-wrapper " + (!this.state.finishedLoading ? 'vertically-centred' : '')} ref="wrapper">
                 {this.state.finishedLoading ? content : spinner}
             </div>
         );
