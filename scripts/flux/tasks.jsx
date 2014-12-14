@@ -10,14 +10,12 @@ var taskActions = reflux.createActions([
     'newTask',
     'removeTask',
     'reorderTask',
-    'updateTask',
-    'setEditing',
-    'unsetEditing'
+    'updateTask'
 ]);
 
 var Pomodoro = new siesta.Collection('Pomodoro');
 var Task = Pomodoro.mapping('Task', {
-    attributes: ['title', 'description', 'completed']
+    attributes: ['title', 'description', 'completed', 'editing']
 });
 Pomodoro.install();
 
@@ -45,25 +43,6 @@ var taskStore = reflux.createStore({
         var task = this.tasks.splice(index, 1)[0];
         this._trigger();
     },
-    onSetEditing: function (index) {
-        console.log('onSetEditing', index);
-        var task = this.tasks[index];
-        this.editingTasks[task._id] = true;
-        console.log('editingTasks', this.editingTasks);
-    },
-    onUnsetEditing: function (index) {
-        console.log('onUnsetEditing', index);
-        var task = this.tasks[index];
-        this.editingTasks[task._id] = false;
-        console.log('editingTasks', this.editingTasks);
-    },
-    getEditing: function () {
-        return Object.keys(this.editingTasks);
-    },
-    isTaskEditing: function (id) {
-        console.log('isTaskEditing', {id: id, editingTasks: taskStore.editingTasks});
-        return taskStore.editingTasks[id];
-    },
     onUpdateTask: function (index, changes) {
         var task = this.tasks[index];
         _.extend(task, changes);
@@ -83,7 +62,6 @@ var taskStore = reflux.createStore({
                 this._trigger();
             }.bind(this));
         }
-        if (!this.editingTasks) this.editingTasks = {};
         return _.extend([], this.tasks);
     },
     isLoaded: function () {

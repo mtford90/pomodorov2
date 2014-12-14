@@ -32,8 +32,6 @@ var Tasks = React.createClass({
             <Spinner ref="spinner" finishedLoading={tasksStore.isLoaded()} >
                 <ul onDragOver={this.dragOver}>
                     {this.state.tasks.map(function (o, i) {
-                        var isEditing = tasksStore.isTaskEditing(o._id);
-                        console.log('isEditing', isEditing);
                         return (
                             <Row componentClass={React.DOM.li}
                                 data-id={i}
@@ -51,7 +49,7 @@ var Tasks = React.createClass({
                                         onChange={self.onChange}
                                         onEditing={self.onEditing}
                                         onDiscard={self.onDiscard}
-                                        editing={isEditing}
+                                        editing={o.editing}
                                     />
                                 </Col>
                             </Row>
@@ -83,16 +81,18 @@ var Tasks = React.createClass({
         var index = task.props.index;
         tasksActions.updateTask(index, changes);
     },
-    onEditing: function (task) {
-        var index = task.props.index;
-        tasksActions.setEditing(index);
+    onEditing: function (taskElem) {
+        var index = taskElem.props.index,
+            task = tasksStore.tasks[index];
+        task.editing = true;
     },
     onCancel: function (task) {
         tasksActions.removeTask(task.props.index);
     },
-    onDiscard: function (task) {
-        var index = task.props.index;
-        tasksActions.unsetEditing(index);
+    onDiscard: function (taskElem) {
+        var index = taskElem.props.index,
+            task = tasksStore.tasks[index];
+        task.editing = false;
     },
     getInitialState: function () {
         return {
