@@ -118,6 +118,7 @@ var Summernote = React.createClass({
     },
     focus: function () {
         var $summernote = $(this.refs.summernote.getDOMNode());
+        $summernote.click(); // Need to click first to trigger the placeholder check.
         $summernote.focus();
     }
 });

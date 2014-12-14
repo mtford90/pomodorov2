@@ -3,6 +3,7 @@ var reflux = require('reflux'),
     q = require('q'),
     _ = require('underscore'),
     util = require('../util'),
+    siesta = require('siesta-orm')({http: require('siesta-orm/http')}),
     Type = require('../data/Type');
 
 var taskActions = reflux.createActions([
@@ -14,13 +15,26 @@ var taskActions = reflux.createActions([
     'unsetEditing'
 ]);
 
+var Pomodoro = new siesta.Collection('Pomodoro');
+var Task = Pomodoro.mapping('Task', {
+    attributes: ['title', 'description']
+});
+Pomodoro.install();
+
+
 // TODO: Cleaner way of using reflux async storage? The below is so ugly.
 var taskStore = reflux.createStore({
     listenables: [taskActions],
-    onNewTask: function (task) {
-        task._id = util.guid();
-        this.tasks.splice(0, 0, task);
-        this._trigger();
+    onNewTask: function (data) {
+        Task.map(data, function (err, task) {
+            if (err) {
+                console.error('Erorr mapping new object', err);
+            }
+            else {
+                this.tasks.splice(0, 0, task);
+                this._trigger();
+            }
+        }.bind(this));
     },
     _trigger: function () {
         this.trigger(_.extend([], this.tasks));
