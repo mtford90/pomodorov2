@@ -13,8 +13,12 @@ var React = require('react'),
     bootstrap = require('react-bootstrap'),
     App = require('./app'),
     Tasks = require('./routes/Tasks'),
+    q = require('q'),
     routesData = require('./routes');
 
+// Allows Siesta to use the Q library for promises.
+if (!window.Q) window.Q = q;
+if (!window.q) window.q = q;
 
 /*********************/
 /** Pack dem styles **/

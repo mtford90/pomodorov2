@@ -17,7 +17,7 @@ var taskActions = reflux.createActions([
 
 var Pomodoro = new siesta.Collection('Pomodoro');
 var Task = Pomodoro.mapping('Task', {
-    attributes: ['title', 'description']
+    attributes: ['title', 'description', 'completed']
 });
 Pomodoro.install();
 
@@ -27,14 +27,15 @@ var taskStore = reflux.createStore({
     listenables: [taskActions],
     onNewTask: function (data) {
         Task.map(data, function (err, task) {
-            if (err) {
-                console.error('Erorr mapping new object', err);
-            }
-            else {
-                this.tasks.splice(0, 0, task);
+            console.log('new task', task);
+            this.promise.then(function () {
+                this.tasks.push(task);
                 this._trigger();
-            }
+            }.bind(this));
         }.bind(this));
+    },
+    uncompletedTasks: function () {
+        return Task.all();
     },
     _trigger: function () {
         this.trigger(_.extend([], this.tasks));
@@ -75,18 +76,14 @@ var taskStore = reflux.createStore({
     },
     data: function () {
         if (!this.tasks) {
-            this.tasks = [{title: 'xyz', description: 'abc'}, {title: '123'}, {title: 'asasda'}];
-            _.each(this.tasks, function (t) {
-                t._id = util.guid();
-            });
+            this.tasks = [];
+            this.promise = Task.all().then(function (tasks) {
+                this.tasks.concat.call(this.tasks, tasks);
+                this._trigger();
+            }.bind(this));
         }
-        if (!this.editingTasks) {
-            this.editingTasks = {};
-        }
+        if (!this.editingTasks) this.editingTasks = {};
         return _.extend([], this.tasks);
-    },
-    isLoaded: function () {
-        return !!this.tasks;
     }
 });
 
