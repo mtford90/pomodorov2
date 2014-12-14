@@ -29,7 +29,7 @@ var ContentWrapper = React.createClass({
                         <Timer className="pull-right"/>
                     </div>
                 </NavBar>
-                <div className="container" id="main-content" role="main">
+                <div id="main-content" role="main">
                     <RouteHandler ref="handler"/>
                 </div>
                 <Modal/>

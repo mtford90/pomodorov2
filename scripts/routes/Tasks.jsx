@@ -179,7 +179,7 @@ var TasksPage = React.createClass({
             <div>
                 <DocumentTitle title={config.brand}>
                 </DocumentTitle>
-                <div id="tasks">
+                <div id="tasks" className="container">
                     <Row>
                         <Col xs={12} sm={1}>
                             <Filters/>

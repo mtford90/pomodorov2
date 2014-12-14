@@ -23,21 +23,24 @@ var React = require('react')
 var Home = React.createClass({
     mixins: [reflux.ListenerMixin],
     render: function () {
-        var tasks = this.state.tasks;
-        var currentTask = tasks.length ? tasks[0] : null;
-        var restOfTasks = tasks.length ? tasks.slice(1, 4) : [];
+        var tasks = this.state.tasks
+            , currentTask = tasks.length ? tasks[0] : null
+            , restOfTasks = tasks.length ? tasks.slice(1, 4) : []
+            , loaded = taskStore.isLoaded();
+        console.log('loaded', loaded);
         return (
             <div>
                 <DocumentTitle title={config.brand}>
                 </DocumentTitle>
-                <div id="home" >
-                    <Row className="timer-row" >
-                        <Col sm={12} >
-                            <PomodoroTimer></PomodoroTimer>
-                            <PomodoroControls/>
-                        </Col>
-                    </Row>
-                    <Spinner ref="spinner" finishedLoading={taskStore.isLoaded()} >
+                <div id="home" className={this.state.spinnerFinished ? '' : "loading"}>
+                    <div className="container">
+                        <Spinner ref="spinner" finishedLoading={ taskStore.isLoaded()} timerEnded={this.timerEnded} >
+                            <Row className="timer-row" >
+                                <Col sm={12} >
+                                    <PomodoroTimer></PomodoroTimer>
+                                    <PomodoroControls/>
+                                </Col>
+                            </Row>
                         {currentTask ? (
                             <div>
                                 <Row >
@@ -65,16 +68,21 @@ var Home = React.createClass({
                                 </Row>
                             )
                         })}
-                    </Spinner>
+                        </Spinner>
+                    </div>
                 </div>
-                <Footer>
-                Home footer!
-                </Footer>
             </div>
         );
     },
     componentDidMount: function () {
-        if (!taskStore.isLoaded()) this.refs.spinner.startTimer();
+        if (!taskStore.isLoaded()) {
+            this.refs.spinner.startTimer();
+        }
+        else {
+            this.setState({
+                spinnerFinished: true
+            })
+        }
         this.cancelListen = this.listenTo(taskStore, function (tasks) {
             this.setState({
                 tasks: tasks,
@@ -84,13 +92,19 @@ var Home = React.createClass({
             });
         }.bind(this));
     },
+    timerEnded: function () {
+        this.setState({
+            spinnerFinished: true
+        })
+    },
     componentDidUnmount: function () {
         this.cancelListen();
     },
     getInitialState: function () {
         return {
             tasks: taskStore.data(),
-            loaded: false
+            loaded: false,
+            spinnerFinished: false
         }
     }
 });
