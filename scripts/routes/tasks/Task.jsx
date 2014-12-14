@@ -21,24 +21,24 @@ var Task = React.createClass({
                 <i className="fa fa-times-circle-o cancel" ref="cancel" title="Hide"></i>
             </div>
         );
-        var editingButtons = (
-            <div>
-                <i className="fa fa-floppy-o save" title="Save"></i>
-                <i className="fa fa-trash-o discard" title="Discard" ref="discard"></i>
-            </div>
-        );
+        //var editingButtons = (
+        //    <div>
+        //        <i className="fa fa-floppy-o save" title="Save"></i>
+        //        <i className="fa fa-trash-o discard" title="Discard" ref="discard"></i>
+        //    </div>
+        //);
         return (
             <div className={className}
                 onMouseOver={self.onMouseOver}
                 onMouseOut={self.onMouseOut}
                 onClick={this.onClick}
                 style={style}
-                >
-            {self.state.editing ? <ContentEditable className="title" onChange={this.onTitleChange} text={this.props.title}>
-                </ContentEditable> : <span>{this.props.title}</span>}
+            >
+            {self.state.editing ? <ContentEditable ref="title" className="title" onChange={this.onTitleChange} text={this.props.title}>
+            </ContentEditable> : <span>{this.props.title}</span>}
                 {this.props.asana ? <img className="tag-asana tag" src="img/asana-minimal.png"/> : ''}
                 <div className="buttons">
-                {self.state.editing ? editingButtons : notEditingButtons}
+                    {notEditingButtons}
                 </div>
                 {this.renderEditing()}
             </div>
@@ -67,7 +67,7 @@ var Task = React.createClass({
                 airMode: true
             };
             comp = (
-                <div className="task-content">
+                <div className="task-content" ref="description">
                     <Summernote summernoteProps={summernoteProps}
                         ref="summernote"
                         onChange={self.onDescriptionChange}
@@ -95,6 +95,18 @@ var Task = React.createClass({
     componentDidUnmount: function () {
         this.cancelListen();
     },
+    /**
+     * Returns true if the target element is part of the sumemrnote editor
+     * @param [target] - The elem that has been clicked.
+     * @return {boolean}
+     */
+    isEditor: function (target) {
+        var $target = $(target)
+            , isDescription = this.refs.description && target == this.refs.description.getDOMNode()
+            , isEditor = $target.hasClass('summernote-placeholder') ||
+                $target.hasClass('note-air-editor');
+        return isDescription || isEditor;
+    },
     onClick: function (e) {
         /*
          TODO: Move these branches into onClick events.
@@ -106,18 +118,43 @@ var Task = React.createClass({
         if (this.refs.cancel && e.target == this.refs.cancel.getDOMNode() && onCancel) {
             onCancel();
         }
-        else if (this.refs.discard && e.target == this.refs.discard.getDOMNode()) {
-            this.onDiscard();
-        }
         else {
-            this.setState({
-                editing: true
-            }, function () {
-                if (this.props.onEditing) {
-                    this.props.onEditing(this);
+            var $target = $(e.target);
+            if (this.state.editing) {
+                console.log('refs', this.refs);
+                console.log('target', e.target);
+                if (this.refs.title && e.target == this.refs.title.getDOMNode()) {
+                    // Do nothing for now.
                 }
-            });
+                else if (this.isEditor(e.target)) {
+                    console.log('description');
+                    // Do nothing for now.
+                }
+                else if ($target.hasClass('description')) {
+                    // If the user clicks in the padding around the description summernote, we want to start editing.
+                    this.refs.summernote.focus();
+                }
+                else {
+                    this.setState({
+                        editing: false
+                    }, function () {
+                        if (this.props.onEditing) {
+                            this.props.onEditing(this);
+                        }
+                    });
+                }
+            }
+            else {
+                this.setState({
+                    editing: true
+                }, function () {
+                    if (this.props.onEditing) {
+                        this.props.onEditing(this);
+                    }
+                });
+            }
         }
+
     },
     onMouseOver: function () {
         // No need to rerender if editing, as the border is already set.

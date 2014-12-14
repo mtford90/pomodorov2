@@ -115,6 +115,10 @@ var Summernote = React.createClass({
     },
     onFocus: function () {
         if (this.existingOnFocus) this.existingOnFocus();
+    },
+    focus: function () {
+        var $summernote = $(this.refs.summernote.getDOMNode());
+        $summernote.focus();
     }
 });
 
