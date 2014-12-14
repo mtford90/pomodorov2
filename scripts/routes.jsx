@@ -2,12 +2,10 @@
  * This is where navigation & routing is configured.
  */
 
-var React = require('react');
-
 var navigationItems = [
     {text: 'Home', handler: require('./routes/home/Home')},
     {text: 'Settings', handler: require('./routes/Settings')},
-    {text: 'Tasks', handler: require('./routes/Tasks')},
+    {text: 'Tasks', handler: require('./routes/Tasks'), path: require('./paths').tasks},
     {text: 'AddOrEditTask', handler: require('./routes/tasks/AddOrEditTask'), path:'/task/:taskId'}
 ];
 

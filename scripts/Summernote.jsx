@@ -1,15 +1,31 @@
 /**
  * Summernote react component. Just wraps up the jquery extension in React but also adds some
  * placeholder functionality.
+ *
+ * It also removes summernote popovers when needed.
  * @module Summernote
  */
 
-var React = require('react'),
-    _ = require('underscore');
+var React = require('react')
+    , location = require('./location')
+    , paths = require('./paths')
+    , _ = require('underscore');
 
 
-// TODO: This is a hack, uncontrolled and not using the Virtual DOM...
+var lastPath;
 
+function cleanSummernote() {
+    $('.note-popover,.note-handle,.note-dialog').remove();
+}
+
+location.addChangeListener(function (x) {
+    console.log('summernote location', x);
+    var path = x.path;
+    if (lastPath == paths.tasks && path != paths.tasks) {
+        cleanSummernote();
+    }
+    lastPath = path;
+});
 
 var placeholder = '<i class="summernote-placeholder">Click here to add notes</i>';
 
@@ -37,16 +53,24 @@ var Summernote = React.createClass({
         $(node).summernote(options);
     },
     onClick: function () {
+        console.log('onClick');
         if (this.existingOnBlur) this.existingOnBlur();
         var $summernote = $(this.refs.summernote.getDOMNode());
         if ($summernote.find('i.summernote-placeholder').length) {
             $summernote.html('');
         }
     },
+    initSummernote: function () {
+        var $summernote = $(this.refs.summernote.getDOMNode());
+        $summernote.summernote(this.state.summernoteProps);
+    },
+    destroySummernote: function () {
+        var $summernote = $(this.refs.summernote.getDOMNode());
+        $summernote.destroy();
+    },
     onBlur: function () {
         if (this.existingOnBlur) this.existingOnBlur();
         var $summernote = $(this.refs.summernote.getDOMNode());
-
 
         var text = $summernote.text();
 
@@ -70,10 +94,12 @@ var Summernote = React.createClass({
             }, _updateTask);
         }
 
+        cleanSummernote();
     },
     getInitialState: function () {
         return {
-            html: this.props.innerHTML || placeholder
+            html: this.props.innerHTML || placeholder,
+            summernoteProps: this.props.summernoteProps
         }
     },
     shouldComponentUpdate: function (nextProps) {
@@ -83,7 +109,8 @@ var Summernote = React.createClass({
     },
     componentWillReceiveProps: function (nextProps) {
         this.setState({
-            html: nextProps.innerHTML || placeholder
+            html: nextProps.innerHTML || placeholder,
+            summernoteProps: this.props.summernoteProps
         })
     },
     onFocus: function () {
