@@ -45,17 +45,25 @@ var Task = React.createClass({
         console.log('discard');
         this.setState({
             editing: false
+        }, function () {
+            if (this.props.onDiscard) {
+                this.props.onDiscard(this);
+            }
         })
     },
     renderEditing: function () {
-        var comp;
+        var comp,
+            self = this;
         if (this.state.editing) {
             var summernoteProps = {
                 airMode: true
             };
             comp = (
                 <div className="task-content">
-                    <Summernote summernoteProps={summernoteProps} ref="summernote"></Summernote>
+                    <Summernote summernoteProps={summernoteProps}
+                        ref="summernote"
+                        onChange={self.onDescriptionChange}
+                        innerHTML={self.props.description}></Summernote>
                 </div>
             );
         }
@@ -71,14 +79,19 @@ var Task = React.createClass({
             });
         });
     },
+    onDescriptionChange: function (html) {
+        if (this.props.onChange) {
+            this.props.onChange(this, {description: html});
+        }
+    },
     componentDidUnmount: function () {
         this.cancelListen();
     },
     onClick: function (e) {
         /*
-        TODO: Move these branches into onClick events.
-        The reason it's implemented this way at the moment is that I couldn't figure out a way to prevent the
-        parent onClick event from triggering when nested onClick events were present.
+         TODO: Move these branches into onClick events.
+         The reason it's implemented this way at the moment is that I couldn't figure out a way to prevent the
+         parent onClick event from triggering when nested onClick events were present.
          */
         var onCancel = this.props.onCancel ? _.partial(this.props.onCancel, this) : undefined;
         e.preventDefault();
@@ -91,6 +104,10 @@ var Task = React.createClass({
         else {
             this.setState({
                 editing: true
+            }, function () {
+                if (this.props.onEditing) {
+                    this.props.onEditing(this);
+                }
             });
         }
     },
@@ -108,7 +125,7 @@ var Task = React.createClass({
         return {
             color: colourFlux.store.getOptions().primary,
             hover: false,
-            editing: false
+            editing: this.props.editing
         }
     }
 });

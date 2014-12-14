@@ -84,8 +84,8 @@ var Settings = React.createClass({
             <div>
                 <DocumentTitle title={config.brand}>
                     <div id="settings">
-                        <Row componentClass={React.DOM.div}>
-                            <Col xs={12} sm={12} md={6} lg={6} className="right-padded" componentClass={React.DOM.div}>
+                        <Row>
+                            <Col xs={12} sm={12} md={6} lg={6} className="right-padded">
                                 <Panel title={pomodoroTitle}>
                                     <p>
                                     Customise the Pomodoro timings.
@@ -129,7 +129,7 @@ var Settings = React.createClass({
 
                                 </Panel>
                             </Col>
-                            <Col xs={12} sm={12} md={6} lg={6} className="left-padded" componentClass={React.DOM.div}>
+                            <Col xs={12} sm={12} md={6} lg={6} className="left-padded">
                                 <Panel title={coloursTitle}>
                                     <p>
                                     Use
@@ -146,7 +146,6 @@ var Settings = React.createClass({
                                                     <ColorPicker color={colors.primary}
                                                         onChange={this.onColorPickerChange}
                                                         onSuccessfulChange={this.onSuccessfulColorPickerChange}
-                                                        componentClass={ColouredInput}
                                                         ref="primary"/>
                                                 </td>
                                             </tr>
@@ -158,7 +157,6 @@ var Settings = React.createClass({
                                                     <ColorPicker color={colors.shortBreak}
                                                         onChange={this.onColorPickerChange}
                                                         onSuccessfulChange={this.onSuccessfulColorPickerChange}
-                                                        componentClass={ColouredInput}
                                                         ref="shortBreak"/>
                                                 </td>
                                             </tr>
@@ -170,7 +168,6 @@ var Settings = React.createClass({
                                                     <ColorPicker color={colors.longBreak}
                                                         onChange={this.onColorPickerChange}
                                                         onSuccessfulChange={this.onSuccessfulColorPickerChange}
-                                                        componentClass={ColouredInput}
                                                         ref="longBreak"/>
                                                 </td>
                                             </tr>
@@ -179,8 +176,8 @@ var Settings = React.createClass({
                                 </Panel>
                             </Col>
                         </Row>
-                        <Row componentClass={React.DOM.div}>
-                            <Col xs={12} sm={12} md={6} lg={6} className="right-padded" componentClass={React.DOM.div}>
+                        <Row >
+                            <Col xs={12} sm={12} md={6} lg={6} className="right-padded" >
                                 <Panel title={asanaTitle}>
                                     <p>
                                     Enable Asana integration by providing an API key.

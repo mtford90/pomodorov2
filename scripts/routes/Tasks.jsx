@@ -25,6 +25,8 @@ var placeholder = document.createElement("li");
 placeholder.className = "placeholder";
 
 
+var editingTasks = [];
+
 var Tasks = React.createClass({
     mixins: [reflux.ListenerMixin, router.Navigation],
     render: function () {
@@ -34,18 +36,23 @@ var Tasks = React.createClass({
                 <ul onDragOver={this.dragOver}>
                     {this.state.tasks.map(function (o, i) {
                         return (
-                            <Row componentClass={React.DOM.li}
+                            <Row
                                 data-id={i}
                                 key={i}
                                 draggable="true"
                                 onDragEnd={self.dragEnd}
                                 onDragStart={self.dragStart}>
-                                <Col sm={12} md={12} lg={12}>
+                                <Col sm={12} md={12} lg={12} >
                                     <Task title={o.title}
                                         asana={o.asana}
                                         key={o._id}
+                                        description={o.description}
                                         index={i}
                                         onCancel={self.onCancel}
+                                        onChange={self.onChange}
+                                        onEditing={self.onEditing}
+                                        onDiscard={self.onDiscard}
+                                        editing={editingTasks.indexOf(o) > -1}
                                     />
                                 </Col>
                             </Row>
@@ -70,6 +77,7 @@ var Tasks = React.createClass({
             console.error('error getting tasks', err);
         });
         this.cancelListen = this.listenTo(tasksStore, function (tasks) {
+            console.log('received listen', tasks);
             this.setState({
                 tasks: tasks
             });
@@ -81,10 +89,29 @@ var Tasks = React.createClass({
     componentDidUnmount: function () {
         this.cancelListen();
     },
+    onChange: function (task, changes) {
+        var index = task.props.index;
+        tasksActions.updateTask(index, changes);
+    },
+    onEditing: function (task) {
+        editingTasks.push(task);
+    },
     onCancel: function (task) {
         // TODO: Why isn't key in props?
+        console.log('onxCancel');
         var index = task.props.index;
-        tasksActions.removeTask(index);
+        this.state.tasks.splice(index, 1);
+        // Ensure that the user does not have the ability to click cancel twice by accident by removing the
+        // task from the state even before the reflux store emits an event.
+        this.setState({
+            tasks: this.state.tasks
+        }, function (){
+            tasksActions.removeTask(index);
+        });
+    },
+    onDiscard: function  (task) {
+        var i = editingTasks.indexOf(task);
+        editingTasks.splice(i, 1);
     },
     getInitialState: function () {
         return {
@@ -133,7 +160,7 @@ var Tasks = React.createClass({
                 this.nodePlacement = "after";
                 parent.insertBefore(placeholder, target.nextElementSibling);
             }
-            else if (dragY < taskMid) {
+            else if (dragY < taskMid) {x
                 this.nodePlacement = "before";
                 parent.insertBefore(placeholder, target);
             }

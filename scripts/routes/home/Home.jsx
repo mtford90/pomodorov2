@@ -31,8 +31,8 @@ var Home = React.createClass({
                 <DocumentTitle title={config.brand}>
                 </DocumentTitle>
                 <div id="home" >
-                    <Row className="timer-row" componentClass={React.DOM.div}>
-                        <Col sm={12} componentClass={React.DOM.div}>
+                    <Row className="timer-row" >
+                        <Col sm={12} >
                             <PomodoroTimer></PomodoroTimer>
                             <PomodoroControls/>
                         </Col>
@@ -40,26 +40,26 @@ var Home = React.createClass({
                     <Spinner ref="spinner" finishedLoading={taskStore.isLoaded()} >
                         {currentTask ? (
                             <div>
-                                <Row componentClass={React.DOM.div}>
-                                    <Col sm={12} componentClass={React.DOM.div}>
+                                <Row >
+                                    <Col sm={12} >
                                         <h3>Current</h3>
                                     </Col>
                                 </Row>
-                                <Row componentClass={React.DOM.div}>
-                                    <Col sm={12} componentClass={React.DOM.div}>
+                                <Row >
+                                    <Col sm={12} >
                                         <Task title={currentTask.title} asana={currentTask.asana}/>
                                     </Col>
                                 </Row>
                             </div>) : ''}
-                        {restOfTasks.length ? ( <Row componentClass={React.DOM.div}>
-                            <Col sm={12} componentClass={React.DOM.div}>
+                        {restOfTasks.length ? ( <Row >
+                            <Col sm={12} >
                                 <h3>Coming Up</h3>
                             </Col>
                         </Row>) : '' }
                         {restOfTasks.map(function (o, i) {
                             return (
-                                <Row componentClass={React.DOM.div}>
-                                    <Col sm={12} componentClass={React.DOM.div}>
+                                <Row >
+                                    <Col sm={12} >
                                         <Task title={o.title} asana={o.asana} key={i}/>
                                     </Col>
                                 </Row>

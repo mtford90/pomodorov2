@@ -2,12 +2,14 @@ var reflux = require('reflux'),
     fixtures = require('./fixtures'),
     pouch = require('../data/pouch'),
     q = require('q'),
+    _ = require('underscore'),
     Type = require('../data/Type');
 
 var taskActions = reflux.createActions([
     'newTask',
     'removeTask',
-    'reorderTask'
+    'reorderTask',
+    'updateTask'
 ]);
 
 
@@ -45,6 +47,39 @@ function createTask(task) {
     })
 }
 
+function updateTask(task) {
+    console.log('updateTask', {task: task});
+    pouch.get(task._id).then(function (doc) {
+        console.log('got task', {task: doc});
+        var newTask = _.extend({}, doc);
+        task._rev = doc._rev;
+        _.extend(newTask, task);
+        _.extend(task, newTask);
+        console.log('putting task', {task: newTask});
+        pouch.put(newTask).then(function () {
+            console.info('Successfully saved task', task);
+        }, function (err) {
+            console.error('Error updating task', err);
+        })
+
+    }, function (err) {
+        console.error('Error getting task in PouchDB before update', err);
+    })
+}
+
+function deleteTask(task) {
+    pouch.get(task._id).then(function (doc) {
+        pouch.remove(doc).then(function () {
+            console.log('Successfully deleted task');
+        }, function (err) {
+            console.error('Error deleting task', err);
+        });
+    }, function (err) {
+        console.error('Error getting doc for deletion', err);
+    });
+
+}
+
 
 // TODO: Cleaner way of using reflux async storage? The below is so ugly.
 var taskStore = reflux.createStore({
@@ -63,12 +98,20 @@ var taskStore = reflux.createStore({
         onRemoveTask: function (index) {
             this.init().then(function () {
                 console.log('Removing task at index ', index);
-                this.tasks.splice(index, 1);
+                var task = this.tasks.splice(index, 1)[0];
+                deleteTask(task);
                 this._trigger();
             }.bind(this));
         },
-        updateTask: function (key, changes) {
-
+        onUpdateTask: function (index, changes) {
+            this.init().then(function () {
+                console.log('onUpdateTask', {index: index, changes: changes});
+                var task = this.tasks[index];
+                console.log('123');
+                _.extend(task, changes);
+                updateTask(task);
+                this._trigger();
+            }.bind(this));
         },
         onReorderTask: function (oldIndex, newIndex) {
             this.init().then(function () {
