@@ -111,37 +111,42 @@ var Tasks = React.createClass({
         tasksActions.reorderTask(from, to, false);
     },
     dragStart: function (e) {
+        console.log('dragStart', e);
         this.dragged = e.currentTarget;
+        this.draggedHeight = this.dragged.getBoundingClientRect().height;
         e.dataTransfer.effectAllowed = 'move';
         // Firefox requires dataTransfer data to be set
         e.dataTransfer.setData("text/html", e.currentTarget);
     },
     dragOver: function (e) {
+        console.log('dragOver', e.target);
         e.preventDefault();
         var task = e.target;
-        if (task.className == 'task') {
+        if (task.className.indexOf('task') > -1) {
             this.dragged.style.display = "none";
             var target = task;
-            console.log('initial target', target);
             var tagName = target.tagName;
             while (tagName != 'LI') {
                 var oldTarget = target;
                 target = target.parentNode;
                 if (!target) {
-                    console.error('wtf', oldTarget);
-                    throw Error('uh oh');
+                    throw Error('Ran out of nodes to check.');
                 }
                 tagName = target.tagName;
             }
-            if (target.className == "placeholder") return;
+            if (target.className == "placeholder") {
+                console.log('placeholder');
+                return;
+            }
             this.over = target;
             // Inside the dragOver method
             var taskRect = task.getBoundingClientRect(),
                 taskBottom = taskRect.bottom,
                 taskMid = taskBottom - (task.offsetHeight / 2);
+            console.log('taskRect', taskRect);
             var dragY = e.clientY;
             var parent = target.parentNode;
-            $(placeholder).height(target.offsetHeight);
+            $(placeholder).height(this.draggedHeight);
             if (dragY > taskMid) {
                 this.nodePlacement = "after";
                 parent.insertBefore(placeholder, target.nextElementSibling);
@@ -149,6 +154,9 @@ var Tasks = React.createClass({
             else if (dragY < taskMid) {
                 this.nodePlacement = "before";
                 parent.insertBefore(placeholder, target);
+            }
+            else {
+                throw Error('WTF?')
             }
         }
     }
