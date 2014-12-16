@@ -3,7 +3,7 @@ var reflux = require('reflux'),
     q = require('q'),
     _ = require('underscore'),
     util = require('../util'),
-    siesta = require('siesta-orm')({http: require('siesta-orm/http')}),
+    siesta = require('../../../rest/core')({http: require('../../../rest/http')}),
     Type = require('../data/Type');
 
 var taskActions = reflux.createActions([
@@ -61,12 +61,17 @@ var taskStore = reflux.createStore({
     data: function () {
         if (!this.tasks) {
             this.tasks = [];
-            var query = {completed: false};
-            this.promise = Task.query(query).then(function (tasks) {
-                this.tasks.concat.call(this.tasks, tasks);
-                this.loaded = true;
-                this._trigger();
-            }.bind(this));
+            this.promise =
+                Task.query({completed: false})
+                    .execute()
+                    .then(function (tasks) {
+                        this.tasks.concat.call(this.tasks, tasks);
+                        this.loaded = true;
+                        this._trigger();
+                    }.bind(this))
+                    .catch(function (err) {
+                        console.error('Error getting uncompleted tasks:', err);
+                    });
 
         }
         return _.extend([], this.tasks);
