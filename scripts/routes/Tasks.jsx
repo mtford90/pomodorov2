@@ -10,12 +10,10 @@ var React = require('react')
     , _ = require('underscore')
     , Filters = require('./tasks/Filters')
     , DocumentTitle = require('react-document-title')
-    , tasksStore = require('../flux/tasks').store
-    , tasksActions = require('../flux/tasks').actions
-    , reflux = require('reflux')
     , router = require('react-router')
     , Link = router.Link
     , Spinner = require('../Spinner')
+    , tasks = require('../flux/tasks')
     , Task = require('./tasks/Task');
 
 
@@ -25,7 +23,7 @@ var placeholder = document.createElement("li");
 placeholder.className = "placeholder";
 
 var Tasks = React.createClass({
-    mixins: [reflux.ListenerMixin, router.Navigation],
+    mixins: [router.Navigation],
     render: function () {
         var self = this;
         return (
@@ -33,7 +31,7 @@ var Tasks = React.createClass({
                 <DocumentTitle title={config.brand}>
                 </DocumentTitle>
                 <div id="tasks" className="container">
-                    <Spinner ref="spinner" finishedLoading={tasksStore.isLoaded()}>
+                    <Spinner ref="spinner" finishedLoading={tasks.initialised}>
                         <Row>
                             <Col xs={12} sm={1}>
                                 <Filters/>
@@ -74,48 +72,64 @@ var Tasks = React.createClass({
         )
     },
     componentDidMount: function () {
-        if (!tasksStore.isLoaded()) this.refs.spinner.startTimer();
-        this.cancelListen = this.listenTo(tasksStore, function (tasks) {
-            console.log('received listen', tasks);
-            this.setState({
-                tasks: tasks,
-                loaded: true
-            }, function () {
+        function _listen() {
+            console.log('listening');
+            this.listener = function () {
+                var taskModels = tasks.results;
+                console.log('tasks changed', taskModels);
+                this.setState({
+                    tasks: taskModels,
+                    loaded: true
+                });
+            }.bind(this);
+            tasks.on('change', this.listener);
+        }
+
+        if (!tasks.initialised) {
+            this.refs.spinner.startTimer();
+            tasks.init().then(function () {
+                _listen.call(this);
                 this.refs.spinner.finishLoading();
-            });
-        }.bind(this));
+            }.bind(this)).catch(function (err) {
+                console.error('Error initialising tasks', err);
+            }).done();
+        }
+        else {
+            _listen.call(this);
+        }
     },
     onClick: function (task) {
         this.transitionTo('AddOrEditTask', {taskId: task._id})
     },
     componentDidUnmount: function () {
-        this.cancelListen();
+        tasks.removeListener('change', this.listener);
     },
-    onChange: function (task, changes) {
-        var index = task.props.index;
-        tasksActions.updateTask(index, changes);
+    onChange: function (taskElem, changes) {
+        var index = taskElem.props.index;
+        var task = tasks.results[index];
+        _.extend(task, changes);
     },
     onComplete: function (taskElem) {
         var index = taskElem.props.index;
-        var task = tasksStore.tasks[index];
+        var task = tasks.results[index];
         task.completed = true;
     },
     onEditing: function (taskElem) {
         var index = taskElem.props.index,
-            task = tasksStore.tasks[index];
+            task = tasks.results[index];
         task.editing = true;
     },
     onCancel: function (task) {
-        tasksActions.removeTask(task.props.index);
+        tasks.results[task.props.index].remove();
     },
     onDiscard: function (taskElem) {
         var index = taskElem.props.index,
-            task = tasksStore.tasks[index];
+            task = tasks.results[index];
         task.editing = false;
     },
     getInitialState: function () {
         return {
-            tasks: tasksStore.data(),
+            tasks: tasks.initialised ? tasks.results : [],
             loaded: false
         }
     },
@@ -128,10 +142,13 @@ var Tasks = React.createClass({
         if (this.nodePlacement == "after") to++;
         var tasks = this.state.tasks;
         tasks.splice(to, 0, tasks.splice(from, 1)[0]);
+        // Update indexes.
+        for (var i = 0; i < tasks.length; i++) {
+            tasks[i].index = i;
+        }
         // Ensure that task order changes straight away, despite the fact that we'll receive a notification from
         // from the task store.
         this.setState({tasks: tasks});
-        tasksActions.reorderTask(from, to, false);
     },
     dragStart: function (e) {
         console.log('dragStart', e);

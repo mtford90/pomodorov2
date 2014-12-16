@@ -1,7 +1,7 @@
 var React = require('react'),
     _ = require('underscore'),
     FilterConfig = require('./FilterConfig'),
-    taskActions = require('../../flux/tasks').actions,
+    Task = require('../../data/pomodoro').Task,
     TagsFilter = require('./TagsFilter');
 
 var Filters = React.createClass({
@@ -35,7 +35,9 @@ var Filters = React.createClass({
         }
     },
     onNewPressed: function () {
-        taskActions.newTask({title: 'A new task!'});
+        Task.map({title: 'A new task!', completed: false}).catch(function(err) {
+            console.error('error creating new task:', err);
+        }).done();
     },
     onTagsPressed: function (e) {
         this.cancelFilterConfig();

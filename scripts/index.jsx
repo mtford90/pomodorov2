@@ -14,6 +14,7 @@ var React = require('react'),
     App = require('./app'),
     Tasks = require('./routes/Tasks'),
     q = require('q'),
+    data = require('./data/pomodoro'),
     routesData = require('./routes');
 
 // Allows Siesta to use the Q library for promises.
@@ -52,7 +53,7 @@ var routes = (
     </Route>
 );
 
-
+data.Pomodoro.install();
 Router.run(routes, require('./location'), function (Handler, x, y) {
     var view = <Handler/>;
     console.log('handler', view);
