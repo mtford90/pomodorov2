@@ -4,7 +4,7 @@
 
 var navigationItems = [
     {text: 'Home', handler: require('./home/Home')},
-    {text: 'Settings', handler: require('./Settings')},
+    {text: 'Settings', handler: require('./settings/Settings')},
     {text: 'Tasks', handler: require('./tasks/Tasks'), path: require('./paths').tasks},
     {text: 'AddOrEditTask', handler: require('./tasks/AddOrEditTask'), path:'/task/:taskId'}
 ];
