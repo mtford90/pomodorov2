@@ -8,6 +8,12 @@ var Type = {
     Task: 'Task'
 };
 
+DEFAULT_COLOURS = {
+    primary: '#df423c',
+    shortBreak: '#37a2c4',
+    longBreak: '#292f37'
+};
+
 var Task = Pomodoro.mapping(Type.Task, {
         attributes: [
             'title',
@@ -28,15 +34,15 @@ var Task = Pomodoro.mapping(Type.Task, {
         attributes: [
             {
                 name: 'primary',
-                default: '#df423c'
+                default: DEFAULT_COLOURS.primary
             },
             {
                 name: 'shortBreak',
-                default: '#37a2c4'
+                default: DEFAULT_COLOURS.shortBreak
             },
             {
                 name: 'longBreak',
-                default: '#292f37'
+                default: DEFAULT_COLOURS.longBreak
             }
         ],
         singleton: true
