@@ -1,9 +1,12 @@
 var q = require('q'),
-    siesta = require('../../../rest/core')({http: require('../../../rest/http')}),
-    Type = require('../data/Type');
+    siesta = require('../../rest/core/index')({http: require('../../rest/http/index')});
 
 
 var Pomodoro = new siesta.Collection('Pomodoro');
+
+var Type = {
+    Task: 'Task'
+};
 
 var Task = Pomodoro.mapping(Type.Task, {
         attributes: [
@@ -64,5 +67,7 @@ module.exports = {
     Pomodoro: Pomodoro,
     Task: Task,
     Config: Config,
-    siesta: siesta
+    siesta: siesta,
+    Type: Type,
+    uncompletedTasks: Task.reactiveQuery({completed: false}).orderBy('index')
 };

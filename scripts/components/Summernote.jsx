@@ -61,14 +61,6 @@ var Summernote = React.createClass({
             $summernote.html('');
         }
     },
-    initSummernote: function () {
-        var $summernote = $(this.refs.summernote.getDOMNode());
-        $summernote.summernote(this.state.summernoteProps);
-    },
-    destroySummernote: function () {
-        var $summernote = $(this.refs.summernote.getDOMNode());
-        $summernote.destroy();
-    },
     onBlur: function () {
         console.log('summernote on blur');
 

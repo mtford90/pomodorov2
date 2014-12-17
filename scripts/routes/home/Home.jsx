@@ -11,7 +11,7 @@ var React = require('react')
     , Row = bootstrap.Row
     , Col = bootstrap.Col
     , DocumentTitle = require('react-document-title')
-    , tasksRQ = require('../../flux/tasks')
+    , unfinishedTasks = require('../../data').uncompletedTasks
     , Spinner = require('../../components/Spinner')
     , Task = require('../tasks/Task');
 
@@ -27,7 +27,7 @@ var Home = React.createClass({
                 </DocumentTitle>
                 <div id="home">
                     <div className="container">
-                        <Spinner ref="spinner" finishedLoading={tasksRQ.initialised} timerEnded={this.timerEnded} >
+                        <Spinner ref="spinner" finishedLoading={unfinishedTasks.initialised} timerEnded={this.timerEnded} >
                             <Row className="timer-row" >
                                 <Col sm={12} >
                                     <PomodoroTimer></PomodoroTimer>
@@ -75,12 +75,12 @@ var Home = React.createClass({
                     loaded: true
                 });
             }.bind(this);
-            tasksRQ.on('change', this.listener);
+            unfinishedTasks.on('change', this.listener);
         }.bind(this);
 
-        if (!tasksRQ.initialised) {
+        if (!unfinishedTasks.initialised) {
             this.refs.spinner.startTimer();
-            tasksRQ.init().then(function () {
+            unfinishedTasks.init().then(function () {
                 this.refs.spinner.finishLoading();
                 _listen.call(this);
             }.bind(this)).catch(function (err) {
@@ -100,11 +100,11 @@ var Home = React.createClass({
         })
     },
     componentWillUnmount: function () {
-        tasksRQ.removeListener('change', this.listener);
+        unfinishedTasks.removeListener('change', this.listener);
     },
     getInitialState: function () {
         return {
-            tasks: tasksRQ.initialised ? tasksRQ.results : [],
+            tasks: unfinishedTasks.initialised ? unfinishedTasks.results : [],
             loaded: false,
             spinnerFinished: false
         }

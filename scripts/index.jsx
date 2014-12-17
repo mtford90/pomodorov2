@@ -14,7 +14,7 @@ var React = require('react'),
     App = require('./app'),
     Tasks = require('./routes/tasks/Tasks'),
     q = require('q'),
-    data = require('./data/pomodoro'),
+    data = require('./data'),
     routesData = require('./routes/config');
 
 // Allows Siesta to use the Q library for promises.

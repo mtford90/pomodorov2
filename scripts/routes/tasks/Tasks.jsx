@@ -13,7 +13,7 @@ var React = require('react')
     , router = require('react-router')
     , Link = router.Link
     , Spinner = require('../../components/Spinner')
-    , tasks = require('../../flux/tasks')
+    , incompleteTasks = require('../../data').uncompletedTasks
     , Task = require('./Task');
 
 
@@ -31,7 +31,7 @@ var Tasks = React.createClass({
                 <DocumentTitle title={config.brand}>
                 </DocumentTitle>
                 <div id="tasks" className="container">
-                    <Spinner ref="spinner" finishedLoading={tasks.initialised}>
+                    <Spinner ref="spinner" finishedLoading={incompleteTasks.initialised}>
                         <Row>
                             <Col xs={12} sm={1}>
                                 <Filters/>
@@ -75,18 +75,18 @@ var Tasks = React.createClass({
         var _listen = function () {
             console.log('listening');
             this.listener = function () {
-                var taskModels = tasks.results;
+                var taskModels = incompleteTasks.results;
                 console.log('tasks changed', taskModels);
                 this.setState({
                     tasks: taskModels,
                     loaded: true
                 });
             }.bind(this);
-            tasks.on('change', this.listener);
+            incompleteTasks.on('change', this.listener);
         }.bind(this);
-        if (!tasks.initialised) {
+        if (!incompleteTasks.initialised) {
             this.refs.spinner.startTimer();
-            tasks.init().then(function () {
+            incompleteTasks.init().then(function () {
                 _listen.call(this);
                 this.refs.spinner.finishLoading();
             }.bind(this)).catch(function (err) {
@@ -101,34 +101,34 @@ var Tasks = React.createClass({
         this.transitionTo('AddOrEditTask', {taskId: task._id})
     },
     componentWillUnmount: function () {
-        tasks.removeListener('change', this.listener);
+        incompleteTasks.removeListener('change', this.listener);
     },
     onChange: function (taskElem, changes) {
         var index = taskElem.props.index;
-        var task = tasks.results[index];
+        var task = incompleteTasks.results[index];
         _.extend(task, changes);
     },
     onComplete: function (taskElem) {
         var index = taskElem.props.index;
-        var task = tasks.results[index];
+        var task = incompleteTasks.results[index];
         task.completed = true;
     },
     onEditing: function (taskElem) {
         var index = taskElem.props.index,
-            task = tasks.results[index];
+            task = incompleteTasks.results[index];
         task.editing = true;
     },
     onCancel: function (task) {
-        tasks.results[task.props.index].remove();
+        incompleteTasks.results[task.props.index].remove();
     },
     onDiscard: function (taskElem) {
         var index = taskElem.props.index,
-            task = tasks.results[index];
+            task = incompleteTasks.results[index];
         task.editing = false;
     },
     getInitialState: function () {
         return {
-            tasks: tasks.initialised ? tasks.results : [],
+            tasks: incompleteTasks.initialised ? incompleteTasks.results : [],
             loaded: false
         }
     },

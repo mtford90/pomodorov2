@@ -1,5 +1,5 @@
 var React = require('react')
-    , Config = require('./../data/pomodoro').Config
+    , Config = require('./../data').Config
     , _ = require('underscore');
 
 // Navbar that reacts to color changes.

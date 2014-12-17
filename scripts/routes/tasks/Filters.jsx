@@ -1,7 +1,7 @@
 var React = require('react'),
     _ = require('underscore'),
     FilterConfig = require('./FilterConfig'),
-    Task = require('../../data/pomodoro').Task,
+    Task = require('../../data').Task,
     TagsFilter = require('./TagsFilter');
 
 var Filters = React.createClass({
