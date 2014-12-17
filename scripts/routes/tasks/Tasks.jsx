@@ -13,7 +13,7 @@ var React = require('react')
     , router = require('react-router')
     , Link = router.Link
     , Spinner = require('../../components/Spinner')
-    , incompleteTasks = require('../../data').uncompletedTasks
+    , incompleteTasks = require('../../data').incompleteTasks
     , Task = require('./Task');
 
 

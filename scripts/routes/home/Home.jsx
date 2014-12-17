@@ -11,7 +11,7 @@ var React = require('react')
     , Row = bootstrap.Row
     , Col = bootstrap.Col
     , DocumentTitle = require('react-document-title')
-    , unfinishedTasks = require('../../data').uncompletedTasks
+    , unfinishedTasks = require('../../data').incompleteTasks
     , Spinner = require('../../components/Spinner')
     , Task = require('../tasks/Task');
 

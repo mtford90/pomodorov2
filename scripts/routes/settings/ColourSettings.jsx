@@ -1,4 +1,3 @@
-
 var React = require('react')
     , config = require('../../../app.config.js')
     , ColorPicker = require('../../components/ColorPicker')
@@ -42,7 +41,8 @@ var ColourSettings = React.createClass({
                         componentClass={ColouredInput}/>
                 </InputPanelItem>
                 <InputPanelItem title="Long Break">
-                    <ColorPicker color={this.state.longBreak}
+                    <ColorPicker
+                        color={this.state.longBreak}
                         onChange={this.onColorPickerChange}
                         onSuccessfulChange={this.onSuccessfulColorPickerChange}
                         ref="longBreak"

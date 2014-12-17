@@ -69,5 +69,5 @@ module.exports = {
     Config: Config,
     siesta: siesta,
     Type: Type,
-    uncompletedTasks: Task.reactiveQuery({completed: false}).orderBy('index')
+    incompleteTasks: Task.reactiveQuery({completed: false}).orderBy('index')
 };
