@@ -1,13 +1,11 @@
 var React = require('react')
-    , _ = require('underscore')
-    , colourFlux = require('./flux/colours')
-    , reflux = require('reflux');
+    , Config = require('./data/pomodoro').Config
+    , _ = require('underscore');
 
 // Navbar that reacts to color changes.
 var NavBar = React.createClass({
-    mixins: [reflux.ListenerMixin],
     render: function () {
-        var style = {backgroundColor: this.state.color};
+        var style = this.state.color ? {backgroundColor: this.state.color} : {};
         var comp = (
             <div id="navbar" className="navbar navbar-inverse navbar-static-top" role="navigation" style={style}>
                 {this.props.children}
@@ -18,20 +16,27 @@ var NavBar = React.createClass({
         return comp;
     },
     componentDidMount: function () {
-        this.cancelListen = this.listenTo(colourFlux.store, function (payload) {
-            console.log('color changed!');
+        Config.get().then(function (config) {
             this.setState({
-                color: payload.primary
+                color: config.colours.primary
             });
-        })
+            this.cancelListen = config.colours.listen(function (n) {
+                if (n.field == 'primary') {
+                    this.setState({
+                        color: n.new
+                    });
+                }
+            }.bind(this))
+        }.bind(this)).catch(function (err) {
+            console.error('Error getting config for nav bar', err);
+        });
     },
-    componentDidUnmount: function () {
+    componentWillUnmount: function () {
         this.cancelListen();
     },
     getInitialState: function () {
-        var colours = colourFlux.store.getOptions();
         return {
-            color: colours.primary
+            color: null
         }
     }
 });

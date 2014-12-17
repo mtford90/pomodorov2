@@ -100,7 +100,7 @@ var Home = React.createClass({
             spinnerFinished: true
         })
     },
-    componentDidUnmount: function () {
+    componentWillUnmount: function () {
         tasksRQ.removeListener('change', this.listener);
     },
     getInitialState: function () {

@@ -100,7 +100,7 @@ var Tasks = React.createClass({
     onClick: function (task) {
         this.transitionTo('AddOrEditTask', {taskId: task._id})
     },
-    componentDidUnmount: function () {
+    componentWillUnmount: function () {
         tasks.removeListener('change', this.listener);
     },
     onChange: function (taskElem, changes) {

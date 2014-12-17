@@ -14,20 +14,48 @@ var Task = Pomodoro.mapping(Type.Task, {
             'index'
         ]
     }),
+    Config = Pomodoro.mapping('Config', {
+        relationships: {
+            pomodoro: {mapping: 'PomodoroConfig'},
+            colours: {mapping: 'ColourConfig'}
+        },
+        singleton: true
+    }),
     ColourConfig = Pomodoro.mapping('ColourConfig', {
         attributes: [
-            'primary',
-            'shortBreak',
-            'longBreak'
+            {
+                name: 'primary',
+                default: '#df423c'
+            },
+            {
+                name: 'shortBreak',
+                default: '#37a2c4'
+            },
+            {
+                name: 'longBreak',
+                default: '#292f37'
+            }
         ],
         singleton: true
     }),
     PomodoroConfig = Pomodoro.mapping('PomodoroConfig', {
         attributes: [
-            'pomodoroLength',
-            'longBreakLength',
-            'shortBreakLength',
-            'roundLength'
+            {
+                name: 'pomodoroLength',
+                default: 25
+            },
+            {
+                name: 'longBreakLength',
+                default: 15
+            },
+            {
+                name: 'shortBreakLength',
+                default: 5
+            },
+            {
+                name: 'roundLength',
+                default: 4
+            }
         ],
         singleton: true
     });
@@ -35,6 +63,6 @@ var Task = Pomodoro.mapping(Type.Task, {
 module.exports = {
     Pomodoro: Pomodoro,
     Task: Task,
-    ColourConfig: ColourConfig,
-    PomodoroConfig: PomodoroConfig
+    Config: Config,
+    siesta: siesta
 };

@@ -11,14 +11,12 @@ var React = require('react')
     , ColorPicker = require('../colorPicker')
     , Footer = require('../footer/index.jsx').Footer
     , Panel = require('../Panel')
-    , pomodoroFlux = require('../flux/pomodoro')
-    , coloursFlux = require('../flux/colours')
-    , reflux = require('reflux')
+    , data = require('../data/pomodoro')
+    , Config = data.Config
     , DocumentTitle = require('react-document-title');
 
 // TODO: Once ReactJS has the capability to use inline hover styles we can avoid having to do the focus/blur
 var ColouredInput = React.createClass({
-    mixins: [reflux.ListenerMixin],
     render: function () {
         var style = this.state.focused ? {borderColor: this.state.color} : {};
         var comp = (
@@ -29,7 +27,7 @@ var ColouredInput = React.createClass({
     },
     getInitialState: function () {
         return {
-            color: coloursFlux.store.getOptions().primary,
+            color: '',
             hovering: false
         }
     },
@@ -44,13 +42,23 @@ var ColouredInput = React.createClass({
         });
     },
     componentDidMount: function () {
-        this.cancelListen = this.listenTo(coloursFlux.store, function (payload) {
+        Config.get().then(function (config) {
+            var primaryColor = config.colours.primary;
+            console.log('primaryColor', primaryColor);
             this.setState({
-                color: payload.primary
+                color: primaryColor
             });
+            this.cancelListen = config.colours.listen(function (n) {
+                this.setState({
+                    color: config.colours.primary
+                })
+            }.bind(this));
+        }.bind(this)).catch(function (err) {
+            console.error('Error getting colour config for settings page', err);
+            if (err instanceof Error) throw err;
         });
     },
-    componentDidUnmount: function () {
+    componentWillUnmount: function () {
         this.cancelListen();
     }
 });
@@ -78,8 +86,8 @@ var Settings = React.createClass({
             </span>
         );
         var cssUrl = "http://paletton.com/#uid=10K0u0kllllaFw0g0qFqFg0w0aF";
-        var options = this.state.options;
-        var colors = this.state.colours;
+        var options = this.state.config || {};
+        var colors = this.state.colours || {};
         return (
             <div className="container">
                 <DocumentTitle title={config.brand}>
@@ -140,7 +148,7 @@ var Settings = React.createClass({
                                         <table className="inputs-table">
                                             <tr>
                                                 <td>
-                                                    Primary
+                                                Primary
                                                 </td>
                                                 <td>
                                                     <ColorPicker color={colors.primary}
@@ -153,7 +161,7 @@ var Settings = React.createClass({
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    Short Break
+                                                Short Break
                                                 </td>
                                                 <td>
                                                     <ColorPicker color={colors.shortBreak}
@@ -240,22 +248,44 @@ var Settings = React.createClass({
         }
     },
     componentDidMount: function () {
-        console.log('componentDidMount');
-
+        Config.get().then(function (config) {
+            this.coloursConfig = config.colours;
+            this.setState({
+                config: config.pomodoro.getAttributes(),
+                colours: config.colours.getAttributes()
+            });
+            this.cancelPomodoroListen = config.pomodoro.listen(function (n) {
+                var config = this.state.config;
+                config[n.field] = n.new;
+                this.setState({
+                    config: config
+                });
+            }.bind(this));
+            this.cancelColoursListen = config.colours.listen(function (n) {
+                var colours = this.state.colours;
+                colours[n.field] = n.new;
+                this.setState({
+                    colours: colours
+                });
+            }.bind(this));
+        }.bind(this)).catch(function (err) {
+            console.error('Error getting pomodoro settings', err);
+        });
+    },
+    componentWillUnmount: function () {
+        this.cancelPomodoroListen();
+        this.cancelColoursListen();
     },
     getInitialState: function () {
         return {
-            options: pomodoroFlux.store.getOptions(),
-            colours: coloursFlux.store.getOptions()
+            config: null,
+            colours: null
         }
     },
     onSuccessfulColorPickerChange: function (change) {
         var prop = this.getProp(change.picker);
         if (prop) {
-            var opts = {};
-            opts[prop] = change.color;
-            console.log('Successful color picker change', opts);
-            coloursFlux.actions.mergeOptions(opts);
+            this.coloursConfig[prop] = change.color;
         }
         else {
             console.warn('Unknown color picker', change);

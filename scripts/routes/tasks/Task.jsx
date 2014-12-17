@@ -1,14 +1,11 @@
 var React = require('react'),
     _ = require('underscore'),
-    reflux = require('reflux'),
     Summernote = require('../../Summernote'),
-    tasksFlux = require('../../flux/tasks'),
-    colourFlux = require('../../flux/colours'),
+    Config = require('../../data/pomodoro').Config
     ContentEditable = require('../../ContentEditable');
 
 // TODO: Once ReactJS has the ability to perform inline hover styles, we can get rid of the awkward mouseout/mouseover handlers
 var Task = React.createClass({
-    mixins: [reflux.ListenerMixin],
     render: function () {
         var shouldColor = this.state.hover || this.state.editing;
         var style = shouldColor ? {borderColor: this.state.color} : {}
@@ -81,10 +78,17 @@ var Task = React.createClass({
         return comp;
     },
     componentDidMount: function () {
-        this.cancelListen = this.listenTo(colourFlux.store, function (payload) {
+        Config.get().then(function (config) {
             this.setState({
-                color: payload.primary
+                color: config.colours.primary
             });
+            this.cancelListen = config.colours.listen(function () {
+                this.setState({
+                    color: config.colours.primary
+                });
+            }.bind(this))
+        }.bind(this)).catch(function (err) {
+            console.error('Error getting config for task', err);
         });
     },
     onDescriptionChange: function (html) {
@@ -92,7 +96,7 @@ var Task = React.createClass({
             this.props.onChange(this, {description: html});
         }
     },
-    componentDidUnmount: function () {
+    componentWillUnmount: function () {
         this.cancelListen();
     },
     onClick: function (e) {
@@ -167,7 +171,7 @@ var Task = React.createClass({
     },
     getInitialState: function () {
         return {
-            color: colourFlux.store.getOptions().primary,
+            color: null,
             hover: false,
             editing: this.props.editing
         }

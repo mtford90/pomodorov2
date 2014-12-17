@@ -53,9 +53,10 @@ var routes = (
     </Route>
 );
 
-data.Pomodoro.install();
-Router.run(routes, require('./location'), function (Handler, x, y) {
-    var view = <Handler/>;
-    console.log('handler', view);
-    React.render(view, document.getElementById('wrapper'));
+data.Pomodoro.install(function () {
+    Router.run(routes, require('./location'), function (Handler, x, y) {
+        var view = <Handler/>;
+        console.log('handler', view);
+        React.render(view, document.getElementById('wrapper'));
+    });
 });
