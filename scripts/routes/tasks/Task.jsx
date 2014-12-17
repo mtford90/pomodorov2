@@ -1,8 +1,8 @@
 var React = require('react'),
     _ = require('underscore'),
-    Summernote = require('../../Summernote'),
+    Summernote = require('../../components/Summernote'),
     Config = require('../../data/pomodoro').Config
-    ContentEditable = require('../../ContentEditable');
+    ContentEditable = require('../../components/ContentEditable');
 
 // TODO: Once ReactJS has the ability to perform inline hover styles, we can get rid of the awkward mouseout/mouseover handlers
 var Task = React.createClass({

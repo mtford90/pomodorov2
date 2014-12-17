@@ -12,7 +12,7 @@ var React = require('react')
     , DocumentTitle = require('react-document-title')
     , router = require('react-router')
     , Link = router.Link
-    , Spinner = require('../Spinner')
+    , Spinner = require('../components/Spinner')
     , tasks = require('../flux/tasks')
     , Task = require('./tasks/Task');
 

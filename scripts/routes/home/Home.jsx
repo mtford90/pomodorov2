@@ -7,13 +7,13 @@ var React = require('react')
     , config = require('../../../app.config')
     , _ = require('underscore')
     , Footer = require('../../footer/Footer')
-    , PomodoroTimer = require('../../PomodoroTimer')
-    , PomodoroControls = require('../../PomodoroControls')
+    , PomodoroTimer = require('../../components/PomodoroTimer')
+    , PomodoroControls = require('../../components/PomodoroControls')
     , Row = bootstrap.Row
     , Col = bootstrap.Col
     , DocumentTitle = require('react-document-title')
     , tasksRQ = require('../../flux/tasks')
-    , Spinner = require('../../Spinner')
+    , Spinner = require('../../components/Spinner')
     , Task = require('../tasks/Task');
 
 

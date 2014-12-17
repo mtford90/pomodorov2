@@ -7,8 +7,8 @@
  */
 
 var React = require('react')
-    , location = require('./location')
-    , paths = require('./paths')
+    , location = require('./../location')
+    , paths = require('./../paths')
     , _ = require('underscore');
 
 

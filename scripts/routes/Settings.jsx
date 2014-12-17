@@ -8,9 +8,9 @@ var React = require('react')
     , Col = bootstrap.Col
     , config = require('../../app.config')
     , _ = require('underscore')
-    , ColorPicker = require('../colorPicker')
+    , ColorPicker = require('../components/ColorPicker')
     , Footer = require('../footer/index.jsx').Footer
-    , Panel = require('../Panel')
+    , Panel = require('../components/Panel')
     , data = require('../data/pomodoro')
     , Config = data.Config
     , DocumentTitle = require('react-document-title');
@@ -284,12 +284,9 @@ var Settings = React.createClass({
     },
     onSuccessfulColorPickerChange: function (change) {
         var prop = this.getProp(change.picker);
-        if (prop) {
-            this.coloursConfig[prop] = change.color;
-        }
-        else {
-            console.warn('Unknown color picker', change);
-        }
+        if (prop) this.coloursConfig[prop] = change.color;
+        else  console.warn('Unknown color picker', change);
+
     }
 });
 

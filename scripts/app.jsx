@@ -4,10 +4,9 @@ var React = require('react')
     , RouteHandler = router.RouteHandler
     , location = require('./location')
     , footer = require('./footer/index.jsx')
-    , Timer = require('./Timer')
-    , Modal = require('./Modal')
+    , Timer = require('./components/Timer')
     , Link = router.Link
-    , NavBar = require('./NavBar');
+    , NavBar = require('./components/NavBar');
 
 var ContentWrapper = React.createClass({
     render: function () {
@@ -32,7 +31,6 @@ var ContentWrapper = React.createClass({
                 <div id="main-content" role="main">
                     <RouteHandler ref="handler"/>
                 </div>
-                <Modal/>
             </div>
         )
     }
