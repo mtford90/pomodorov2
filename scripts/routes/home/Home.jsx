@@ -12,29 +12,23 @@ var React = require('react')
     , Row = bootstrap.Row
     , Col = bootstrap.Col
     , DocumentTitle = require('react-document-title')
-    , taskFlux = require('../../flux/tasks')
-    , taskActions = taskFlux.actions
-    , taskStore = taskFlux.store
-    , reflux = require('reflux')
+    , tasksRQ = require('../../flux/tasks')
     , Spinner = require('../../Spinner')
     , Task = require('../tasks/Task');
 
 
 var Home = React.createClass({
-    mixins: [reflux.ListenerMixin],
     render: function () {
         var tasks = this.state.tasks
             , currentTask = tasks.length ? tasks[0] : null
-            , restOfTasks = tasks.length ? tasks.slice(1, 4) : []
-            , loaded = taskStore.isLoaded();
-        console.log('loaded', loaded);
+            , restOfTasks = tasks.length ? tasks.slice(1, 4) : [];
         return (
             <div>
                 <DocumentTitle title={config.brand}>
                 </DocumentTitle>
                 <div id="home">
                     <div className="container">
-                        <Spinner ref="spinner" finishedLoading={ taskStore.isLoaded()} timerEnded={this.timerEnded} >
+                        <Spinner ref="spinner" finishedLoading={tasksRQ.initialised} timerEnded={this.timerEnded} >
                             <Row className="timer-row" >
                                 <Col sm={12} >
                                     <PomodoroTimer></PomodoroTimer>
@@ -75,22 +69,31 @@ var Home = React.createClass({
         );
     },
     componentDidMount: function () {
-        if (!taskStore.isLoaded()) {
+        var _listen = function () {
+            this.listener = function () {
+                this.setState({
+                    tasks: tasks,
+                    loaded: true
+                });
+            }.bind(this);
+            tasksRQ.on('change', this.listener);
+        }.bind(this);
+
+        if (!tasksRQ.initialised) {
             this.refs.spinner.startTimer();
+            tasksRQ.init().then(function () {
+                this.refs.spinner.finishLoading();
+                _listen.call(this);
+            }.bind(this)).catch(function (err) {
+                console.error('Error initialising tasksRQ for home', err);
+            })
         }
         else {
             this.setState({
                 spinnerFinished: true
-            })
-        }
-        this.cancelListen = this.listenTo(taskStore, function (tasks) {
-            this.setState({
-                tasks: tasks,
-                loaded: true
-            }, function () {
-                this.refs.spinner.finishLoading();
             });
-        }.bind(this));
+            _listen.call(this);
+        }
     },
     timerEnded: function () {
         this.setState({
@@ -98,11 +101,11 @@ var Home = React.createClass({
         })
     },
     componentDidUnmount: function () {
-        this.cancelListen();
+        tasksRQ.removeListener('change', this.listener);
     },
     getInitialState: function () {
         return {
-            tasks: taskStore.data(),
+            tasks: tasksRQ.initialised ? tasksRQ.results : [],
             loaded: false,
             spinnerFinished: false
         }

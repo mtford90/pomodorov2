@@ -72,7 +72,7 @@ var Tasks = React.createClass({
         )
     },
     componentDidMount: function () {
-        function _listen() {
+        var _listen = function () {
             console.log('listening');
             this.listener = function () {
                 var taskModels = tasks.results;
@@ -83,8 +83,7 @@ var Tasks = React.createClass({
                 });
             }.bind(this);
             tasks.on('change', this.listener);
-        }
-
+        }.bind(this);
         if (!tasks.initialised) {
             this.refs.spinner.startTimer();
             tasks.init().then(function () {
