@@ -3,8 +3,7 @@ var React = require('react')
     , _ = require('underscore')
     , RouteHandler = router.RouteHandler
     , location = require('./location')
-    , footer = require('./footer/index.jsx')
-    , Timer = require('./components/Timer')
+    , Timer = require('./components/pomodoro/Timer')
     , Link = router.Link
     , NavBar = require('./components/NavBar');
 

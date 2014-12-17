@@ -8,7 +8,7 @@
 
 var React = require('react')
     , location = require('./../location')
-    , paths = require('./../paths')
+    , paths = require('./../routes/paths')
     , _ = require('underscore');
 
 

@@ -6,15 +6,15 @@ var React = require('react')
     , bootstrap = require('react-bootstrap')
     , Col = bootstrap.Col
     , Row = bootstrap.Row
-    , config = require('../../app.config')
+    , config = require('../../../app.config.js')
     , _ = require('underscore')
-    , Filters = require('./tasks/Filters')
+    , Filters = require('./Filters')
     , DocumentTitle = require('react-document-title')
     , router = require('react-router')
     , Link = router.Link
-    , Spinner = require('../components/Spinner')
-    , tasks = require('../flux/tasks')
-    , Task = require('./tasks/Task');
+    , Spinner = require('../../components/Spinner')
+    , tasks = require('../../flux/tasks')
+    , Task = require('./Task');
 
 
 var colors = ["Red", "Green", "Blue", "Yellow", "Black", "White", "Orange"];

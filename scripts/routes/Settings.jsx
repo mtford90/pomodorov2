@@ -9,7 +9,6 @@ var React = require('react')
     , config = require('../../app.config')
     , _ = require('underscore')
     , ColorPicker = require('../components/ColorPicker')
-    , Footer = require('../footer/index.jsx').Footer
     , Panel = require('../components/Panel')
     , data = require('../data/pomodoro')
     , Config = data.Config
@@ -213,9 +212,6 @@ var Settings = React.createClass({
                         </Row>
                     </div>
                 </DocumentTitle>
-                <Footer>
-                ASafsmasfaf
-                </Footer>
             </div>
 
         );

@@ -1,6 +1,6 @@
 var React = require('react'),
     _ = require('underscore'),
-    Tagger = require('./Tagger'),
+    Tagger = require('./../../components/tag/Tagger'),
     FilterConfig = require('./FilterConfig');
 
 var TagsFilter = React.createClass({
