@@ -66,6 +66,17 @@
 
   }
 
+  .colour-settings {
+    .colour-footer {
+      margin-top: 20px;
+      height: 40px;
+      .coloured-button {
+        position: relative;
+        float: right;
+      }
+    }
+  }
+
   .color-picker {
     position: relative;
     #color {

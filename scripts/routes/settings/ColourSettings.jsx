@@ -4,19 +4,21 @@ var React = require('react')
     , ColouredInput = require('../../components/ColouredInput')
     , data = require('../../data')
     , Config = data.Config
+    , _ = require('underscore')
     , InputPanel = require('./InputPanel')
     , InputPanelItem = require('./InputPanelItem')
     , InputPanelTitle = require('./InputPanelTitle')
     , InputPanelDescription = require('./InputPanelDescription')
-    , InputPanelFooter = require('./InputPanelFooter');
+    , InputPanelFooter = require('./InputPanelFooter')
+    , ColouredButton = require('../../components/ColouredButton');
 
 
 var ColourSettings = React.createClass({
     render: function () {
         var cssUrl = "http://paletton.com/#uid=10K0u0kllllaFw0g0qFqFg0w0aF";
         return (
-            <div>
-                <InputPanel>
+            <div className="colour-settings">
+                <InputPanel >
                     <InputPanelTitle>
                         <span>
                             <i className="fa fa-paint-brush"/>
@@ -50,8 +52,8 @@ var ColourSettings = React.createClass({
                             ref="longBreak"
                             componentClass={ColouredInput}/>
                     </InputPanelItem>
-                    <InputPanelFooter>
-                        <button onClick={this.onResetToDefaults}>Defaults</button>
+                    <InputPanelFooter className="colour-footer">
+                        <ColouredButton onClick={this.onResetToDefaults}>Reset</ColouredButton>
                     </InputPanelFooter>
                 </InputPanel>
             </div>

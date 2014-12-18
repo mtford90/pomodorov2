@@ -29,6 +29,7 @@ var InputPanel = React.createClass({
             else if (displayName == 'InputPanelFooter') {
                 if (footer) console.warn('Multiple InputPanelFooter components in one InputPanel');
                 else footer = child;
+                console.log('footer', footer);
             }
         });
         return (
