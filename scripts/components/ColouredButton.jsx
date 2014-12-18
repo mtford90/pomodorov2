@@ -17,9 +17,9 @@ var ColouredButton = React.createClass({
             </div>
         );
         // TODO: Is there a nicer way of passing on props?
-        var props = _.extend({}, component.props);
+        var props = _.extend({}, this.props);
         delete props.children;
-        _.extend(props, this.props);
+        _.extend(component.props, props);
         return component;
     },
     getInitialState: function () {

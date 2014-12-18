@@ -53,7 +53,7 @@ var ColourSettings = React.createClass({
                             componentClass={ColouredInput}/>
                     </InputPanelItem>
                     <InputPanelFooter className="colour-footer">
-                        <ColouredButton onClick={this.onResetToDefaults}>Reset</ColouredButton>
+                        <ColouredButton onClick={this.onResetToDefaults.bind(this)}>Reset</ColouredButton>
                     </InputPanelFooter>
                 </InputPanel>
             </div>
