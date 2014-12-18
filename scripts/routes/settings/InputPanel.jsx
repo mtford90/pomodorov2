@@ -5,7 +5,7 @@ var React = require('react')
 
 var InputPanel = React.createClass({
     render: function () {
-        var title, description, rows = [];
+        var title, description, footer, rows = [];
         this.props.children.forEach(function (child, i) {
             /* TODO: Better way to determine what the type of component is?
              * If we change the name of InputPanelItem the below will break... */
@@ -26,6 +26,10 @@ var InputPanel = React.createClass({
                 if (description) console.warn('Multiple InputPanelDescription components in one InputPanel');
                 else description = child;
             }
+            else if (displayName == 'InputPanelFooter') {
+                if (footer) console.warn('Multiple InputPanelFooter components in one InputPanel');
+                else footer = child;
+            }
         });
         return (
             <Panel title={title}>
@@ -35,6 +39,7 @@ var InputPanel = React.createClass({
                         <tbody>{rows}</tbody>
                     </table>
                 </form>
+                {footer ? footer : ''}
             </Panel>
         )
     }

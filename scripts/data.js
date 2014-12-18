@@ -1,4 +1,5 @@
 var q = require('q'),
+    _ = require('underscore'),
     siesta = require('../../rest/core/index')({http: require('../../rest/http/index')});
 
 
@@ -45,7 +46,12 @@ var Task = Pomodoro.mapping(Type.Task, {
                 default: DEFAULT_COLOURS.longBreak
             }
         ],
-        singleton: true
+        singleton: true,
+        methods: {
+            resetToDefaults: function () {
+                _.extend(this, DEFAULT_COLOURS);
+            }
+        }
     }),
     PomodoroConfig = Pomodoro.mapping('PomodoroConfig', {
         attributes: [

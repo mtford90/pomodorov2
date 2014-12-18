@@ -7,48 +7,54 @@ var React = require('react')
     , InputPanel = require('./InputPanel')
     , InputPanelItem = require('./InputPanelItem')
     , InputPanelTitle = require('./InputPanelTitle')
-    , InputPanelDescription = require('./InputPanelDescription');
+    , InputPanelDescription = require('./InputPanelDescription')
+    , InputPanelFooter = require('./InputPanelFooter');
 
 
 var ColourSettings = React.createClass({
     render: function () {
         var cssUrl = "http://paletton.com/#uid=10K0u0kllllaFw0g0qFqFg0w0aF";
         return (
-            <InputPanel>
-                <InputPanelTitle>
-                    <span>
-                        <i className="fa fa-paint-brush"/>
-                        <span className="title-text">Colours</span>
-                    </span>
-                </InputPanelTitle>
-                <InputPanelDescription>
-                    <span>Use
-                        <a href={cssUrl}> CSS colours </a>
-                    to customise the theme.</span>
-                </InputPanelDescription>
-                <InputPanelItem title="Primary">
-                    <ColorPicker color={this.state.primary}
-                        onChange={this.onColorPickerChange}
-                        onSuccessfulChange={this.onSuccessfulColorPickerChange}
-                        ref="primary"
-                        componentClass={ColouredInput}/>
-                </InputPanelItem>
-                <InputPanelItem title="Short Break">
-                    <ColorPicker color={this.state.shortBreak}
-                        onChange={this.onColorPickerChange}
-                        onSuccessfulChange={this.onSuccessfulColorPickerChange}
-                        ref="shortBreak"
-                        componentClass={ColouredInput}/>
-                </InputPanelItem>
-                <InputPanelItem title="Long Break">
-                    <ColorPicker
-                        color={this.state.longBreak}
-                        onChange={this.onColorPickerChange}
-                        onSuccessfulChange={this.onSuccessfulColorPickerChange}
-                        ref="longBreak"
-                        componentClass={ColouredInput}/>
-                </InputPanelItem>
-            </InputPanel>
+            <div>
+                <InputPanel>
+                    <InputPanelTitle>
+                        <span>
+                            <i className="fa fa-paint-brush"/>
+                            <span className="title-text">Colours</span>
+                        </span>
+                    </InputPanelTitle>
+                    <InputPanelDescription>
+                        <span>Use
+                            <a href={cssUrl}> CSS colours </a>
+                        to customise the theme.</span>
+                    </InputPanelDescription>
+                    <InputPanelItem title="Primary">
+                        <ColorPicker color={this.state.primary}
+                            onChange={this.onColorPickerChange}
+                            onSuccessfulChange={this.onSuccessfulColorPickerChange}
+                            ref="primary"
+                            componentClass={ColouredInput}/>
+                    </InputPanelItem>
+                    <InputPanelItem title="Short Break">
+                        <ColorPicker color={this.state.shortBreak}
+                            onChange={this.onColorPickerChange}
+                            onSuccessfulChange={this.onSuccessfulColorPickerChange}
+                            ref="shortBreak"
+                            componentClass={ColouredInput}/>
+                    </InputPanelItem>
+                    <InputPanelItem title="Long Break">
+                        <ColorPicker
+                            color={this.state.longBreak}
+                            onChange={this.onColorPickerChange}
+                            onSuccessfulChange={this.onSuccessfulColorPickerChange}
+                            ref="longBreak"
+                            componentClass={ColouredInput}/>
+                    </InputPanelItem>
+                    <InputPanelFooter>
+                        <button onClick={this.onResetToDefaults}>Defaults</button>
+                    </InputPanelFooter>
+                </InputPanel>
+            </div>
         )
     },
     getProp: function (picker) {
@@ -90,7 +96,10 @@ var ColourSettings = React.createClass({
     onSuccessfulColorPickerChange: function (change) {
         var prop = this.getProp(change.picker);
         if (prop) this.coloursConfig[prop] = change.color;
-        else  console.warn('Unknown color picker', change);
+        else console.warn('Unknown color picker', change);
+    },
+    onResetToDefaults: function () {
+        this.coloursConfig.resetToDefaults()
     }
 });
 
