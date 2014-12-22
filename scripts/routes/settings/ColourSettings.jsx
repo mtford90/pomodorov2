@@ -101,7 +101,7 @@ var ColourSettings = React.createClass({
         else console.warn('Unknown color picker', change);
     },
     onResetToDefaults: function () {
-        modal.confirmation('This will reset the colour scheme', function () {
+        modal.confirmation('Reset colour scheme?', null, function () {
             this.coloursConfig.resetToDefaults()
         }.bind(this));
     }

@@ -11,7 +11,8 @@ var defaultState = {
     },
     contentStyle: {
         width: '0px',
-        height: '0px'
+        height: '0px',
+        overflow: 'hidden'
     },
     inner: <span></span>
 };
@@ -58,8 +59,9 @@ var Modal = React.createClass({
                 pointerEvents: 'auto'
             },
             contentStyle: {
-                width: '400px',
-                height: '300px'
+                width: 'auto',
+                height: 'auto',
+                overflow: 'default'
             }
         };
         if (elem) stateChange['inner'] = elem;

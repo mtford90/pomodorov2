@@ -11,7 +11,7 @@ var ColouredButton = React.createClass({
         var component = (
             <div style={style} className="coloured-button">
                 <div className="overlay"></div>
-                <span className="content">
+                <span className="button-content">
                     {this.props.children}
                 </span>
             </div>

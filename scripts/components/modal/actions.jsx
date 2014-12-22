@@ -14,7 +14,7 @@ module.exports = {
         var modal = Modal.getSingleton();
         modal.hideModal();
     },
-    confirmation: function (content, okCallback, cancelCallback) {
+    confirmation: function (title, content, okCallback, cancelCallback) {
         okCallback = okCallback || function () {};
         cancelCallback = cancelCallback || function () {};
         var modal = Modal.getSingleton();
@@ -26,6 +26,6 @@ module.exports = {
             modal.hideModal();
             okCallback();
         };
-        this.reveal(<Confirmation ok={ok} cancel={cancel}>{content}</Confirmation>)
+        this.reveal(<Confirmation ok={ok} cancel={cancel} title={title}>{content}</Confirmation>)
     }
 };
