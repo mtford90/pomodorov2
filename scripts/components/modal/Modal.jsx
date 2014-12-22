@@ -16,7 +16,7 @@ var defaultState = {
     inner: <span></span>
 };
 
-var cstr;
+var singleton;
 
 var Modal = React.createClass({
     render: function () {
@@ -34,9 +34,15 @@ var Modal = React.createClass({
             </div>
         )
     },
+    statics: {
+        getSingleton: function () {
+            if (!singleton) throw Error('Modal placeholder must be in the app somewhere');
+            return singleton;
+        }
+    },
     componentDidMount: function () {
         // Make available reveal, hide etc so can export functionality of the placeholder
-        cstr = this;
+        singleton = this;
     },
     getInitialState: function () {
         return defaultState
@@ -71,16 +77,4 @@ var Modal = React.createClass({
 
 });
 
-var placeholder = <Modal/>;
-
-var exports = {
-    placeholder: placeholder,
-    reveal: function () {
-        cstr.reveal.apply(cstr, arguments);
-    },
-    hide: function () {
-        console.log('hide');
-        cstr.hideModal();
-    }
-};
-module.exports = exports;
+module.exports = Modal;

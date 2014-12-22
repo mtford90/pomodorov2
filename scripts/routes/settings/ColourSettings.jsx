@@ -11,7 +11,7 @@ var React = require('react')
     , InputPanelDescription = require('./InputPanelDescription')
     , InputPanelFooter = require('./InputPanelFooter')
     , ColouredButton = require('../../components/ColouredButton')
-    , modal = require('../../components/modal');
+    , modal = require('../../components/modal/actions');
 
 var ColourSettings = React.createClass({
     render: function () {
@@ -101,12 +101,9 @@ var ColourSettings = React.createClass({
         else console.warn('Unknown color picker', change);
     },
     onResetToDefaults: function () {
-        modal.reveal((
-            <div>
-                <button onClick={modal.hide}>Hide</button>
-            </div>
-        ));
-        //this.coloursConfig.resetToDefaults()
+        modal.confirmation('This will reset the colour scheme', function () {
+            this.coloursConfig.resetToDefaults()
+        }.bind(this));
     }
 });
 
