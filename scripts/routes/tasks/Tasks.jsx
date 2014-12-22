@@ -38,31 +38,31 @@ var Tasks = React.createClass({
                             </Col>
                             <Col xs={12} sm={11}>
                                 <ul onDragOver={this.dragOver}>
-                    {this.state.tasks.map(function (o, i) {
-                        return (
-                            <Row componentClass={React.DOM.li}
-                                data-id={i}
-                                key={i}
-                                draggable="true"
-                                onDragEnd={self.dragEnd}
-                                onDragStart={self.dragStart}>
-                                <Col sm={12} md={12} lg={12} >
-                                    <Task title={o.title}
-                                        asana={o.asana}
-                                        key={o._id}
-                                        description={o.description}
-                                        index={i}
-                                        onCancel={self.onCancel}
-                                        onChange={self.onChange}
-                                        onComplete={self.onComplete}
-                                        onEditing={self.onEditing}
-                                        onDiscard={self.onDiscard}
-                                        editing={o.editing}
-                                    />
-                                </Col>
-                            </Row>
-                        )
-                    })}
+                                    {this.state.tasks.map(function (o, i) {
+                                        return (
+                                            <Row componentClass={React.DOM.li}
+                                                data-id={i}
+                                                key={i}
+                                                draggable="true"
+                                                onDragEnd={self.dragEnd}
+                                                onDragStart={self.dragStart}>
+                                                <Col sm={12} md={12} lg={12} >
+                                                    <Task title={o.title}
+                                                        asana={o.asana}
+                                                        key={o._id}
+                                                        description={o.description}
+                                                        index={i}
+                                                        onCancel={self.onCancel}
+                                                        onChange={self.onChange}
+                                                        onComplete={self.onComplete}
+                                                        onEditing={self.onEditing}
+                                                        onDiscard={self.onDiscard}
+                                                        editing={o.editing}
+                                                    />
+                                                </Col>
+                                            </Row>
+                                        )
+                                    })}
                                 </ul>
                             </Col>
                         </Row>

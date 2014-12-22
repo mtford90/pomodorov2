@@ -5,6 +5,7 @@ var React = require('react')
     , location = require('./location')
     , Timer = require('./components/pomodoro/Timer')
     , Link = router.Link
+    , modalPlaceholder = require('./components/modal').placeholder
     , NavBar = require('./components/NavBar');
 
 var ContentWrapper = React.createClass({
@@ -38,7 +39,10 @@ var ContentWrapper = React.createClass({
 var App = React.createClass({
     render: function () {
         return (
-            <ContentWrapper/>
+            <div>
+                <ContentWrapper/>
+                {modalPlaceholder}
+            </div>
         )
     }
 });

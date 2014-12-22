@@ -55,7 +55,9 @@ var routes = (
 
 data.Pomodoro.install(function () {
     Router.run(routes, require('./location'), function (Handler, x, y) {
-        var view = <Handler/>;
+        var view = (
+                <Handler/>
+        );
         console.log('handler', view);
         React.render(view, document.getElementById('wrapper'));
     });
