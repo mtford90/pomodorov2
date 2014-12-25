@@ -53,12 +53,23 @@ var routes = (
     </Route>
 );
 
-data.Pomodoro.install(function () {
+siesta.install(function () {
     Router.run(routes, require('./location'), function (Handler, x, y) {
         var view = (
-                <Handler/>
+            <Handler/>
         );
         console.log('handler', view);
         React.render(view, document.getElementById('wrapper'));
     });
+});
+
+siesta.on('Siesta', function () {
+    console.log('Saving');
+    siesta.save()
+        .then(function () {
+            console.log('saved');
+        })
+        .catch(function (err) {
+            console.error('Error saving')
+        })
 });

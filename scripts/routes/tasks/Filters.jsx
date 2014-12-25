@@ -35,9 +35,19 @@ var Filters = React.createClass({
         }
     },
     onNewPressed: function () {
-        Task.map({title: 'A new task!', completed: false}).catch(function(err) {
-            console.error('error creating new task:', err);
-        }).done();
+        Task.map({title: 'A new task!', completed: false})
+            .then(function () {
+                siesta.save().
+                    then(function () {
+                        console.log('Save success');
+                    })
+                    .catch(function (err) {
+                        console.error('Error saving');
+                    })
+            })
+            .catch(function (err) {
+                console.error('error creating new task:', err);
+            }).done();
     },
     onTagsPressed: function (e) {
         this.cancelFilterConfig();

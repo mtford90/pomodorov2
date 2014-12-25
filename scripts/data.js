@@ -1,9 +1,12 @@
 var q = require('q'),
     _ = require('underscore'),
-    siesta = require('../../rest/core/index')({http: require('../../rest/http/index')});
+    siesta = require('../../rest/core/index')({
+        http: require('../../rest/http/index'),
+        storage: require('../../rest/storage/index')
+    });
 
 
-var Pomodoro = new siesta.Collection('Pomodoro');
+var Pomodoro = siesta.collection('Pomodoro');
 
 var Type = {
     Task: 'Task'
@@ -15,7 +18,7 @@ DEFAULT_COLOURS = {
     longBreak: '#292f37'
 };
 
-var Task = Pomodoro.mapping(Type.Task, {
+var Task = Pomodoro.model(Type.Task, {
         attributes: [
             'title',
             'description',
@@ -24,14 +27,14 @@ var Task = Pomodoro.mapping(Type.Task, {
             'index'
         ]
     }),
-    Config = Pomodoro.mapping('Config', {
+    Config = Pomodoro.model('Config', {
         relationships: {
-            pomodoro: {mapping: 'PomodoroConfig'},
-            colours: {mapping: 'ColourConfig'}
+            pomodoro: {model: 'PomodoroConfig'},
+            colours: {model: 'ColourConfig'}
         },
         singleton: true
     }),
-    ColourConfig = Pomodoro.mapping('ColourConfig', {
+    ColourConfig = Pomodoro.model('ColourConfig', {
         attributes: [
             {
                 name: 'primary',
@@ -53,7 +56,7 @@ var Task = Pomodoro.mapping(Type.Task, {
             }
         }
     }),
-    PomodoroConfig = Pomodoro.mapping('PomodoroConfig', {
+    PomodoroConfig = Pomodoro.model('PomodoroConfig', {
         attributes: [
             {
                 name: 'pomodoroLength',
@@ -75,11 +78,12 @@ var Task = Pomodoro.mapping(Type.Task, {
         singleton: true
     });
 
+var incompleteTasks = Task.reactiveQuery({completed: false}).orderBy('index');
 module.exports = {
     Pomodoro: Pomodoro,
     Task: Task,
     Config: Config,
     siesta: siesta,
     Type: Type,
-    incompleteTasks: Task.reactiveQuery({completed: false}).orderBy('index')
+    incompleteTasks: incompleteTasks
 };

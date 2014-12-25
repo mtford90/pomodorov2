@@ -89,6 +89,9 @@ var Tasks = React.createClass({
             incompleteTasks.init().then(function () {
                 _listen.call(this);
                 this.refs.spinner.finishLoading();
+                this.setState({
+                    tasks: incompleteTasks.results
+                })
             }.bind(this)).catch(function (err) {
                 console.error('Error initialising tasks', err);
             }).done();

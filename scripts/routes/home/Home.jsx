@@ -83,6 +83,9 @@ var Home = React.createClass({
             unfinishedTasks.init().then(function () {
                 this.refs.spinner.finishLoading();
                 _listen.call(this);
+                this.setState({
+                    tasks: unfinishedTasks.results
+                })
             }.bind(this)).catch(function (err) {
                 console.error('Error initialising tasksRQ for home', err);
             })
