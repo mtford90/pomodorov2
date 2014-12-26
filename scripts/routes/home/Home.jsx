@@ -69,13 +69,13 @@ var Home = React.createClass({
     },
     componentDidMount: function () {
         var _listen = function () {
-            this.listener = function () {
+            this.incompleteTasksListener = function () {
                 this.setState({
                     tasks: tasks,
                     loaded: true
                 });
             }.bind(this);
-            unfinishedTasks.on('change', this.listener);
+            unfinishedTasks.on('change', this.incompleteTasksListener);
         }.bind(this);
 
         if (!unfinishedTasks.initialised) {
@@ -103,7 +103,7 @@ var Home = React.createClass({
         })
     },
     componentWillUnmount: function () {
-        unfinishedTasks.removeListener('change', this.listener);
+        unfinishedTasks.removeListener('change', this.incompleteTasksListener);
     },
     getInitialState: function () {
         return {

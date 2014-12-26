@@ -13,7 +13,8 @@ var React = require('react')
     , router = require('react-router')
     , Link = router.Link
     , Spinner = require('../../components/Spinner')
-    , incompleteTasks = require('../../data').incompleteTasks
+    , data = require('../../data')
+    , incompleteTasks = data.incompleteTasks
     , Task = require('./Task');
 
 
@@ -74,7 +75,7 @@ var Tasks = React.createClass({
     componentDidMount: function () {
         var _listen = function () {
             console.log('listening');
-            this.listener = function () {
+            this.incompleteTasksListener = function () {
                 var taskModels = incompleteTasks.results;
                 console.log('tasks changed', taskModels);
                 this.setState({
@@ -82,7 +83,7 @@ var Tasks = React.createClass({
                     loaded: true
                 });
             }.bind(this);
-            incompleteTasks.on('change', this.listener);
+            incompleteTasks.on('change', this.incompleteTasksListener);
         }.bind(this);
         if (!incompleteTasks.initialised) {
             this.refs.spinner.startTimer();
@@ -104,7 +105,7 @@ var Tasks = React.createClass({
         this.transitionTo('AddOrEditTask', {taskId: task._id})
     },
     componentWillUnmount: function () {
-        incompleteTasks.removeListener('change', this.listener);
+        incompleteTasks.removeListener('change', this.incompleteTasksListener);
     },
     onChange: function (taskElem, changes) {
         var index = taskElem.props.index;
@@ -119,6 +120,17 @@ var Tasks = React.createClass({
     onStartEditing: function (taskElem) {
         var index = taskElem.props.index,
             task = incompleteTasks.results[index];
+        data.Task.query({editing: true})
+            .execute()
+            .then(function (tasks) {
+                _.each(tasks, function (t) {
+                    t.editing = false
+                });
+                this.setState();
+            }.bind(this))
+            .catch(function (err) {
+                console.error('Error canceling editing of other tasks');
+            });
         task.editing = true;
     },
     onEndEditing: function (taskElem) {
