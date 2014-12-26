@@ -39,6 +39,7 @@ var Tasks = React.createClass({
                             <Col xs={12} sm={11}>
                                 <ul onDragOver={this.dragOver}>
                                     {this.state.tasks.map(function (o, i) {
+                                        console.log('render task', o);
                                         return (
                                             <Row componentClass={React.DOM.li}
                                                 data-id={i}
@@ -47,15 +48,14 @@ var Tasks = React.createClass({
                                                 onDragEnd={self.dragEnd}
                                                 onDragStart={self.dragStart}>
                                                 <Col sm={12} md={12} lg={12} >
-                                                    <Task title={o.title}
-                                                        asana={o.asana}
+                                                    <Task task={o}
                                                         key={o._id}
-                                                        description={o.description}
                                                         index={i}
                                                         onCancel={self.onCancel}
                                                         onChange={self.onChange}
                                                         onComplete={self.onComplete}
-                                                        onEditing={self.onEditing}
+                                                        onStartEditing={self.onStartEditing}
+                                                        onEndEditing={self.onEndEditing}
                                                         onDiscard={self.onDiscard}
                                                         editing={o.editing}
                                                     />
@@ -116,10 +116,15 @@ var Tasks = React.createClass({
         var task = incompleteTasks.results[index];
         task.completed = true;
     },
-    onEditing: function (taskElem) {
+    onStartEditing: function (taskElem) {
         var index = taskElem.props.index,
             task = incompleteTasks.results[index];
         task.editing = true;
+    },
+    onEndEditing: function (taskElem) {
+        var index = taskElem.props.index,
+            task = incompleteTasks.results[index];
+        task.editing = false;
     },
     onCancel: function (task) {
         incompleteTasks.results[task.props.index].remove();
@@ -131,7 +136,7 @@ var Tasks = React.createClass({
     },
     getInitialState: function () {
         return {
-            tasks: incompleteTasks.initialised ? incompleteTasks.results : [],
+            tasks: incompleteTasks.results || [],
             loaded: false
         }
     },

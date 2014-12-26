@@ -87,9 +87,19 @@ var Tagger = React.createClass({
             this.resizeInput();
         });
     },
+    getDefaultProps: function () {
+        return {
+            data: []
+        }
+    },
+    componentWillReceiveProps: function (nextProps){
+        this.setState({
+            tags: nextProps.tags
+        })
+    },
     getInitialState: function () {
         return {
-            tags: ['tag1', 'tag2', 'tag3'],
+            tags: this.props.data,
             text: ''
         }
     },
