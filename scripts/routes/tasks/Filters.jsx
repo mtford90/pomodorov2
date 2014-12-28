@@ -1,7 +1,9 @@
 var React = require('react'),
     _ = require('underscore'),
     FilterConfig = require('./FilterConfig'),
-    Task = require('../../data').Task,
+    data = require('../../data'),
+    Task = data.Task,
+    incompleteTasks = data.incompleteTasks,
     TagsFilter = require('./TagsFilter');
 
 var Filters = React.createClass({
@@ -35,14 +37,20 @@ var Filters = React.createClass({
         }
     },
     onNewPressed: function () {
-        Task.map({title: 'A new task!', completed: false})
-            .then(function (task) {
-                console.log('New task created', task);
+
+        // Ensure that the new task is at the top.
+        for (var i=0; i<incompleteTasks.results.length; i++) {
+            var task = incompleteTasks.results[i];
+            task.index = i+1;
+            task.editing = false;
+        }
+        Task.map({title: 'A new task!', completed: false, index: 0, editing: true})
+            .then(function () {
+                console.log('new task created');
             })
             .catch(function (err) {
                 console.error('error creating new task:', err);
-            })
-            .done();
+            }).done();
     },
     onTagsPressed: function (e) {
         this.cancelFilterConfig();

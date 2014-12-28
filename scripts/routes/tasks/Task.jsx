@@ -24,6 +24,7 @@ var Task = React.createClass({
         //        <i className="fa fa-trash-o discard" title="Discard" ref="discard"></i>
         //    </div>
         //);
+        var task = this.props.task;
         return (
             <div className={className}
                 onMouseOver={self.onMouseOver}
@@ -31,9 +32,9 @@ var Task = React.createClass({
                 onClick={this.onClick}
                 style={style}
             >
-            {self.state.editing ? <ContentEditable ref="title" className="title" onChange={this.onTitleChange} text={this.props.title}>
-            </ContentEditable> : <span>{this.props.title}</span>}
-                {this.props.asana ? <img className="tag-asana tag" src="img/asana-minimal.png"/> : ''}
+            {self.state.editing ? <ContentEditable ref="title" className="title" onChange={this.onTitleChange} text={task.title}>
+            </ContentEditable> : <span>{task.title}</span>}
+                {task.asana ? <img className="tag-asana tag" src="img/asana-minimal.png"/> : ''}
                 <div className="buttons">
                     {notEditingButtons}
                 </div>
@@ -68,7 +69,7 @@ var Task = React.createClass({
                     <Summernote summernoteProps={summernoteProps}
                         ref="summernote"
                         onChange={self.onDescriptionChange}
-                        innerHTML={self.props.description}></Summernote>
+                        innerHTML={self.props.task.description}></Summernote>
                 </div>
             );
         }
@@ -128,8 +129,8 @@ var Task = React.createClass({
                     this.setState({
                         editing: false
                     }, function () {
-                        if (this.props.onEditing) {
-                            this.props.onEditing(this);
+                        if (this.props.onEndEditing) {
+                            this.props.onEndEditing(this);
                         }
                     });
                 }
@@ -139,8 +140,8 @@ var Task = React.createClass({
                 this.setState({
                     editing: true
                 }, function () {
-                    if (this.props.onEditing) {
-                        this.props.onEditing(this);
+                    if (this.props.onStartEditing) {
+                        this.props.onStartEditing(this);
                     }
                 });
             }
@@ -164,8 +165,10 @@ var Task = React.createClass({
         }
     },
     componentWillReceiveProps: function (nextProps) {
+        console.log('Task componentWillReceiveProps', nextProps);
         this.setState({
             editing: nextProps.editing,
+            task: nextProps.task,
             hover: false
         })
     },

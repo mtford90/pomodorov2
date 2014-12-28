@@ -69,13 +69,13 @@ var Home = React.createClass({
     },
     componentDidMount: function () {
         var _listen = function () {
-            this.listener = function () {
+            this.incompleteTasksListener = function () {
                 this.setState({
                     tasks: tasks,
                     loaded: true
                 });
             }.bind(this);
-            unfinishedTasks.on('change', this.listener);
+            unfinishedTasks.on('change', this.incompleteTasksListener);
         }.bind(this);
 
         if (!unfinishedTasks.initialised) {
@@ -83,6 +83,9 @@ var Home = React.createClass({
             unfinishedTasks.init().then(function () {
                 this.refs.spinner.finishLoading();
                 _listen.call(this);
+                this.setState({
+                    tasks: unfinishedTasks.results
+                })
             }.bind(this)).catch(function (err) {
                 console.error('Error initialising tasksRQ for home', err);
             })
@@ -100,7 +103,7 @@ var Home = React.createClass({
         })
     },
     componentWillUnmount: function () {
-        unfinishedTasks.removeListener('change', this.listener);
+        unfinishedTasks.removeListener('change', this.incompleteTasksListener);
     },
     getInitialState: function () {
         return {

@@ -81,7 +81,6 @@ var Task = Pomodoro.model(Type.Task, {
 var incompleteTasks = Task.positionedReactiveQuery({completed: false});
 incompleteTasks.orderBy('index');
 incompleteTasks.init();
-
 module.exports = {
     Pomodoro: Pomodoro,
     Task: Task,

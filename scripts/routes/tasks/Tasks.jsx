@@ -13,7 +13,8 @@ var React = require('react')
     , router = require('react-router')
     , Link = router.Link
     , Spinner = require('../../components/Spinner')
-    , incompleteTasks = require('../../data').incompleteTasks
+    , data = require('../../data')
+    , incompleteTasks = data.incompleteTasks
     , Task = require('./Task');
 
 
@@ -39,6 +40,7 @@ var Tasks = React.createClass({
                             <Col xs={12} sm={11}>
                                 <ul onDragOver={this.dragOver}>
                                     {this.state.tasks.map(function (o, i) {
+                                        console.log('render task', o);
                                         return (
                                             <Row componentClass={React.DOM.li}
                                                 data-id={i}
@@ -47,15 +49,14 @@ var Tasks = React.createClass({
                                                 onDragEnd={self.dragEnd}
                                                 onDragStart={self.dragStart}>
                                                 <Col sm={12} md={12} lg={12} >
-                                                    <Task title={o.title}
-                                                        asana={o.asana}
+                                                    <Task task={o}
                                                         key={o._id}
-                                                        description={o.description}
                                                         index={i}
                                                         onCancel={self.onCancel}
                                                         onChange={self.onChange}
                                                         onComplete={self.onComplete}
-                                                        onEditing={self.onEditing}
+                                                        onStartEditing={self.onStartEditing}
+                                                        onEndEditing={self.onEndEditing}
                                                         onDiscard={self.onDiscard}
                                                         editing={o.editing}
                                                     />
@@ -74,7 +75,7 @@ var Tasks = React.createClass({
     componentDidMount: function () {
         var _listen = function () {
             console.log('listening');
-            this.listener = function () {
+            this.incompleteTasksListener = function () {
                 var taskModels = incompleteTasks.results;
                 console.log('tasks changed', taskModels);
                 this.setState({
@@ -82,13 +83,16 @@ var Tasks = React.createClass({
                     loaded: true
                 });
             }.bind(this);
-            incompleteTasks.on('change', this.listener);
+            incompleteTasks.on('change', this.incompleteTasksListener);
         }.bind(this);
         if (!incompleteTasks.initialised) {
             this.refs.spinner.startTimer();
             incompleteTasks.init().then(function () {
                 _listen.call(this);
                 this.refs.spinner.finishLoading();
+                this.setState({
+                    tasks: incompleteTasks.results
+                })
             }.bind(this)).catch(function (err) {
                 console.error('Error initialising tasks', err);
             }).done();
@@ -101,7 +105,7 @@ var Tasks = React.createClass({
         this.transitionTo('AddOrEditTask', {taskId: task._id})
     },
     componentWillUnmount: function () {
-        incompleteTasks.removeListener('change', this.listener);
+        incompleteTasks.removeListener('change', this.incompleteTasksListener);
     },
     onChange: function (taskElem, changes) {
         var index = taskElem.props.index;
@@ -113,10 +117,26 @@ var Tasks = React.createClass({
         var task = incompleteTasks.results[index];
         task.completed = true;
     },
-    onEditing: function (taskElem) {
+    onStartEditing: function (taskElem) {
         var index = taskElem.props.index,
             task = incompleteTasks.results[index];
+        data.Task.query({editing: true})
+            .execute()
+            .then(function (tasks) {
+                _.each(tasks, function (t) {
+                    t.editing = false
+                });
+                this.setState();
+            }.bind(this))
+            .catch(function (err) {
+                console.error('Error canceling editing of other tasks');
+            });
         task.editing = true;
+    },
+    onEndEditing: function (taskElem) {
+        var index = taskElem.props.index,
+            task = incompleteTasks.results[index];
+        task.editing = false;
     },
     onCancel: function (task) {
         incompleteTasks.results[task.props.index].remove();
@@ -128,7 +148,7 @@ var Tasks = React.createClass({
     },
     getInitialState: function () {
         return {
-            tasks: incompleteTasks.initialised ? incompleteTasks.results : [],
+            tasks: incompleteTasks.results || [],
             loaded: false
         }
     },
