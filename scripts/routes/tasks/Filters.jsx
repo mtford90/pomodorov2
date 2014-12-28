@@ -37,14 +37,7 @@ var Filters = React.createClass({
         }
     },
     onNewPressed: function () {
-
-        // Ensure that the new task is at the top.
-        for (var i=0; i<incompleteTasks.results.length; i++) {
-            var task = incompleteTasks.results[i];
-            task.index = i+1;
-            task.editing = false;
-        }
-        Task.map({title: 'A new task!', completed: false, index: 0, editing: true})
+        Task.map({title: 'A new task!', completed: false, editing: true})
             .then(function () {
                 console.log('new task created');
             })

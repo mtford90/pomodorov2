@@ -78,9 +78,22 @@ var Task = Pomodoro.model(Type.Task, {
         singleton: true
     });
 
-var incompleteTasks = Task.positionedReactiveQuery({completed: false});
+var incompleteTasks = Task.positionalReactiveQuery({completed: false});
 incompleteTasks.orderBy('index');
-incompleteTasks.init();
+incompleteTasks.insertionPolicy = siesta.InsertionPolicy.Front;
+// Only one task should be editing at a time.
+incompleteTasks.on('change', function (n) {
+    if (n.field == 'editing') {
+        var task = n.obj;
+        if (task.editing) {
+            _.each(incompleteTasks.results, function (t) {
+                 if (t != task) {
+                     t.editing = false;
+                 }
+            });
+        }
+    }
+});
 module.exports = {
     Pomodoro: Pomodoro,
     Task: Task,

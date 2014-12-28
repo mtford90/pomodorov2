@@ -39,7 +39,7 @@ var Spinner = React.createClass({
             this.setState({
                 timing: true
             }, function () {
-                var defaultMinimumTime = 3000,
+                var defaultMinimumTime = 1000,
                     time = this.props['minimumTime'] || defaultMinimumTime;
                 setTimeout(function () {
                     var timerEnded = this.props['timerEnded'];

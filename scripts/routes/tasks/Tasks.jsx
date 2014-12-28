@@ -88,10 +88,12 @@ var Tasks = React.createClass({
         if (!incompleteTasks.initialised) {
             this.refs.spinner.startTimer();
             incompleteTasks.init().then(function () {
+                var tasks = incompleteTasks.results;
+                console.log('initialised', tasks);
                 _listen.call(this);
                 this.refs.spinner.finishLoading();
                 this.setState({
-                    tasks: incompleteTasks.results
+                    tasks: tasks
                 })
             }.bind(this)).catch(function (err) {
                 console.error('Error initialising tasks', err);
@@ -120,17 +122,6 @@ var Tasks = React.createClass({
     onStartEditing: function (taskElem) {
         var index = taskElem.props.index,
             task = incompleteTasks.results[index];
-        data.Task.query({editing: true})
-            .execute()
-            .then(function (tasks) {
-                _.each(tasks, function (t) {
-                    t.editing = false
-                });
-                this.setState();
-            }.bind(this))
-            .catch(function (err) {
-                console.error('Error canceling editing of other tasks');
-            });
         task.editing = true;
     },
     onEndEditing: function (taskElem) {
@@ -159,15 +150,7 @@ var Tasks = React.createClass({
             to = Number(this.over.dataset.id);
         if (from < to) to--;
         if (this.nodePlacement == "after") to++;
-        var tasks = this.state.tasks;
-        tasks.splice(to, 0, tasks.splice(from, 1)[0]);
-        // Update indexes.
-        for (var i = 0; i < tasks.length; i++) {
-            tasks[i].index = i;
-        }
-        // Ensure that task order changes straight away, despite the fact that we'll receive a notification from
-        // from the task store.
-        this.setState({tasks: tasks});
+        incompleteTasks.move(from, to);
     },
     dragStart: function (e) {
         console.log('dragStart', e);
