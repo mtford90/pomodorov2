@@ -85,6 +85,7 @@ incompleteTasks.insertionPolicy = siesta.InsertionPolicy.Front;
 incompleteTasks.on('change', function (n) {
     if (n.field == 'editing') {
         var task = n.obj;
+        console.log('n', n);
         if (task.editing) {
             _.each(incompleteTasks.results, function (t) {
                  if (t != task) {

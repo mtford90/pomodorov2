@@ -62,14 +62,3 @@ siesta.install(function () {
         React.render(view, document.getElementById('wrapper'));
     });
 });
-
-siesta.on('Siesta', function () {
-    console.log('Saving');
-    siesta.save()
-        .then(function () {
-            console.log('saved');
-        })
-        .catch(function (err) {
-            console.error('Error saving')
-        })
-});

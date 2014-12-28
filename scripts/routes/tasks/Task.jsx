@@ -7,6 +7,7 @@ var React = require('react'),
 // TODO: Once ReactJS has the ability to perform inline hover styles, we can get rid of the awkward mouseout/mouseover handlers
 var Task = React.createClass({
     render: function () {
+        console.log('render task');
         var shouldColor = this.state.hover || this.state.editing;
         var style = shouldColor ? {borderColor: this.state.color} : {}
             , self = this
@@ -164,13 +165,29 @@ var Task = React.createClass({
             })
         }
     },
+    shouldComponentUpdate: function (nextProps, nextState) {
+        console.log('shouldComponentUpdate', {
+            nextProps: nextProps,
+            props: this.props
+        });
+        var shouldUpdate = this.props.editing !== nextProps.editing ||
+            this.props.task !== nextProps.task ||
+            this.state.hover !== nextState.hover;
+        console.log('shouldUpdate?', shouldUpdate);
+        return shouldUpdate;
+    },
     componentWillReceiveProps: function (nextProps) {
-        console.log('Task componentWillReceiveProps', nextProps);
-        this.setState({
-            editing: nextProps.editing,
-            task: nextProps.task,
-            hover: false
-        })
+        console.log('componentWillReceiveProps', {
+            nextProps: nextProps,
+            props: this.props
+        });
+        if (nextProps.editing !== this.props.editing) {
+            this.setState({
+                editing: nextProps.editing,
+                task: nextProps.task,
+                hover: false
+            })
+        }
     },
     getInitialState: function () {
         return {
