@@ -1,0 +1,3 @@
+[submodule "submodules/react-siesta"]
+	path = submodules/react-siesta
+	url = https://github.com/mtford90/react-siesta

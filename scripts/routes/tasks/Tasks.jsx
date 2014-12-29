@@ -15,6 +15,7 @@ var React = require('react')
     , Spinner = require('../../components/Spinner')
     , data = require('../../data')
     , incompleteTasks = data.incompleteTasks
+    , SiestaMixin = require('../../../submodules/react-siesta/index').SiestaMixin
     , Task = require('./Task');
 
 
@@ -24,7 +25,7 @@ var placeholder = document.createElement("li");
 placeholder.className = "placeholder";
 
 var Tasks = React.createClass({
-    mixins: [router.Navigation],
+    mixins: [SiestaMixin],
     render: function () {
         var self = this;
         return (
@@ -51,15 +52,7 @@ var Tasks = React.createClass({
                                                 <Col sm={12} md={12} lg={12} >
                                                     <Task task={o}
                                                         key={o._id}
-                                                        index={i}
-                                                        onCancel={self.onCancel}
-                                                        onChange={self.onChange}
-                                                        onComplete={self.onComplete}
-                                                        onStartEditing={self.onStartEditing}
-                                                        onEndEditing={self.onEndEditing}
-                                                        onDiscard={self.onDiscard}
-                                                        editing={o.editing}
-                                                    />
+                                                        index={i}/>
                                                 </Col>
                                             </Row>
                                         )
@@ -73,69 +66,21 @@ var Tasks = React.createClass({
         )
     },
     componentDidMount: function () {
-        var _listen = function () {
-            console.log('listening');
-            this.incompleteTasksListener = function () {
-                var taskModels = incompleteTasks.results;
-                console.log('tasks changed', taskModels);
-                this.setState({
-                    tasks: taskModels,
-                    loaded: true
-                });
-            }.bind(this);
-            incompleteTasks.on('change', this.incompleteTasksListener);
-        }.bind(this);
-        if (!incompleteTasks.initialised) {
-            this.refs.spinner.startTimer();
-            incompleteTasks.init().then(function () {
-                var tasks = incompleteTasks.results;
-                console.log('initialised', tasks);
-                _listen.call(this);
+        if (!incompleteTasks.initialised) this.refs.spinner.startTimer();
+        this.listenToReactiveQuery(incompleteTasks, {
+            init: function () {
                 this.refs.spinner.finishLoading();
                 this.setState({
-                    tasks: tasks
+                    tasks: incompleteTasks.results
                 })
-            }.bind(this)).catch(function (err) {
-                console.error('Error initialising tasks', err);
-            }).done();
-        }
-        else {
-            _listen.call(this);
-        }
-    },
-    onClick: function (task) {
-        this.transitionTo('AddOrEditTask', {taskId: task._id})
-    },
-    componentWillUnmount: function () {
-        incompleteTasks.removeListener('change', this.incompleteTasksListener);
-    },
-    onChange: function (taskElem, changes) {
-        var index = taskElem.props.index;
-        var task = incompleteTasks.results[index];
-        _.extend(task, changes);
-    },
-    onComplete: function (taskElem) {
-        var index = taskElem.props.index;
-        var task = incompleteTasks.results[index];
-        task.completed = true;
-    },
-    onStartEditing: function (taskElem) {
-        var index = taskElem.props.index,
-            task = incompleteTasks.results[index];
-        task.editing = true;
-    },
-    onEndEditing: function (taskElem) {
-        var index = taskElem.props.index,
-            task = incompleteTasks.results[index];
-        task.editing = false;
-    },
-    onCancel: function (task) {
-        incompleteTasks.results[task.props.index].remove();
-    },
-    onDiscard: function (taskElem) {
-        var index = taskElem.props.index,
-            task = incompleteTasks.results[index];
-        task.editing = false;
+            }.bind(this),
+            change: function () {
+                this.setState({
+                    tasks: incompleteTasks.results,
+                    loaded: true
+                });
+            }.bind(this)
+        });
     },
     getInitialState: function () {
         return {
@@ -169,7 +114,6 @@ var Tasks = React.createClass({
             var target = task;
             var tagName = target.tagName;
             while (tagName != 'LI') {
-                var oldTarget = target;
                 target = target.parentNode;
                 if (!target) {
                     throw Error('Ran out of nodes to check.');
@@ -193,12 +137,9 @@ var Tasks = React.createClass({
                 this.nodePlacement = "after";
                 parent.insertBefore(placeholder, target.nextElementSibling);
             }
-            else if (dragY < taskMid) {
+            else if (dragY <= taskMid) {
                 this.nodePlacement = "before";
                 parent.insertBefore(placeholder, target);
-            }
-            else {
-                throw Error('WTF?')
             }
         }
     }

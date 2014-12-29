@@ -11,12 +11,14 @@ var React = require('react')
     , Row = bootstrap.Row
     , Col = bootstrap.Col
     , DocumentTitle = require('react-document-title')
-    , unfinishedTasks = require('../../data').incompleteTasks
+    , incompleteTasks = require('../../data').incompleteTasks
     , Spinner = require('../../components/Spinner')
+    , SiestaMixin = require('../../../submodules/react-siesta/index').SiestaMixin
     , Task = require('../tasks/Task');
 
 
 var Home = React.createClass({
+    mixins: [SiestaMixin],
     render: function () {
         var tasks = this.state.tasks
             , currentTask = tasks.length ? tasks[0] : null
@@ -27,7 +29,7 @@ var Home = React.createClass({
                 </DocumentTitle>
                 <div id="home">
                     <div className="container">
-                        <Spinner ref="spinner" finishedLoading={unfinishedTasks.initialised} timerEnded={this.timerEnded} >
+                        <Spinner ref="spinner" finishedLoading={incompleteTasks.initialised}>
                             <Row className="timer-row" >
                                 <Col sm={12} >
                                     <PomodoroTimer></PomodoroTimer>
@@ -43,7 +45,7 @@ var Home = React.createClass({
                                 </Row>
                                 <Row >
                                     <Col sm={12} >
-                                        <Task title={currentTask.title} asana={currentTask.asana}/>
+                                        <Task task={currentTask}/>
                                     </Col>
                                 </Row>
                             </div>) : ''}
@@ -56,7 +58,7 @@ var Home = React.createClass({
                             return (
                                 <Row >
                                     <Col sm={12} >
-                                        <Task title={o.title} asana={o.asana} key={i}/>
+                                        <Task task={o} key={i}/>
                                     </Col>
                                 </Row>
                             )
@@ -68,46 +70,25 @@ var Home = React.createClass({
         );
     },
     componentDidMount: function () {
-        var _listen = function () {
-            this.incompleteTasksListener = function () {
+        if (!incompleteTasks.initialised) this.refs.spinner.startTimer();
+        this.listenToReactiveQuery(incompleteTasks, {
+            init: function () {
+                this.refs.spinner.finishLoading();
                 this.setState({
-                    tasks: tasks,
+                    tasks: incompleteTasks.results
+                })
+            }.bind(this),
+            change: function () {
+                this.setState({
+                    tasks: incompleteTasks.results,
                     loaded: true
                 });
-            }.bind(this);
-            unfinishedTasks.on('change', this.incompleteTasksListener);
-        }.bind(this);
-
-        if (!unfinishedTasks.initialised) {
-            this.refs.spinner.startTimer();
-            unfinishedTasks.init().then(function () {
-                this.refs.spinner.finishLoading();
-                _listen.call(this);
-                this.setState({
-                    tasks: unfinishedTasks.results
-                })
-            }.bind(this)).catch(function (err) {
-                console.error('Error initialising tasksRQ for home', err);
-            })
-        }
-        else {
-            this.setState({
-                spinnerFinished: true
-            });
-            _listen.call(this);
-        }
-    },
-    timerEnded: function () {
-        this.setState({
-            spinnerFinished: true
-        })
-    },
-    componentWillUnmount: function () {
-        unfinishedTasks.removeListener('change', this.incompleteTasksListener);
+            }.bind(this)
+        });
     },
     getInitialState: function () {
         return {
-            tasks: unfinishedTasks.initialised ? unfinishedTasks.results : [],
+            tasks: incompleteTasks.results || [],
             loaded: false,
             spinnerFinished: false
         }
