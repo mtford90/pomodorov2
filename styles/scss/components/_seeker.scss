@@ -1,8 +1,30 @@
-.seeker {
-  .svg {
-    position: relative;
-    transition: none !important;
-    margin-left: 160px;
-    margin-right: 160px;
+@import "../responsive";
+@import "../../../vendor/bootstrap-sass-official/assets/stylesheets/bootstrap/_variables.scss";
+
+.seeker-wrapper {
+  text-align: center;
+  .seeker-overlay {
+    display: inline-block;
+    overflow: hidden;
+    @include breakpoint('large') {
+      width: 500px;
+    }
+    .seeker {
+      @include breakpoint('large') {
+        width:2000px;
+        position: relative;
+        right: 750px;
+      }
+      .svg {
+        display: inline-block;
+        @include breakpoint('large') {
+          width: 1000px;
+        }
+        position: relative;
+        transition: none !important;
+        margin-left: 160px;
+        margin-right: 160px;
+      }
+    }
   }
 }

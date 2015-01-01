@@ -11,16 +11,20 @@ var Seeker = React.createClass({
         console.log('render');
         var svgStyle = {right: this.state.deltaX};
         return (
-
-            <div className="seeker">
-                <img draggable="true"
-                    style={svgStyle}
-                    onDragStart={this.onDragStart}
-                    onDrag={this.onDrag}
-                    className="svg"
-                    src="img/timeline.svg">
-                </img>
+            <div className="seeker-wrapper">
+                <div className="seeker-overlay">
+                    <div className="seeker">
+                        <img draggable="true"
+                            style={svgStyle}
+                            onDragStart={this.onDragStart}
+                            onDrag={this.onDrag}
+                            className="svg"
+                            src="img/timeline.svg">
+                        </img>
+                    </div>
+                </div>
             </div>
+
         )
     },
     componentDidMount: function () {
