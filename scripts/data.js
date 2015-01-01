@@ -6,6 +6,9 @@ var q = require('q'),
     });
 
 
+siesta.autosave = true;
+siesta.autosaveDuration = 1000;
+
 var Pomodoro = siesta.collection('Pomodoro');
 
 var Type = {

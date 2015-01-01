@@ -14,6 +14,7 @@ var React = require('react')
     , incompleteTasks = require('../../data').incompleteTasks
     , Spinner = require('../../components/Spinner')
     , SiestaMixin = require('../../../submodules/react-siesta/index').SiestaMixin
+    , Clock = require('./Seeker')
     , Task = require('../tasks/Task');
 
 
@@ -34,6 +35,7 @@ var Home = React.createClass({
                                 <Col sm={12} >
                                     <PomodoroTimer></PomodoroTimer>
                                     <PomodoroControls/>
+                                    <Clock></Clock>
                                 </Col>
                             </Row>
                         {currentTask ? (
