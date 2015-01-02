@@ -30,14 +30,38 @@ $gradient-width: 120px;
     }
     display: inline-block;
     overflow: hidden;
+    width: 300px;
+
+    @include breakpoint('xsmall') {
+      width: 300px;
+    }
+    @include breakpoint('small') {
+      width: 300px;
+    }
+    @include breakpoint('medium') {
+      width: 400px;
+    }
     @include breakpoint('large') {
       width: 500px;
     }
+
     .svg {
       display: inline-block;
+      width: 600px;
+
+      @include breakpoint('xsmall') {
+        width: 600px;
+      }
+      @include breakpoint('small') {
+        width: 600px;
+      }
+      @include breakpoint('medium') {
+        width: 800px;
+      }
       @include breakpoint('large') {
         width: 1000px;
       }
+
       position: relative;
       transition: none !important;
       z-index: 1;
