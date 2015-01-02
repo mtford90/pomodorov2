@@ -36,7 +36,7 @@ var ContentWrapper = React.createClass({
     }
 });
 
-var App = React.createClass({
+var ReactApp = React.createClass({
     render: function () {
         return (
             <div>
@@ -47,4 +47,4 @@ var App = React.createClass({
     }
 });
 
-module.exports = App;
+module.exports = ReactApp;

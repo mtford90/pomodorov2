@@ -119,6 +119,8 @@ gulp.task('test-bundle', function () {
 // This task compiles the production bundle.
 gulp.task('compile', function () {
     var webpackConf = require('./webpack.config.js');
+    delete webpackConf.devtool;
+
     // The webpack uglify plugin will uglify both the JS and the embedded styles.
     var UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
     webpackConf.plugins.push(new UglifyJsPlugin());
