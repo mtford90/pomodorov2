@@ -71,8 +71,9 @@ var Seeker = React.createClass({
 
 
             if (delta > minDelta && delta < maxDelta) {
-                var minutes = Math.round((normalisedDelta / deltaRange) * 60),
-                    seconds = minutes * 60;
+                var minutes = Math.round((normalisedDelta / deltaRange) * 60);
+                if (minutes == 60) minutes--;
+                var seconds = minutes * 60;
 
                 console.log('value', Math.round(seconds));
 
