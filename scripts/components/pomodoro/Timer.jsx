@@ -1,19 +1,18 @@
-var React = require('react');
+var React = require('react'),
+    SiestaMixin = require('../../../submodules/react-siesta').SiestaMixin,
+    PomodoroTimer = require('../../data').PomodoroTimer;
 
 var Timer = React.createClass({
+    mixins: [SiestaMixin],
     render: function () {
         var comp = (
             <div>
                 <span className="timer">
                     <span id="minute"
-                        className="segment"
-                        onDoubleClick={this.onDblClick}
-                        onBlur={this.onBlur}>25</span>
-                :
+                        className="segment">{this.state.seconds ? this.state.seconds / 60 : ''}</span>
+                    :
                     <span id="seconds"
-                        className="segment"
-                        onDoubleClick={this.onDblClick}
-                        onBlur={this.onBlur}>00</span>
+                        className="segment">00</span>
                 </span>
             </div>
         );
@@ -21,14 +20,20 @@ var Timer = React.createClass({
         _.extend(comp.props, this.props);
         return comp;
     },
-    onDblClick: function (e) {
-        var $target = $(e.target);
-        $target.attr('contentEditable', 'true');
-        //$target.focus();
+    componentDidMount: function () {
+        var setSeconds = function (timer) {
+            this.setState({
+                seconds: timer.seconds
+            });
+        };
+        this.listenToSingleton(PomodoroTimer, setSeconds.bind(this))
+            .then(setSeconds.bind(this))
+            .catch(function (err) {
+                console.error('Error initialising timer', err);
+            })
     },
-    onBlur: function (e) {
-        var $target = $(e.target);
-        $target.attr('contentEditable', 'false')
+    getInitialState: function () {
+        return {seconds: null}
     }
 });
 

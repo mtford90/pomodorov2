@@ -83,10 +83,11 @@ var Task = Pomodoro.model(Type.Task, {
     PomodoroTimer = Pomodoro.model('PomodoroTimer', {
         attributes: [
             {
-                name: 'timer',
+                name: 'seconds',
                 default: 25 * 60
             }
-        ]
+        ],
+        singleton: true
     });
 
 var incompleteTasks = Task.positionalReactiveQuery({completed: false});

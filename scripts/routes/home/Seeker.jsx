@@ -5,7 +5,8 @@
  * @module routes.home.Clock
  */
 
-var React = require('React');
+var React = require('React'),
+    PomodoroTimer = require('../../data').PomodoroTimer;
 
 // See timeline.ai smart guides for the values.
 var SVG_NATIVE_WIDTH = 1833,
@@ -16,7 +17,7 @@ var SVG_NATIVE_WIDTH = 1833,
     THIRTY_PERC = THIRTY_POS / SVG_NATIVE_WIDTH,
     ZERO_PERC = ZERO_POS / SVG_NATIVE_WIDTH,
     SIXTY_MODIFIER = SIXTY_PERC,
-    ZERO_MODIFIER = (1-ZERO_PERC);
+    ZERO_MODIFIER = (1 - ZERO_PERC);
 
 var Seeker = React.createClass({
     render: function () {
@@ -50,7 +51,7 @@ var Seeker = React.createClass({
         this.x = e.pageX;
         this.empty = document.createElement('span');
         this.empty.setAttribute('style',
-            'position: absolute; display: block; top: 0; left: 0; width: 0; height: 0;' );
+            'position: absolute; display: block; top: 0; left: 0; width: 0; height: 0;');
         document.body.appendChild(this.empty);
         e.dataTransfer.setDragImage(this.empty, 0, 0);
     },
@@ -62,27 +63,27 @@ var Seeker = React.createClass({
                 $overlay = $svg.parent(),
                 parentWidth = $overlay.width(),
                 parentMiddle = parentWidth / 2;
-            var svgWidth = $svg.width();
-            var ratio = svgWidth / SVG_NATIVE_WIDTH;
-
-
 
             var minDelta = SIXTY_MODIFIER * -(parentWidth + parentMiddle),
                 maxDelta = ZERO_MODIFIER * parentMiddle,
                 deltaRange = Math.abs(minDelta) + Math.abs(maxDelta),
                 normalisedDelta = deltaRange - (delta + parentMiddle + parentWidth);
 
-            var value = (normalisedDelta / deltaRange) * 60;
-
-            console.log('value', Math.round(value));
-
-
-            console.log('ZERO_PERC', ZERO_PERC);
-            console.log('minDelta', minDelta);
-            console.log('maxDelta', maxDelta);
-            console.log('range', deltaRange);
 
             if (delta > minDelta && delta < maxDelta) {
+                var minutes = Math.round((normalisedDelta / deltaRange) * 60),
+                    seconds = minutes * 60;
+
+                console.log('value', Math.round(seconds));
+
+                PomodoroTimer.get()
+                    .then(function (timer) {
+                        timer.seconds = seconds;
+                    })
+                    .catch(function (err) {
+                        console.error('error changing seconds', err);
+                    });
+
                 console.log('deltaX', delta);
                 console.log('normalisedDelta', normalisedDelta);
                 this.setState({
