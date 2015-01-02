@@ -6,56 +6,28 @@
  Run gulp help to get a list of all tasks that can be run.
  */
 
-// The gulp module is used to register tasks to be executed.
 var gulp = require('gulp'),
-// NodeMon is used to detect changes to development server code and restart if neccessary.
     nodemon = require('nodemon'),
-// Jest provides gulp integration for running tests written in Facebook's jest framework.
-// Jest is built on top of the jasmine test framework and provides advanced support for React
-// and a more natural asynchronous testing methodology than plain jasmine
-// Gulp watch is used by gulp to watch for changes to files and perform the appropriate action.
     watch = require('gulp-watch'),
-// Task listing provides the gulp help facility that lists all available gulp tasks
     taskListing = require('gulp-task-listing'),
-// Gulp webpack provides webpack integration, supporting bundling and the live editing functionality
-// that will make our lives so much easier.
     gulpWebpack = require('gulp-webpack'),
-// Underscore is used to make some of the code in this file more concise
     _ = require('underscore'),
-// Replace is used to perform some renaming when compiling the bundle.
     replace = require('gulp-replace'),
-// Open is used to automatically open the browser when gulp watch is run
     open = require('gulp-open'),
-// Webpack is the backbone of red hot react and provides the support for bundling
-// and the live editing functionality that will make our lives so much easier.
     webpack = require('webpack'),
-// dev.config is the user settings
     conf = require('./dev.config'),
-// Used in combination with the mocha in-browser test runner to execute tests on change.
     livereload = require('gulp-livereload'),
-// Used for sass compilation for the landing page
     sass = require('gulp-sass');
 
-/**
- * A list of globs of all Javascript files (both app and test specifications)
- * @type {string[]} - list of globs
- */
+
 var JS_FILES = (function () {
-    var glob = _.map(conf.ext.js, function (x) { return './' + conf.scripts + '/**/*.' + x; });
-    _.each(conf.ext.spec, function (x) { glob.push('./' + conf.tests + '/**/*.' + x) });
-    glob = glob.concat('!' + './' + conf.tests + '/support/preprocessor.js');
-    return glob;
-})();
+        var glob = _.map(conf.ext.js, function (x) { return './' + conf.scripts + '/**/*.' + x; });
+        _.each(conf.ext.spec, function (x) { glob.push('./' + conf.tests + '/**/*.' + x) });
+        glob = glob.concat('!' + './' + conf.tests + '/support/preprocessor.js');
+        return glob;
+    })(),
+    HTML_FILES = ['./index.html'];
 
-/**
- * List of all html files in the project. In a single page application this will just be the index.html
- * file. React uses a DOM element in the index as a root and will render the app's components as
- * children of that element.
- * @type {string[]}
- */
-var HTML_FILES = ['./index.html'];
-
-// Configure the gulp help tasks, excluding any unnecessary cruft.
 (function configureHelp() {
     var HELP_EXCLUSIONS = ['default'];
 
@@ -68,7 +40,6 @@ var HTML_FILES = ['./index.html'];
 
 gulp.task('watch', ['watch-js', 'watch-server', 'watch-landing', 'livereload-listen']);
 
-// If any dev server related configuration changes, we need to relaunch as opposed to hot reloading.
 if (!gulp.task('watch-server', function () {
         // We do NOT want to restart the dev server unless something actually attributed to the dev server
         // changes.
@@ -90,7 +61,6 @@ if (!gulp.task('watch-server', function () {
             });
     })) { }
 
-// When JSX/JS files change, we want to run the Jest tests.
 gulp.task('watch-js', function () {
     gulp.watch(JS_FILES, ['test-bundle']).on('change', livereload.changed);
 });
@@ -102,7 +72,6 @@ gulp.task('livereload-listen', function () {
 gulp.task('livereload-changed', function () {
     livereload.changed();
 });
-
 
 gulp.task('test-bundle', function () {
     var webpackConf = require('./webpack.test.config.js');
@@ -116,11 +85,9 @@ gulp.task('test-bundle', function () {
         .pipe(gulp.dest(publicDest));
 });
 
-// This task compiles the production bundle.
 gulp.task('compile', function () {
     var webpackConf = require('./webpack.config.js');
     delete webpackConf.devtool;
-
     // The webpack uglify plugin will uglify both the JS and the embedded styles.
     var UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
     webpackConf.plugins.push(new UglifyJsPlugin());
@@ -152,8 +119,6 @@ gulp.task('watch-landing', function () {
     gulp.watch('landing/scss/*.scss', ['sass-landing']);
 });
 
-// If gulp is run without a task specification we just run the help tasks which displays a list
-// of possible tasks that can be executed.
 gulp.task('default', ['help']);
 
 module.exports = gulp;
