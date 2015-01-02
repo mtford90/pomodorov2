@@ -13,15 +13,13 @@ var Seeker = React.createClass({
         return (
             <div className="seeker-wrapper">
                 <div className="seeker-overlay">
-                    <div className="seeker">
-                        <img draggable="true"
-                            style={svgStyle}
-                            onDragStart={this.onDragStart}
-                            onDrag={this.onDrag}
-                            className="svg"
-                            src="img/timeline.svg">
-                        </img>
-                    </div>
+                    <img draggable="true"
+                        style={svgStyle}
+                        onDragStart={this.onDragStart}
+                        onDrag={this.onDrag}
+                        className="svg"
+                        src="img/timeline.svg">
+                    </img>
                 </div>
             </div>
 
@@ -31,31 +29,25 @@ var Seeker = React.createClass({
 
     },
     onDragStart: function (e) {
-        this.x = e.clientX;
+        this.x = e.pageX;
     },
     onDrag: function (e) {
         console.log('onDrag', e);
-        var X = e.clientX;
+        var X = e.pageX;
+        console.log('this.x', this.x);
         console.log('X', X);
         if (X) {
-            var svg = e.target,
-                parentNode = svg.parentNode,
-                parentRect = parentNode.getBoundingClientRect(),
-                svgRect = svg.getBoundingClientRect(),
-                parentLeft = parentRect.left,
-                parentRight = parentRect.right,
-                svgLeft = svgRect.left,
-                svgRight = svgRect.right,
-                deltaX = this.x - X,
-                newSvgLeft = svgLeft - deltaX,
-                newSvgRight = svgRight - deltaX;
+            var parentNode = e.target.parentNode,
+                deltaX = this.x - X;
             console.log('deltaX', deltaX);
-            console.log('newSvgLeft', newSvgLeft);
-            console.log('newSvgRight', newSvgRight);
-            console.log('parentLeft', parentLeft);
-            console.log('parentRight', parentRight);
-            var withinBounds = newSvgLeft >= parentLeft && newSvgRight <= parentRight;
-            if (withinBounds) {
+
+            var $parentNode = $(parentNode),
+                parentWidth = $parentNode.width(),
+                parentMiddle = parentWidth / 2;
+            var rightBounded = (deltaX > 0 && (deltaX - parentWidth) < parentMiddle);
+            var leftBounded = (deltaX < 0 && Math.abs(deltaX) <= parentMiddle);
+            var bounded = leftBounded || rightBounded;
+            if (bounded) {
                 console.log('within bounds');
                 this.setState({
                     deltaX: deltaX

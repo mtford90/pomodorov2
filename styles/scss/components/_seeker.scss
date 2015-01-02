@@ -9,22 +9,13 @@
     @include breakpoint('large') {
       width: 500px;
     }
-    .seeker {
+    .svg {
+      display: inline-block;
       @include breakpoint('large') {
-        width:2000px;
-        position: relative;
-        right: 750px;
+        width: 1000px;
       }
-      .svg {
-        display: inline-block;
-        @include breakpoint('large') {
-          width: 1000px;
-        }
-        position: relative;
-        transition: none !important;
-        margin-left: 160px;
-        margin-right: 160px;
-      }
+      position: relative;
+      transition: none !important;
     }
   }
 }
