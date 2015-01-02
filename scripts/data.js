@@ -79,6 +79,14 @@ var Task = Pomodoro.model(Type.Task, {
             }
         ],
         singleton: true
+    }),
+    PomodoroTimer = Pomodoro.model('PomodoroTimer', {
+        attributes: [
+            {
+                name: 'timer',
+                default: 25 * 60
+            }
+        ]
     });
 
 var incompleteTasks = Task.positionalReactiveQuery({completed: false});
@@ -100,6 +108,7 @@ incompleteTasks.on('change', function (n) {
 });
 module.exports = {
     Pomodoro: Pomodoro,
+    PomodoroTimer: PomodoroTimer,
     Task: Task,
     Config: Config,
     siesta: siesta,

@@ -1,9 +1,33 @@
 @import "../responsive";
+@import "../variables";
 @import "../../../vendor/bootstrap-sass-official/assets/stylesheets/bootstrap/_variables.scss";
 
+$gradient-width: 120px;
 .seeker-wrapper {
   text-align: center;
   .seeker-overlay {
+    position: relative;
+    .left-blur {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: $gradient-width;
+      background: linear-gradient(left, $background-color, transparent);
+      z-index: 2;
+      pointer-events: none;
+    }
+    .right-blur {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 100%;
+      width: $gradient-width;
+      background: linear-gradient(right, $background-color, transparent);
+      z-index: 2;
+      pointer-events: none;
+
+    }
     display: inline-block;
     overflow: hidden;
     @include breakpoint('large') {
@@ -16,6 +40,7 @@
       }
       position: relative;
       transition: none !important;
+      z-index: 1;
     }
   }
 }

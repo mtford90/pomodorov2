@@ -1,21 +1,36 @@
 /**
  * An awesome clock interface for changing the time by dragging the mouse.
  * SVG based for colour change and responsiveness.
+ * SVG is generated from timeline.ai, created using Adobe Illustrator 2014 CC
  * @module routes.home.Clock
  */
 
 var React = require('React');
 
+// See timeline.ai smart guides for the values.
+var SVG_NATIVE_WIDTH = 1833,
+    SIXTY_POS = 1820,
+    THIRTY_POS = 923,
+    ZERO_POS = 30,
+    SIXTY_PERC = SIXTY_POS / SVG_NATIVE_WIDTH,
+    THIRTY_PERC = THIRTY_POS / SVG_NATIVE_WIDTH,
+    ZERO_PERC = ZERO_POS / SVG_NATIVE_WIDTH,
+    SIXTY_MODIFIER = SIXTY_PERC,
+    ZERO_MODIFIER = (1-ZERO_PERC);
+
 var Seeker = React.createClass({
     render: function () {
         console.log('render');
-        var svgStyle = {right: this.state.deltaX};
+        var svgStyle = {left: this.state.deltaX};
         return (
             <div className="seeker-wrapper">
                 <div className="seeker-overlay">
+                    <div className="left-blur"/>
+                    <div className="right-blur"/>
                     <img draggable="true"
                         style={svgStyle}
                         onDragStart={this.onDragStart}
+                        onDragEnd={this.onDragEnd}
                         onDrag={this.onDrag}
                         className="svg"
                         src="img/timeline.svg">
@@ -28,33 +43,51 @@ var Seeker = React.createClass({
     componentDidMount: function () {
 
     },
+    onDragEnd: function () {
+        document.body.removeChild(this.empty);
+    },
     onDragStart: function (e) {
         this.x = e.pageX;
+        this.empty = document.createElement('span');
+        this.empty.setAttribute('style',
+            'position: absolute; display: block; top: 0; left: 0; width: 0; height: 0;' );
+        document.body.appendChild(this.empty);
+        e.dataTransfer.setDragImage(this.empty, 0, 0);
     },
     onDrag: function (e) {
-        console.log('onDrag', e);
         var X = e.pageX;
-        console.log('this.x', this.x);
-        console.log('X', X);
         if (X) {
-            var parentNode = e.target.parentNode,
-                deltaX = this.x - X;
-            console.log('deltaX', deltaX);
-
-            var $parentNode = $(parentNode),
-                parentWidth = $parentNode.width(),
+            var $svg = $(e.target),
+                delta = -(this.x - X),
+                $overlay = $svg.parent(),
+                parentWidth = $overlay.width(),
                 parentMiddle = parentWidth / 2;
-            var rightBounded = (deltaX > 0 && (deltaX - parentWidth) < parentMiddle);
-            var leftBounded = (deltaX < 0 && Math.abs(deltaX) <= parentMiddle);
-            var bounded = leftBounded || rightBounded;
-            if (bounded) {
-                console.log('within bounds');
+            var svgWidth = $svg.width();
+            var ratio = svgWidth / SVG_NATIVE_WIDTH;
+
+
+
+            var minDelta = SIXTY_MODIFIER * -(parentWidth + parentMiddle),
+                maxDelta = ZERO_MODIFIER * parentMiddle,
+                deltaRange = Math.abs(minDelta) + Math.abs(maxDelta),
+                normalisedDelta = deltaRange - (delta + parentMiddle + parentWidth);
+
+            var value = (normalisedDelta / deltaRange) * 60;
+
+            console.log('value', Math.round(value));
+
+
+            console.log('ZERO_PERC', ZERO_PERC);
+            console.log('minDelta', minDelta);
+            console.log('maxDelta', maxDelta);
+            console.log('range', deltaRange);
+
+            if (delta > minDelta && delta < maxDelta) {
+                console.log('deltaX', delta);
+                console.log('normalisedDelta', normalisedDelta);
                 this.setState({
-                    deltaX: deltaX
+                    deltaX: delta
                 });
-            }
-            else {
-                console.log('not within bounds');
             }
         }
     },
