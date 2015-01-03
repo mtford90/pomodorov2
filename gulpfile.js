@@ -22,6 +22,9 @@ var gulp = require('gulp'),
     path = require('path'),
     cordova = require('cordova-lib').cordova.raw;
 
+// Argument parsing
+var gulpif = require('gulp-if'),
+    minimist = require('minimist');
 
 var JS_FILES = (function () {
         var glob = _.map(conf.ext.js, function (x) { return './' + conf.scripts + '/**/*.' + x; });
@@ -146,12 +149,15 @@ gulp.task('cordova-create', ['cordova-clean'], function () {
     process.chdir(buildDir);
     fs.symlinkSync(path.join('..', 'CordovaConfig.xml'), 'config.xml');
     fs.symlinkSync(path.join('..', 'bin/public'), 'www');
-    return cordova.plugins('add', ['org.apache.cordova.file'])
+    var plugins = [
+        'org.apache.cordova.file'
+    ];
+    return cordova.plugins('add', plugins)
         .then(function () {
             // point to node_modules/cordova-android/
             var android = path.join('..', 'node_modules/cordova-android'),
                 browser = path.join('..', 'node_modules/cordova-browser');
-            return cordova.platform('add', [android, browser]) ;
+            return cordova.platform('add', [android, browser]);
         });
 });
 
@@ -163,6 +169,23 @@ gulp.task('cordova-build', function () {
             fs.copySync('platforms/android/ant-build/CordovaApp-debug.apk', path.join('..', 'bin/TomatoSoup-debug.apk'));
         });
 });
+
+var cordovaBuild = function () {
+    var buildDir = 'app';
+    process.chdir(buildDir);
+    var defaultOptions = {platform: 'android'},
+        options = minimist(process.argv.slice(2), defaultOptions);
+    return cordova.serve(options.platform);
+};
+
+var cordovaEmulate = function () {
+    return cordova.emulate();
+};
+
+gulp.task('cordova-serve', ['cordova-build'], cordovaBuild);
+gulp.task('cordova-serve-no-build', cordovaBuild);
+gulp.task('cordova-emulate', ['cordova-emulate'], cordovaEmulate);
+gulp.task('cordova-emulate-no-build', cordovaEmulate);
 
 gulp.task('compile', build(true));
 
