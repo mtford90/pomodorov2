@@ -63,7 +63,11 @@ var Seeker = React.createClass({
     componentDidMount: function () {
         this.moveSeekerToCorrectPosition();
         // TODO: Is there a more clever way to handle scaling of the seeker? i.e. incorporate into responsiveness?
-        $(window).resize(this.moveSeekerToCorrectPosition.bind(this));
+        this.resizeHandler = this.moveSeekerToCorrectPosition.bind(this);
+        $(window).resize(this.resizeHandler);
+    },
+    componentWillUnmount: function () {
+        $(window).off('resize', this.resizeHandler);
     },
     onDragEnd: function () {
         document.body.removeChild(this.empty);
