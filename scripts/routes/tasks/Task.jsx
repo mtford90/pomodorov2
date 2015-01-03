@@ -34,9 +34,10 @@ var Task = React.createClass({
         )
     },
     onTitleChange: function (title) {
-        if (this.props.onChange) {
-            this.props.onChange(this, {title: title});
-        }
+        this.props.task.title = title;
+    },
+    onDescriptionChange: function (html) {
+        this.props.task.description = html;
     },
     renderEditing: function () {
         var comp,
@@ -73,11 +74,6 @@ var Task = React.createClass({
         }.bind(this)).catch(function (err) {
             console.error('Error getting config for task', err);
         });
-    },
-    onDescriptionChange: function (html) {
-        if (this.props.onChange) {
-            this.props.onChange(this, {description: html});
-        }
     },
     componentWillUnmount: function () {
         this.cancelListen();
