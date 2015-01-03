@@ -85,6 +85,14 @@ var Task = Pomodoro.model(Type.Task, {
             {
                 name: 'seconds',
                 default: 25 * 60
+            },
+            {
+                name: 'currentRound',
+                default: 1
+            },
+            {
+                name: 'targetRound',
+                default: 1
             }
         ],
         singleton: true
