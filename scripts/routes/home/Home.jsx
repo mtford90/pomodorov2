@@ -6,15 +6,16 @@ var React = require('react')
     , bootstrap = require('react-bootstrap')
     , config = require('../../../app.config')
     , _ = require('underscore')
-    , PomodoroTimer = require('../../components/pomodoro/PomodoroTimer')
+    , PomodoroDetails = require('../../components/pomodoro/PomodoroDetails')
     , PomodoroControls = require('../../components/pomodoro/PomodoroControls')
+    , Timer = require('../../components/pomodoro/Timer')
     , Row = bootstrap.Row
     , Col = bootstrap.Col
     , DocumentTitle = require('react-document-title')
     , incompleteTasks = require('../../data').incompleteTasks
     , Spinner = require('../../components/Spinner')
     , SiestaMixin = require('../../../submodules/react-siesta/index').SiestaMixin
-    , Clock = require('./Seeker')
+    , Seeker = require('./Seeker')
     , Task = require('../tasks/Task');
 
 
@@ -33,9 +34,10 @@ var Home = React.createClass({
                         <Spinner ref="spinner" finishedLoading={incompleteTasks.initialised}>
                             <Row className="timer-row" >
                                 <Col sm={12} >
-                                    <PomodoroTimer></PomodoroTimer>
+                                    <Timer></Timer>
+                                    <Seeker></Seeker>
+                                    <PomodoroDetails/>
                                     <PomodoroControls/>
-                                    <Clock></Clock>
                                 </Col>
                             </Row>
                         {currentTask ? (

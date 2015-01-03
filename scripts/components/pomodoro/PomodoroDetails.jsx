@@ -1,7 +1,4 @@
-var React = require('react'),
-    _ = require('underscore'),
-    Timer = require('./Timer');
-
+var React = require('react');
 
 var Num = React.createClass({
     render: function () {
@@ -20,11 +17,10 @@ var Num = React.createClass({
     }
 });
 
-var PomodoroTimer = React.createClass({
+var PomodoroDetails = React.createClass({
     render: function () {
         return (
-            <div className="pomodoro-timer">
-                <Timer/>
+            <div>
                 <Num className="" divisor={1} dividend={4} description="Current Round"/>
                 <Num className="" divisor={1} dividend={12} description="Target Rounds"/>
             </div>
@@ -32,4 +28,4 @@ var PomodoroTimer = React.createClass({
     }
 });
 
-module.exports = PomodoroTimer;
+module.exports = PomodoroDetails;
