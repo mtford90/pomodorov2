@@ -11,17 +11,14 @@ var React = require('React'),
 // See timeline.ai smart guides for the values.
 var SVG_NATIVE_WIDTH = 1833,
     SIXTY_POS = 1820,
-    THIRTY_POS = 923,
     ZERO_POS = 30,
     SIXTY_PERC = SIXTY_POS / SVG_NATIVE_WIDTH,
-    THIRTY_PERC = THIRTY_POS / SVG_NATIVE_WIDTH,
     ZERO_PERC = ZERO_POS / SVG_NATIVE_WIDTH,
     SIXTY_MODIFIER = SIXTY_PERC,
     ZERO_MODIFIER = (1 - ZERO_PERC);
 
 var Seeker = React.createClass({
     render: function () {
-        console.log('render');
         var svgStyle = {left: this.state.deltaX};
         return (
             <div className="seeker-wrapper">
@@ -38,7 +35,6 @@ var Seeker = React.createClass({
                     </img>
                 </div>
             </div>
-
         )
     },
     componentDidMount: function () {
