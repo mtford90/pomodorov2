@@ -37,7 +37,7 @@ var Seeker = React.createClass({
             </div>
         )
     },
-    componentDidMount: function () {
+    moveSeekerToCorrectPosition: function () {
         /* TODO: Use refs instead.
          For some reason there is an error stating must have an owner to use refs which makes no sense as clearly has
          an owner.
@@ -59,9 +59,11 @@ var Seeker = React.createClass({
             .catch(function (err) {
                 console.error('Error initialising seeker', err);
             });
-
-
-
+    },
+    componentDidMount: function () {
+        this.moveSeekerToCorrectPosition();
+        // TODO: Is there a more clever way to handle scaling of the seeker? i.e. incorporate into responsiveness?
+        $(window).resize(this.moveSeekerToCorrectPosition.bind(this));
     },
     onDragEnd: function () {
         document.body.removeChild(this.empty);
