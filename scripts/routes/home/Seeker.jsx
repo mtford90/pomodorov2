@@ -38,6 +38,29 @@ var Seeker = React.createClass({
         )
     },
     componentDidMount: function () {
+        /* TODO: Use refs instead.
+         For some reason there is an error stating must have an owner to use refs which makes no sense as clearly has
+         an owner.
+         */
+        PomodoroTimer.get()
+            .then(function (timer) {
+                var $overlay = $('.seeker-overlay'),
+                    parentWidth = $overlay.width(),
+                    parentMiddle = parentWidth / 2,
+                    minDelta = SIXTY_MODIFIER * -(parentWidth + parentMiddle),
+                    maxDelta = ZERO_MODIFIER * parentMiddle,
+                    deltaRange = Math.abs(minDelta) + Math.abs(maxDelta),
+                    normalisedDelta = (timer.seconds / (60 * 60)) * deltaRange,
+                    denormalisedDelta = -(normalisedDelta - deltaRange) - parentMiddle - parentWidth;
+                this.setState({
+                    deltaX: denormalisedDelta
+                });
+            }.bind(this))
+            .catch(function (err) {
+                console.error('Error initialising seeker', err);
+            });
+
+
 
     },
     onDragEnd: function () {
