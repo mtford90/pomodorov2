@@ -1,6 +1,6 @@
 var React = require('react'),
-    SiestaMixin = require('../../../submodules/react-siesta').SiestaMixin,
-    PomodoroTimer = require('../../data').PomodoroTimer;
+    SiestaMixin = require('../../../../react-siesta/index.jsx').SiestaMixin,
+    PomodoroTimer = require('../../pomodoroTimer').PomodoroTimer;
 
 var Timer = React.createClass({
     mixins: [SiestaMixin],
@@ -26,7 +26,7 @@ var Timer = React.createClass({
                 seconds: timer.seconds
             });
         };
-        this.listenToSingleton(PomodoroTimer, setSeconds.bind(this))
+        this.listen(PomodoroTimer, setSeconds.bind(this))
             .then(setSeconds.bind(this))
             .catch(function (err) {
                 console.error('Error initialising timer', err);

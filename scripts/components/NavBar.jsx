@@ -16,7 +16,7 @@ var NavBar = React.createClass({
         return comp;
     },
     componentDidMount: function () {
-        Config.get().then(function (config) {
+        Config.one().then(function (config) {
             this.setState({
                 color: config.colours.primary
             });

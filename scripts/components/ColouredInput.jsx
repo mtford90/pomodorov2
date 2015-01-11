@@ -33,7 +33,7 @@ var ColouredInput = React.createClass({
         });
     },
     componentDidMount: function () {
-        Config.get().then(function (config) {
+        Config.one().then(function (config) {
             var primaryColor = config.colours.primary;
             console.log('primaryColor', primaryColor);
             this.setState({
