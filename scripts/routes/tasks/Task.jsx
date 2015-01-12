@@ -1,16 +1,19 @@
 var React = require('react'),
     _ = require('underscore'),
     Summernote = require('../../components/Summernote'),
-    Config = require('../../data').Config,
+    ColourConfig = require('../../data').ColourConfig,
+    SiestaMixin = require('../../../../react-siesta').SiestaMixin,
     ContentEditable = require('../../components/ContentEditable');
 
 // TODO: Once ReactJS has the ability to perform inline hover styles, we can get rid of the awkward mouseout/mouseover handlers
 var Task = React.createClass({
+    mixins: [SiestaMixin],
+
     render: function () {
         var task = this.props.task,
             isEditing = task.editing,
             shouldColor = this.state.hover || isEditing,
-            style = shouldColor ? {borderColor: this.state.color} : {},
+            style = shouldColor ? {borderColor: this.state.colours.primary} : {},
             self = this,
             className = 'task';
         if (isEditing) className += ' task-editing';
@@ -61,22 +64,9 @@ var Task = React.createClass({
         }
         return comp;
     },
+    
     componentDidMount: function () {
-        Config.one().then(function (config) {
-            this.setState({
-                color: config.colours.primary
-            });
-            this.cancelListen = config.colours.listen(function () {
-                this.setState({
-                    color: config.colours.primary
-                });
-            }.bind(this))
-        }.bind(this)).catch(function (err) {
-            console.error('Error getting config for task', err);
-        });
-    },
-    componentWillUnmount: function () {
-        this.cancelListen();
+        this.listenAndSet(ColourConfig, 'colours');
     },
     onClick: function (e) {
         e.preventDefault();
@@ -131,7 +121,7 @@ var Task = React.createClass({
     },
     getInitialState: function () {
         return {
-            color: null,
+            colours: {},
             hover: false
         }
     }

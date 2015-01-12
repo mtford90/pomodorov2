@@ -37,7 +37,7 @@ var PomodoroSettings = React.createClass({
         )
     },
     componentDidMount: function () {
-        Config.get().then(function (config) {
+        Config.one().then(function (config) {
             this.coloursConfig = config.colours;
             this.setState(config.pomodoro.getAttributes());
             this.cancelListen = config.pomodoro.listen(function () {

@@ -4,6 +4,7 @@ var React = require('react')
     , ColouredInput = require('../../components/ColouredInput')
     , data = require('../../data')
     , Config = data.Config
+    , ColourConfig = data.ColourConfig
     , _ = require('underscore')
     , InputPanel = require('./InputPanel')
     , InputPanelItem = require('./InputPanelItem')
@@ -11,9 +12,11 @@ var React = require('react')
     , InputPanelDescription = require('./InputPanelDescription')
     , InputPanelFooter = require('./InputPanelFooter')
     , ColouredButton = require('../../components/ColouredButton')
+    , SiestaMixin = require('../../../../react-siesta').SiestaMixin
     , modal = require('../../components/modal/actions');
 
 var ColourSettings = React.createClass({
+    mixins: [SiestaMixin],
     render: function () {
         var cssUrl = "http://paletton.com/#uid=10K0u0kllllaFw0g0qFqFg0w0aF";
         return (
@@ -79,7 +82,7 @@ var ColourSettings = React.createClass({
         this.setState(stateChange);
     },
     componentDidMount: function () {
-        Config.get().then(function (config) {
+        Config.one().then(function (config) {
             this.coloursConfig = config.colours;
             this.setState(config.colours.getAttributes());
             this.cancelListen = config.colours.listen(function (n) {

@@ -26,11 +26,7 @@ var Timer = React.createClass({
                 seconds: timer.seconds
             });
         };
-        this.listen(PomodoroTimer, setSeconds.bind(this))
-            .then(setSeconds.bind(this))
-            .catch(function (err) {
-                console.error('Error initialising timer', err);
-            })
+        this.listenAndSet(PomodoroTimer, 'seconds');
     },
     getInitialState: function () {
         return {seconds: null}

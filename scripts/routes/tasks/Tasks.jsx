@@ -66,14 +66,13 @@ var Tasks = React.createClass({
         )
     },
     componentDidMount: function () {
-            console.error('YAHOOO');
         if (!incompleteTasks.initialised) this.refs.spinner.startTimer();
         this.listenAndSet(incompleteTasks, 'tasks', function (err) {
             this.refs.spinner.finishLoading();
             this.setState({
                 loaded: true
             });
-        });
+        }.bind(this));
     },
     getInitialState: function () {
         return {

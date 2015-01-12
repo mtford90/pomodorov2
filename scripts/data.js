@@ -102,6 +102,7 @@ module.exports = {
     Pomodoro: Pomodoro,
     Task: Task,
     Config: Config,
+    ColourConfig: ColourConfig,
     siesta: siesta,
     Type: Type,
     incompleteTasks: incompleteTasks
