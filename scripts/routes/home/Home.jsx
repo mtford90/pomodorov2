@@ -75,20 +75,13 @@ var Home = React.createClass({
     },
     componentDidMount: function () {
         if (!incompleteTasks.initialised) this.refs.spinner.startTimer();
-        this.listenToReactiveQuery(incompleteTasks, {
-            init: function () {
+        this.listenAndSet(incompleteTasks, 'tasks')
+            .then(function () {
                 this.refs.spinner.finishLoading();
                 this.setState({
-                    tasks: incompleteTasks.results
-                })
-            }.bind(this),
-            change: function () {
-                this.setState({
-                    tasks: incompleteTasks.results,
                     loaded: true
                 });
-            }.bind(this)
-        });
+            }.bind(this));
     },
     getInitialState: function () {
         return {

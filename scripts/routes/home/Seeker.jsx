@@ -6,7 +6,7 @@
  */
 
 var React = require('React'),
-    PomodoroTimer = require('../../data').PomodoroTimer;
+    PomodoroTimer = require('../../pomodoroTimer').PomodoroTimer;
 
 // See timeline.ai smart guides for the values.
 var SVG_NATIVE_WIDTH = 1833,

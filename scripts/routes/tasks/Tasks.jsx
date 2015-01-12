@@ -66,20 +66,13 @@ var Tasks = React.createClass({
         )
     },
     componentDidMount: function () {
+            console.error('YAHOOO');
         if (!incompleteTasks.initialised) this.refs.spinner.startTimer();
-        this.listenToReactiveQuery(incompleteTasks, {
-            init: function () {
-                this.refs.spinner.finishLoading();
-                this.setState({
-                    tasks: incompleteTasks.results
-                })
-            }.bind(this),
-            change: function () {
-                this.setState({
-                    tasks: incompleteTasks.results,
-                    loaded: true
-                });
-            }.bind(this)
+        this.listenAndSet(incompleteTasks, 'tasks', function (err) {
+            this.refs.spinner.finishLoading();
+            this.setState({
+                loaded: true
+            });
         });
     },
     getInitialState: function () {

@@ -79,30 +79,13 @@ var Task = Pomodoro.model(Type.Task, {
             }
         ],
         singleton: true
-    }),
-    PomodoroTimer = Pomodoro.model('PomodoroTimer', {
-        attributes: [
-            {
-                name: 'seconds',
-                default: 25 * 60
-            },
-            {
-                name: 'currentRound',
-                default: 1
-            },
-            {
-                name: 'targetRound',
-                default: 1
-            }
-        ],
-        singleton: true
     });
 
-var incompleteTasks = Task.positionalReactiveQuery({completed: false});
-incompleteTasks.orderBy('index');
+
+var incompleteTasks = Task.arrangedReactiveQuery({completed: false, __order: 'index'});
 incompleteTasks.insertionPolicy = siesta.InsertionPolicy.Front;
 // Only one task should be editing at a time.
-incompleteTasks.on('change', function (n) {
+incompleteTasks.listen(function (n) {
     if (n.field == 'editing') {
         var task = n.obj;
         console.log('n', n);
@@ -117,7 +100,6 @@ incompleteTasks.on('change', function (n) {
 });
 module.exports = {
     Pomodoro: Pomodoro,
-    PomodoroTimer: PomodoroTimer,
     Task: Task,
     Config: Config,
     siesta: siesta,

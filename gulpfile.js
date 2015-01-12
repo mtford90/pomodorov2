@@ -68,7 +68,7 @@ if (!gulp.task('watch-server', function () {
     })) { }
 
 gulp.task('watch-js', function () {
-    gulp.watch(JS_FILES, ['test-bundle']).on('change', livereload.changed);
+    gulp.watch(JS_FILES, ['test-bundle']);
 });
 
 gulp.task('livereload-listen', function () {
@@ -88,7 +88,8 @@ gulp.task('test-bundle', function () {
     var publicDest = dest + '/test/';
     gulp.src('tests/test.js')
         .pipe(gulpWebpack(webpackConf))
-        .pipe(gulp.dest(publicDest));
+        .pipe(gulp.dest(publicDest))
+        .pipe(livereload())
 });
 
 var build = function (uglify) {
