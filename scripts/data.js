@@ -1,8 +1,8 @@
 var q = require('q'),
     _ = require('underscore'),
-    siesta = require('../../rest/core/index')({
-        http: require('../../rest/http/index'),
-        storage: require('../../rest/storage/index')
+    siesta = require('../../siesta/core/index')({
+        http: require('../../siesta/http/index'),
+        storage: require('../../siesta/storage/index')
     });
 
 

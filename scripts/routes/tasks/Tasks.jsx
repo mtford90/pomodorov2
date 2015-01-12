@@ -15,7 +15,7 @@ var React = require('react')
     , Spinner = require('../../components/Spinner')
     , data = require('../../data')
     , incompleteTasks = data.incompleteTasks
-    , SiestaMixin = require('../../../submodules/react-siesta/index').SiestaMixin
+    , SiestaMixin = require('../../../../react-siesta/index').SiestaMixin
     , Task = require('./Task');
 
 

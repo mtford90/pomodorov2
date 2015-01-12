@@ -1,5 +1,5 @@
 var React = require('react'),
-    SiestaMixin = require('../../../submodules/react-siesta').SiestaMixin,
+    SiestaMixin = require('../../../../react-siesta').SiestaMixin,
     PomodoroTimer = require('../../data').PomodoroTimer;
 
 var Timer = React.createClass({

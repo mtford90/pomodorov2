@@ -14,7 +14,7 @@ var React = require('react')
     , DocumentTitle = require('react-document-title')
     , incompleteTasks = require('../../data').incompleteTasks
     , Spinner = require('../../components/Spinner')
-    , SiestaMixin = require('../../../submodules/react-siesta/index').SiestaMixin
+    , SiestaMixin = require('../../../../react-siesta/index').SiestaMixin
     , Seeker = require('./Seeker')
     , Task = require('../tasks/Task');
 
