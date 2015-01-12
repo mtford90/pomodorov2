@@ -1,6 +1,6 @@
 var React = require('react'),
     SiestaMixin = require('../../../../react-siesta').SiestaMixin,
-    PomodoroTimer = require('../../pomodoroTimer').PomodoroTimer;
+    PomodoroTimer = require('../../pomodoroTimer');
 
 var Timer = React.createClass({
     mixins: [SiestaMixin],
