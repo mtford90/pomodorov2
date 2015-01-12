@@ -85,7 +85,7 @@ var Task = Pomodoro.model(Type.Task, {
 var incompleteTasks = Task.arrangedReactiveQuery({completed: false, __order: 'index'});
 incompleteTasks.insertionPolicy = siesta.InsertionPolicy.Front;
 // Only one task should be editing at a time.
-incompleteTasks.listen(function (n) {
+incompleteTasks.listen(function (results, n) {
     if (n.field == 'editing') {
         var task = n.obj;
         console.log('n', n);
