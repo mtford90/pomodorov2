@@ -13,7 +13,7 @@ var Task = React.createClass({
         var task = this.props.task,
             isEditing = task.editing,
             shouldColor = this.state.hover || isEditing,
-            style = shouldColor ? {borderColor: this.state.colours.primary} : {},
+            style = shouldColor ? {borderColor: this.state.primary} : {},
             self = this,
             className = 'task';
         if (isEditing) className += ' task-editing';
@@ -66,7 +66,7 @@ var Task = React.createClass({
     },
     
     componentDidMount: function () {
-        this.listenAndSet(ColourConfig, 'colours');
+        this.listenAndSet(ColourConfig, {fields: ['primary', 'secondary', 'tertiary']});
     },
     onClick: function (e) {
         e.preventDefault();

@@ -6,7 +6,7 @@
  */
 
 var React = require('React'),
-    PomodoroTimer = require('../../pomodoroTimer').PomodoroTimer;
+    PomodoroTimer = require('../../pomodoroTimer');
 
 // See timeline.ai smart guides for the values.
 var SVG_NATIVE_WIDTH = 1833,
@@ -42,7 +42,7 @@ var Seeker = React.createClass({
          For some reason there is an error stating must have an owner to use refs which makes no sense as clearly has
          an owner.
          */
-        PomodoroTimer.get()
+        PomodoroTimer.one()
             .then(function (timer) {
                 var $overlay = $('.seeker-overlay'),
                     parentWidth = $overlay.width(),
@@ -102,7 +102,7 @@ var Seeker = React.createClass({
 
                 console.log('value', Math.round(seconds));
 
-                PomodoroTimer.get()
+                PomodoroTimer.one()
                     .then(function (timer) {
                         timer.seconds = seconds;
                     })

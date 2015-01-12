@@ -21,12 +21,7 @@ var Timer = React.createClass({
         return comp;
     },
     componentDidMount: function () {
-        var setSeconds = function (timer) {
-            this.setState({
-                seconds: timer.seconds
-            });
-        };
-        this.listenAndSet(PomodoroTimer, 'seconds');
+        this.listenAndSet(PomodoroTimer, {fields: ['seconds']});
     },
     getInitialState: function () {
         return {seconds: null}
