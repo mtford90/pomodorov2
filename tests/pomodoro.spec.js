@@ -40,24 +40,24 @@ describe('pomodoro', function () {
         })
     });
 
-    describe('start', function () {
-        it('running property', function () {
-            assert.notOk(timer.running);
-            timer.start();
-            assert.ok(timer.running);
-            timer.stop();
-            assert.notOk(timer.running);
-        });
+    it('running property', function () {
+        assert.notOk(timer.running);
+        timer.start();
+        assert.ok(timer.running);
+        timer.stop();
+        assert.notOk(timer.running);
     });
 
-    describe('timer', function () {
-        it('decrements seconds', function (done) {
-            timer.listenOnce(function (n) {
-                assert.equal(n.field, 'seconds');
-                done();
-            });
-            timer.start();
+    it('timer works', function (done) {
+        timer.listenOnce(function (n) {
+            assert.equal(n.field, 'seconds');
+            done();
         });
+        timer.start();
+    });
+
+    describe('transitions', function () {
+
         describe('transition to short break', function () {
             beforeEach(function (done) {
                 timer.seconds = 0;
@@ -149,6 +149,49 @@ describe('pomodoro', function () {
             });
             it('should now be in pomodoro state', function () {
                 assert.equal(timer.state, PomodoroTimer.State.Pomodoro);
+            });
+        });
+    });
+
+    describe('settings changes', function () {
+        describe('pomodoro length change', function () {
+            it('if paused and maxed, should change the value', function (done) {
+                timer.stop();
+                var newPomodoroLength = 30;
+                timer.pomodoroConfig.pomodoroLength = newPomodoroLength;
+                siesta.notify(function () {
+                    assert.equal(timer.seconds, newPomodoroLength * 60);
+                    done();
+                });
+            });
+            it('if started and maxed, should change the value', function (done) {
+                timer.start();
+                var newPomodoroLength = 30;
+                timer.pomodoroConfig.pomodoroLength = newPomodoroLength;
+                siesta.notify(function () {
+                    assert.equal(timer.seconds, newPomodoroLength * 60);
+                    timer.stop();
+                    done();
+                });
+            });
+            it('if paused and not maxed, should not change the value', function (done) {
+                timer.seconds = 10;
+                timer.stop();
+                timer.pomodoroConfig.pomodoroLength = 30;
+                siesta.notify(function () {
+                    assert.equal(timer.seconds, 10);
+                    done();
+                });
+            });
+            it('if started and not maxed, should not change the value', function (done) {
+                timer.seconds = 10;
+                timer.start();
+                timer.pomodoroConfig.pomodoroLength = 30;
+                siesta.notify(function () {
+                    assert.equal(timer.seconds, 10);
+                    timer.stop();
+                    done();
+                });
             });
         });
     });
