@@ -13,6 +13,7 @@ var gulp = require('gulp'),
     _ = require('underscore'),
     replace = require('gulp-replace'),
     open = require('gulp-open'),
+    nodemon = require('nodemon'),
     webpack = require('webpack'),
     conf = require('./dev.config'),
     livereload = require('gulp-livereload'),
@@ -46,9 +47,33 @@ var JS_FILES = (function () {
 })();
 
 
-gulp.task('watch', function () {
+gulp.task('watch', ['watch-server', 'watch-js'], function () {
     livereload.listen();
+});
+
+gulp.task('watch-js', function () {
     gulp.watch(JS_FILES, ['test-bundle'])
+});
+
+gulp.task('watch-server', function () {
+    // We do NOT want to restart the dev server unless something actually attributed to the dev server
+    // changes.
+    var ignore = _.map(_.keys(conf.styles), function (x) {
+        return conf.styles[x]
+    }).concat('gulpfile.js', 'app.config.js', 'index.html', 'tests/**/*.js', 'bin/**/*');
+    // Node monitor provides us with the ability to react to changes that affect node applications.
+    // In our case this node application is the dev server that provides us with webpack's
+    // hot module replacement.
+    nodemon({
+        script: 'devServer.js',
+        ignore: ignore
+    })
+        .on('restart', function () {
+            console.log('restarting node server');
+        })
+        .on('crash', function () {
+            console.log('\nNode has crashed  will restart after next save.');
+        });
 });
 
 gulp.task('test-bundle', function () {

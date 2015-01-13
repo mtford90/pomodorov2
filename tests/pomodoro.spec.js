@@ -322,6 +322,4 @@ describe('pomodoro', function () {
 
     });
 
-
-
 });
