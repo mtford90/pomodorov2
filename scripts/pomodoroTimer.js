@@ -57,37 +57,14 @@ var PomodoroTimer = Pomodoro.model('PomodoroTimer', {
             }
         },
         onConfigChange: function (n) {
-            switch (n.field) {
-                case 'pomodoroLength':
-                    this.onPomodoroLengthChange(n.old, n.new);
-                    break;
-                case 'longBreakLength':
-                    this.onLongBreakLengthChange(n.old, n.new);
-                    break;
-                case 'shortBreakLength':
-                    this.onShortBreakLengthChange(n.old, n.new);
-                    break;
-                case 'roundLength':
-                    this.onRoundLengthChange(n.old, n.new);
-                    break;
-                default:
-                    break;
-            }
+            var state;
+            if (n.field == 'pomodoroLength') state = State.Pomodoro;
+            else if (n.field == 'longBreakLength') state = State.LongBreak;
+            else if (n.field == 'shortBreakLength') state = State.ShortBreak;
+            if (state) this.onLengthChange(state, n);
         },
-        onLengthChange: function (state, old, _new) {
-            if (this.seconds == old * 60 && this.state == state) this.seconds = _new * 60;
-        },
-        onPomodoroLengthChange: function (old, _new) {
-            this.onLengthChange(State.Pomodoro, old, _new);
-        },
-        onLongBreakLengthChange: function (old, _new) {
-            this.onLengthChange(State.LongBreak, old, _new);
-        },
-        onShortBreakLengthChange: function (old, _new) {
-            this.onLengthChange(State.ShortBreak, old, _new);
-        },
-        onRoundLengthChange: function (old, _new) {
-
+        onLengthChange: function (state, n) {
+            if (this.seconds == n.old * 60 && this.state == state) this.seconds = n.new * 60;
         },
         start: function () {
             if (!this._token) {

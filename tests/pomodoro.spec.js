@@ -1,8 +1,10 @@
+/**
+ * Tests for the siesta powered pomodoro timer
+ */
+
 var chai = require('chai'),
-    assert = chai.assert;
-
-
-var data = require('../scripts/data'),
+    assert = chai.assert,
+    data = require('../scripts/data'),
     PomodoroTimer = require('../scripts/pomodoroTimer');
 
 describe('pomodoro', function () {
@@ -319,5 +321,7 @@ describe('pomodoro', function () {
         });
 
     });
+
+
 
 });
