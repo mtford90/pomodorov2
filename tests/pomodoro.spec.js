@@ -258,6 +258,64 @@ describe('pomodoro', function () {
                     done();
                 });
             });
+
+        });
+        describe('short break length change', function () {
+            it('if paused and maxed, should change the value', function (done) {
+                timer.state = PomodoroTimer.State.ShortBreak;
+                timer.seconds = timer.pomodoroConfig.shortBreakLength * 60;
+                timer.stop();
+                var newLength = 30;
+                timer.pomodoroConfig.shortBreakLength = newLength;
+                siesta.notify(function () {
+                    assert.equal(timer.seconds, newLength * 60);
+                    done();
+                });
+            });
+            it('if started and maxed, should change the value', function (done) {
+                timer.state = PomodoroTimer.State.ShortBreak;
+                timer.seconds = timer.pomodoroConfig.shortBreakLength * 60;
+                timer.start();
+                var newLength = 30;
+                timer.pomodoroConfig.shortBreakLength = newLength;
+                siesta.notify(function () {
+                    assert.equal(timer.seconds, newLength * 60);
+                    timer.stop();
+                    done();
+                });
+            });
+            it('if paused and not maxed, should not change the value', function (done) {
+                timer.state = PomodoroTimer.State.ShortBreak;
+                timer.seconds = 10;
+                timer.stop();
+                timer.pomodoroConfig.shortBreakLength = 30;
+                siesta.notify(function () {
+                    assert.equal(timer.seconds, 10);
+                    done();
+                });
+            });
+            it('if started and not maxed, should not change the value', function (done) {
+                timer.state = PomodoroTimer.State.ShortBreak;
+                timer.seconds = 10;
+                timer.start();
+                timer.pomodoroConfig.shortBreakLength = 30;
+                siesta.notify(function () {
+                    assert.equal(timer.seconds, 10);
+                    timer.stop();
+                    done();
+                });
+            });
+            it('if paused, maxed and not in a long break state, should NOT change the value', function (done) {
+                timer.seconds = timer.pomodoroConfig.shortBreakLength * 60;
+                timer.state = PomodoroTimer.State.LongBreak;
+                timer.stop();
+                timer.pomodoroConfig.shortBreakLength = 30;
+                siesta.notify(function () {
+                    assert.equal(timer.seconds, 5 * 60);
+                    done();
+                });
+            });
+
         });
 
     });

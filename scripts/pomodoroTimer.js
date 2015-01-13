@@ -74,14 +74,17 @@ var PomodoroTimer = Pomodoro.model('PomodoroTimer', {
                     break;
             }
         },
+        onLengthChange: function (state, old, _new) {
+            if (this.seconds == old * 60 && this.state == state) this.seconds = _new * 60;
+        },
         onPomodoroLengthChange: function (old, _new) {
-            if (this.seconds == old * 60 && this.state == State.Pomodoro) this.seconds = _new * 60;
+            this.onLengthChange(State.Pomodoro, old, _new);
         },
         onLongBreakLengthChange: function (old, _new) {
-            if (this.seconds == old * 60 && this.state == State.LongBreak) this.seconds = _new * 60;
+            this.onLengthChange(State.LongBreak, old, _new);
         },
         onShortBreakLengthChange: function (old, _new) {
-
+            this.onLengthChange(State.ShortBreak, old, _new);
         },
         onRoundLengthChange: function (old, _new) {
 
