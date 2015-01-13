@@ -193,6 +193,15 @@ describe('pomodoro', function () {
                     done();
                 });
             });
+            it('if paused, maxed and not in a pomodoro state, should NOT change the value', function (done) {
+                timer.stop();
+                timer.state = PomodoroTimer.State.ShortBreak;
+                timer.pomodoroConfig.pomodoroLength = 30;
+                siesta.notify(function () {
+                    assert.equal(timer.seconds, 25 * 60);
+                    done();
+                });
+            });
         });
     });
 

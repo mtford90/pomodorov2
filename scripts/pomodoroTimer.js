@@ -78,9 +78,7 @@ var PomodoroTimer = Pomodoro.model('PomodoroTimer', {
             }
         },
         onPomodoroLengthChange: function (old, _new) {
-            if (this.seconds == old * 60) {
-                this.seconds = _new * 60;
-            }
+            if (this.seconds == old * 60 && this.state == State.Pomodoro) this.seconds = _new * 60;
         },
         onLongBreakLengthChange: function (old, _new) {
 
