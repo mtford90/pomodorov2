@@ -56,6 +56,7 @@ module.exports = {
             'node_modules'
         ],
         extensions: ['', '.js', '.json', '.jsx']
-    }
+    },
+    devtool: "inline-source-map"
 
 };

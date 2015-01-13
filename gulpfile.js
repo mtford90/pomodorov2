@@ -7,7 +7,6 @@
  */
 
 var gulp = require('gulp'),
-    nodemon = require('nodemon'),
     watch = require('gulp-watch'),
     taskListing = require('gulp-task-listing'),
     gulpWebpack = require('gulp-webpack'),
@@ -23,13 +22,15 @@ var gulp = require('gulp'),
     cordova = require('cordova-lib').cordova.raw;
 
 // Argument parsing
-var gulpif = require('gulp-if'),
-    minimist = require('minimist');
+var minimist = require('minimist');
 
 var JS_FILES = (function () {
         var glob = _.map(conf.ext.js, function (x) { return './' + conf.scripts + '/**/*.' + x; });
         _.each(conf.ext.spec, function (x) { glob.push('./' + conf.tests + '/**/*.' + x) });
         glob = glob.concat('!' + './' + conf.tests + '/support/preprocessor.js');
+        glob = glob.concat('../rest/core/**/*.js');
+        glob = glob.concat('../rest/storage/**/*.js');
+        glob = glob.concat('../rest/http/**/*.js');
         return glob;
     })(),
     HTML_FILES = ['./index.html'];
@@ -44,39 +45,10 @@ var JS_FILES = (function () {
     gulp.task('help', taskListing.withFilters(null, excludeFilter));
 })();
 
-gulp.task('watch', ['watch-js', 'watch-server', 'watch-landing', 'livereload-listen']);
 
-if (!gulp.task('watch-server', function () {
-        // We do NOT want to restart the dev server unless something actually attributed to the dev server
-        // changes.
-        var ignore = _.map(_.keys(conf.styles), function (x) {
-            return conf.styles[x]
-        }).concat('gulpfile.js', 'app.config.js', 'index.html', 'tests/**/*.js', 'bin/**/*');
-        // Node monitor provides us with the ability to react to changes that affect node applications.
-        // In our case this node application is the dev server that provides us with webpack's
-        // hot module replacement.
-        nodemon({
-            script: 'devServer.js',
-            ignore: ignore
-        })
-            .on('restart', function () {
-                console.log('restarting node server');
-            })
-            .on('crash', function () {
-                console.log('\nNode has crashed - will restart after next save.');
-            });
-    })) { }
-
-gulp.task('watch-js', function () {
-    gulp.watch(JS_FILES, ['test-bundle']);
-});
-
-gulp.task('livereload-listen', function () {
-    livereload.listen(41062);
-});
-
-gulp.task('livereload-changed', function () {
-    livereload.changed();
+gulp.task('watch', function () {
+    livereload.listen();
+    gulp.watch(JS_FILES, ['test-bundle'])
 });
 
 gulp.task('test-bundle', function () {
@@ -187,19 +159,7 @@ gulp.task('cordova-serve', ['cordova-build'], cordovaBuild);
 gulp.task('cordova-serve-no-build', cordovaBuild);
 gulp.task('cordova-emulate', ['cordova-emulate'], cordovaEmulate);
 gulp.task('cordova-emulate-no-build', cordovaEmulate);
-
 gulp.task('compile', build(true));
-
-gulp.task('sass-landing', function () {
-    gulp.src('./landing/scss/main.scss')
-        .pipe(sass())
-        .pipe(gulp.dest('./landing/css'));
-});
-
-gulp.task('watch-landing', function () {
-    gulp.watch('landing/scss/*.scss', ['sass-landing']);
-});
-
 gulp.task('default', ['help']);
 
 module.exports = gulp;

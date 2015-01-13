@@ -73,6 +73,7 @@
     "sass-graph": "~0.1.2",
     "sass-loader": "^0.3.1",
     "siesta-orm": "0.0.11",
+    "source-map-support": "^0.2.9",
     "style-loader": "~0.8.2",
     "underscore": "^1.7.0",
     "url": "^0.10.1",

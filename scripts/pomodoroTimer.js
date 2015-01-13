@@ -16,22 +16,25 @@ var PomodoroTimer = Pomodoro.model('PomodoroTimer', {
             default: 1
         }
     ],
+    init: function (done) {
+        // Setup listeners.
+        // Note: The reason why we listen to self rather than simply execute logic when we decrement seconds in
+        // the interval is that this options leaves open the possibility of modifying seconds outside of the model
+        // instance.
+        this.listen(function (n) {
+            if (n.field == 'seconds') this.onSecondsChange();
+        }.bind(this));
+        console.log('starting');
+        data.PomodoroConfig.one()
+            .then(function (config) {
+                console.log('started');
+
+                config.listen(this.onConfigChange.bind(this));
+                done();
+            }.bind(this))
+            .catch(done);
+    },
     methods: {
-        __init: function (done) {
-            // Setup listeners.
-            // Note: The reason why we listen to self rather than simply execute logic when we decrement seconds in
-            // the interval is that this options leaves open the possibility of modifying seconds outside of the model
-            // instance.
-            this.listen(function (n) {
-                if (n.field == 'seconds') this.onSecondsChange();
-            }.bind(this));
-            Config.one()
-                .then(function (config) {
-                    config.listen(this.onConfigChange.bind(this));
-                    done();
-                }.bind(this))
-                .catch(done);
-        },
         onSecondsChange: function () {
             if (this.seconds == 0) {
 

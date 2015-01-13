@@ -29,7 +29,7 @@ var app = {
     initialize: function () {
         this.bindDeviceEvents();
         this.initializeStyling();
-        siesta.install(this.startReact);
+        data.siesta.install(this.startReact);
     },
     /**
      * Inject webpack styles.

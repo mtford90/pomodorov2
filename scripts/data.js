@@ -6,6 +6,7 @@ var q = require('q'),
     });
 
 
+
 siesta.autosave = true;
 siesta.autosaveDuration = 1000;
 
@@ -98,12 +99,14 @@ incompleteTasks.listen(function (results, n) {
         }
     }
 });
+
 module.exports = {
+    siesta: siesta,
+    Type: Type,
     Pomodoro: Pomodoro,
     Task: Task,
     Config: Config,
+    PomodoroConfig: PomodoroConfig,
     ColourConfig: ColourConfig,
-    siesta: siesta,
-    Type: Type,
     incompleteTasks: incompleteTasks
 };

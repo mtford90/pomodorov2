@@ -1,24 +1,20 @@
 var chai = require('chai'),
     assert = chai.assert;
 
-var PomodoroTimer = require('../scripts/pomodoroTimer');
+
+var data = require('../scripts/data'),
+    PomodoroTimer = require('../scripts/pomodoroTimer');
 
 describe('pomodoro', function () {
     beforeEach(function (done) {
-        siesta.reset(function () {
-            siesta.install()
-                .then(function () {
-                    done()
-                })
-                .catch(done);
-        });
+        siesta.resetData(done);
     });
     describe('defaults', function () {
         var timer;
         beforeEach(function (done) {
-            PomodoroTimer.get()
+            PomodoroTimer.one()
                 .then(function (_timer) {
-                    console.log('_timer', _timer);
+                    assert.ok(_timer, 'Should get singleton instance');
                     timer = _timer;
                     done();
                 })
@@ -27,12 +23,14 @@ describe('pomodoro', function () {
         it('25min default', function () {
             assert.equal(timer.seconds, 25 * 60);
         });
-        it('current round is 0', function () {
-            assert.equal(timer.round, 0);
+        it('current round is 1', function () {
+            assert.equal(timer.round, 1);
         });
-        it('target is 0', function () {
-            assert.equal(timer.target, 0);
+        it('target is 1', function () {
+            assert.equal(timer.target, 1);
         });
     });
+
+
 
 });
