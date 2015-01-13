@@ -70,9 +70,6 @@ var PomodoroTimer = Pomodoro.model('PomodoroTimer', {
                 case 'roundLength':
                     this.onRoundLengthChange(n.old, n.new);
                     break;
-                case 'pomodoroTarget':
-                    this.onPomodoroTargetChange(n.old, n.new);
-                    break;
                 default:
                     break;
             }
@@ -81,15 +78,12 @@ var PomodoroTimer = Pomodoro.model('PomodoroTimer', {
             if (this.seconds == old * 60 && this.state == State.Pomodoro) this.seconds = _new * 60;
         },
         onLongBreakLengthChange: function (old, _new) {
-
+            if (this.seconds == old * 60 && this.state == State.LongBreak) this.seconds = _new * 60;
         },
         onShortBreakLengthChange: function (old, _new) {
 
         },
         onRoundLengthChange: function (old, _new) {
-
-        },
-        onPomodoroTargetChange: function (old, _new) {
 
         },
         start: function () {
