@@ -1,19 +1,22 @@
 var data = require('./data'),
     Pomodoro = data.Pomodoro;
 
+var State = {
+    Pomodoro: 'Pomodoro',
+    ShortBreak: 'ShortBreak',
+    LongBreak: 'LongBreak'
+};
+
 var PomodoroTimer = Pomodoro.model('PomodoroTimer', {
     attributes: [
+        'seconds',
         {
-            name: 'seconds',
-            default: 25 * 60
+            name: 'completed',
+            default: 0
         },
         {
-            name: 'round',
-            default: 1
-        },
-        {
-            name: 'target',
-            default: 1
+            name: 'state',
+            default: State.Pomodoro
         }
     ],
     init: function (done) {
@@ -22,22 +25,35 @@ var PomodoroTimer = Pomodoro.model('PomodoroTimer', {
         // the interval is that this options leaves open the possibility of modifying seconds outside of the model
         // instance.
         this.listen(function (n) {
-            if (n.field == 'seconds') this.onSecondsChange();
+            if (n.field == 'seconds' && n.new == 0) this.transition();
         }.bind(this));
         console.log('starting');
         data.PomodoroConfig.one()
             .then(function (config) {
-                console.log('started');
-
+                this.pomodoroConfig = config;
                 config.listen(this.onConfigChange.bind(this));
+                var pomodoroLength = this.pomodoroConfig.pomodoroLength;
+                this.seconds = pomodoroLength * 60;
                 done();
             }.bind(this))
             .catch(done);
     },
     methods: {
-        onSecondsChange: function () {
-            if (this.seconds == 0) {
-
+        transition: function () {
+            if (this.state == State.Pomodoro) {
+                this.completed++;
+                if (!(this.completed % this.pomodoroConfig.roundLength)) {
+                    this.seconds = this.pomodoroConfig.longBreakLength * 60;
+                    this.state = State.LongBreak;
+                }
+                else {
+                    this.seconds = this.pomodoroConfig.shortBreakLength * 60;
+                    this.state = State.ShortBreak;
+                }
+            }
+            else if (this.state == State.ShortBreak || this.state == State.LongBreak) {
+                this.seconds = this.pomodoroConfig.pomodoroLength * 60;
+                this.state = State.Pomodoro;
             }
         },
         onConfigChange: function (n) {
@@ -74,7 +90,7 @@ var PomodoroTimer = Pomodoro.model('PomodoroTimer', {
             if (!this._token) {
                 this._token = setInterval(function () {
                     this.seconds--;
-                }, 1000);
+                }.bind(this), 1000);
             }
         },
         stop: function () {
@@ -84,7 +100,17 @@ var PomodoroTimer = Pomodoro.model('PomodoroTimer', {
             }
         }
     },
+    properties: {
+        // Is the timer ticking?
+        running: {
+            get: function () {
+                return !!this._token;
+            }
+        }
+    },
     singleton: true
 });
+
+PomodoroTimer.State = State;
 
 module.exports = PomodoroTimer;

@@ -77,6 +77,10 @@ var Task = Pomodoro.model(Type.Task, {
             {
                 name: 'roundLength',
                 default: 4
+            },
+            {
+                name: 'pomodoroTarget',
+                default: 8
             }
         ],
         singleton: true
