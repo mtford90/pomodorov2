@@ -1,22 +1,23 @@
 .pomodoro-controls {
-  border: 2px solid black;
-  border-radius: 1000px;
-  width: 50px;
-  height: 50px;
-  position: relative;
-  .underlay {
+  font-size: 14px;
+  .play-button {
     display: inline-block;
-    background-color: #ababab;
-    width: 44px;
-    height: 44px;
-    border-radius: 1000px;
-  }
-  i {
-    display: inline-block;
+    .fa-stack {
+      .fa {
+        cursor: pointer;
+      }
+      .fa-pause {
+        font-size: 0.9em;
+      }
+      .fa-play {
+        position: relative;
+        left: 0.1em;
+        bottom: 0.04em;
+      }
+    }
+
   }
 }
-
-
 
 .display-table {
   display: table;

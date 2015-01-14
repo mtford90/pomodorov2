@@ -2,10 +2,14 @@ var data = require('./data'),
     Pomodoro = data.Pomodoro;
 
 var State = {
-    Pomodoro: 'Pomodoro',
-    ShortBreak: 'ShortBreak',
-    LongBreak: 'LongBreak'
-};
+        Pomodoro: 'Pomodoro',
+        ShortBreak: 'ShortBreak',
+        LongBreak: 'LongBreak'
+    },
+    Event = {
+        start: 'start',
+        stop: 'stop'
+    };
 
 var PomodoroTimer = Pomodoro.model('PomodoroTimer', {
     attributes: [
@@ -71,13 +75,19 @@ var PomodoroTimer = Pomodoro.model('PomodoroTimer', {
                 this._token = setInterval(function () {
                     this.seconds--;
                 }.bind(this), 1000);
+                this.emit(Event.start, {});
             }
         },
         stop: function () {
             if (this._token) {
                 clearInterval(this._token);
                 this._token = null;
+                this.emit(Event.stop, {});
             }
+        },
+        toggle: function () {
+            if (this.paused) this.start();
+            else this.stop();
         }
     },
     properties: {
@@ -96,6 +106,9 @@ var PomodoroTimer = Pomodoro.model('PomodoroTimer', {
     singleton: true
 });
 
-PomodoroTimer.State = State;
+_.extend(PomodoroTimer, {
+    State: State,
+    Event: Event
+});
 
 module.exports = PomodoroTimer;
