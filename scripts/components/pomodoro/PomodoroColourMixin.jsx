@@ -4,11 +4,12 @@ var data = require('./../../data')
 
 var PomodoroColourMixin = {
     mixins: [SiestaMixin],
-    colourForState: function (timer) {
-        var color, state = timer.state;
-        if (state == PomodoroTimer.State.Pomodoro) color = this.state.colours.primary;
-        else if (state == PomodoroTimer.State.LongBreak) color = this.state.colours.longBreak;
-        else if (state == PomodoroTimer.State.ShortBreak) color = this.state.colours.shortBreak;
+    colourForState: function () {
+        console.log('colour has changed');
+        var color, state = this.timer.state;
+        if (state == PomodoroTimer.State.Pomodoro) color = this.config.primary;
+        else if (state == PomodoroTimer.State.LongBreak) color = this.config.longBreak;
+        else if (state == PomodoroTimer.State.ShortBreak) color = this.config.shortBreak;
         if (color) {
             this.setState({
                 color: color
@@ -16,16 +17,22 @@ var PomodoroColourMixin = {
         }
     },
     componentDidMount: function () {
-        this.listenAndSet(data.ColourConfig, 'colours');
-        this.listen(PomodoroTimer, function (e) {
-            this.colourForState(e.obj);
+        data.ColourConfig.one(function (err, config) {
+            PomodoroTimer.one(function (err, timer) {
+                this.timer = timer;
+                this.config = config;
+                this.colourForState();
+                this.listen(timer, function (e) {
+                    if (e.field == 'state') this.colourForState();
+                }.bind(this));
+                this.listen(config, function () {
+                    this.colourForState();
+                }.bind(this));
+            }.bind(this));
         }.bind(this));
-        PomodoroTimer.one().then(function (timer) {
-            this.colourForState(timer);
-        }.bind(this))
     },
     getInitialState: function () {
-        return {colours: {}, color: null};
+        return {color: null};
     }
 };
 

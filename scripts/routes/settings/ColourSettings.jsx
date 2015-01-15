@@ -82,18 +82,16 @@ var ColourSettings = React.createClass({
         this.setState(stateChange);
     },
     componentDidMount: function () {
-        Config.one().then(function (config) {
-            this.coloursConfig = config.colours;
-            this.setState(config.colours.getAttributes());
-            this.cancelListen = config.colours.listen(function (n) {
-                this.setState(config.colours.getAttributes());
+        ColourConfig.one().then(function (config) {
+            window.colourConfig = config;
+            this.coloursConfig = config;
+            this.setState(config.getAttributes());
+            this.cancelListen = config.listen(function (n) {
+                this.setState(config.getAttributes());
             }.bind(this));
         }.bind(this)).catch(function (err) {
             console.error('Error getting pomodoro settings', err);
         });
-    },
-    componentWillUnmount: function () {
-        this.cancelListen();
     },
     getInitialState: function () {
         return {};

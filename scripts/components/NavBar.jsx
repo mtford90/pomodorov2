@@ -8,6 +8,7 @@ var React = require('react')
 var NavBar = React.createClass({
     mixins: [PomodoroColourMixin],
     render: function () {
+        console.log('???');
         var style = {backgroundColor: this.state.color};
         var comp = (
             <div id="navbar" className="navbar navbar-inverse navbar-static-top" role="navigation" style={style}>
