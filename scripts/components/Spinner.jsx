@@ -5,19 +5,22 @@
  */
 
 var React = require('react'),
+    PomodoroColourMixin = require('./pomodoro/PomodoroColourMixin'),
     q = require('q');
 
 
 var FADE_TIME = 400;
 
 var Spinner = React.createClass({
+    mixins: [PomodoroColourMixin],
     render: function () {
         var defaultSpinnerClass = 'sk-spinner-rotating-plane',
             spinnerClass = this.props['spinnerClass'] || defaultSpinnerClass,
-            spinner = <div className={"sk-spinner " + spinnerClass}></div>,
+            style = {backgroundColor: this.state.color},
+            spinner = <div className={"sk-spinner " + spinnerClass} style={style}></div>,
             content = this.props.children;
         return (
-            <div className={"spinner-wrapper " + (!this.state.finishedLoading ? 'vertically-centred' : '')} ref="wrapper">
+            <div className={"spinner-wrapper " + (!this.state.finishedLoading ? 'vertically-centred' : '')} ref="wrapper" >
                 {this.state.finishedLoading ? content : spinner}
             </div>
         );

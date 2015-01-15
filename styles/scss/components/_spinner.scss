@@ -1,3 +1,5 @@
+@import "../variables";
+
 .spinner-wrapper {
   -webkit-transition: all 2s ease;
   -moz-transition: all 2s ease;
@@ -20,4 +22,8 @@
     min-width: 100vw;
     text-align: center;
   }
+}
+
+.sk-spinner {
+  background-color: $primary;
 }

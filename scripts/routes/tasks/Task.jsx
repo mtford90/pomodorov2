@@ -2,20 +2,21 @@ var React = require('react'),
     _ = require('underscore'),
     Summernote = require('../../components/Summernote'),
     ColourConfig = require('../../data').ColourConfig,
-    SiestaMixin = require('../../../../react-siesta').SiestaMixin,
+    PomodoroColourMixin = require('../../components/pomodoro/PomodoroColourMixin'),
     ContentEditable = require('../../components/ContentEditable');
 
 // TODO: Once ReactJS has the ability to perform inline hover styles, we can get rid of the awkward mouseout/mouseover handlers
 var Task = React.createClass({
-    mixins: [SiestaMixin],
-
+    mixins: [PomodoroColourMixin],
     render: function () {
         var task = this.props.task,
             isEditing = task.editing,
             shouldColor = this.state.hover || isEditing,
-            style = shouldColor ? {borderColor: this.state.primary} : {},
+            color = this.state.color,
+            style = shouldColor ? {borderColor: color} : {},
             self = this,
             className = 'task';
+        console.log('color', color);
         if (isEditing) className += ' task-editing';
         return (
             <div className={className}
@@ -63,10 +64,6 @@ var Task = React.createClass({
             comp = '';
         }
         return comp;
-    },
-    
-    componentDidMount: function () {
-        this.listenAndSet(ColourConfig, {fields: ['primary', 'secondary', 'tertiary']});
     },
     onClick: function (e) {
         e.preventDefault();
@@ -121,7 +118,6 @@ var Task = React.createClass({
     },
     getInitialState: function () {
         return {
-            colours: {},
             hover: false
         }
     }

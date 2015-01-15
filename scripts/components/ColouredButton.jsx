@@ -1,13 +1,15 @@
 var React = require('react')
     , config = require('../../app.config.js')
     , data = require('../data')
-    , Config = data.Config
+    , Config = data.Config,
+    PomodoroColourMixin = require('./pomodoro/PomodoroColourMixin')
     , _ = require('underscore');
 
 
 var ColouredButton = React.createClass({
+    mixins: [PomodoroColourMixin],
     render: function () {
-        var style = this.state;
+        var style = {backgroundColor: this.state.color};
         var component = (
             <div style={style} className="coloured-button">
                 <div className="overlay"></div>
@@ -21,31 +23,6 @@ var ColouredButton = React.createClass({
         delete props.children;
         _.extend(component.props, props);
         return component;
-    },
-    getInitialState: function () {
-        return {
-            backgroundColor: ''
-        }
-    },
-    componentDidMount: function () {
-        Config.one().then(function (config) {
-            var primaryColor = config.colours.primary;
-            console.log('primaryColor', primaryColor);
-            this.setState({
-                backgroundColor: primaryColor
-            });
-            this.cancelListen = config.colours.listen(function (n) {
-                this.setState({
-                    backgroundColor: config.colours.primary
-                })
-            }.bind(this));
-        }.bind(this)).catch(function (err) {
-            console.error('Error getting colour config for settings page', err);
-            if (err instanceof Error) throw err;
-        });
-    },
-    componentWillUnmount: function () {
-        this.cancelListen();
     }
 });
 
