@@ -19,10 +19,20 @@ var AsanaSettings = React.createClass({
                 Enable Asana integration by providing an API key.
                 </InputPanelDescription>
                 <InputPanelItem title="API Key">
-                    <ColouredInput type="text"/>
+                    <ColouredInput type="text" onBlur={this.onBlur} onFocus={this.onFocus} />
                 </InputPanelItem>
             </InputPanel>
         )
+    },
+    onBlur: function (e) {
+        var newAPIKey = $(e.target).val();
+        if (this.previousAPIKey != newAPIKey) {
+            console.log('asana api key changed', newAPIKey);
+        }
+    },
+    onFocus: function (e) {
+        var tgt = e.target;
+        this.previousAPIKey = $(tgt).val();
     }
 });
 

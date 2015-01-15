@@ -14,23 +14,35 @@ var ColouredInput = React.createClass({
         var comp = (
             <input style={style} onFocus={this.onFocus} onBlur={this.onBlur}></input>
         );
+        delete this.props.onBlur;
+        delete this.props.onFocus;
         _.extend(comp.props, this.props);
         return comp
     },
     getInitialState: function () {
         return {
-            hovering: false
+            hovering: false,
+            onBlur: this.props.onBlur,
+            onFocus: this.props.onFocus
         }
     },
-    onFocus: function () {
+    componentWillReceiveProps: function (nextProps) {
+        this.setState({
+            onBlur: nextProps.onBlur,
+            onFocus: nextProps.onFocus
+        });
+    },
+    onFocus: function (e) {
         this.setState({
             focused: true
         });
+        if (this.state.onFocus) this.state.onFocus(e);
     },
-    onBlur: function () {
+    onBlur: function (e) {
         this.setState({
             focused: false
         });
+        if (this.state.onBlur) this.state.onBlur(e);
     }
 });
 
