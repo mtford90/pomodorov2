@@ -28,13 +28,14 @@ var PomodoroControls = React.createClass({
     },
     componentDidMount: function () {
         PomodoroTimer.one(function (err, timer) {
+            this.setState({paused: timer.paused});
             if (!err) {
-                timer.listen(function (e) {
+                this.listen(PomodoroTimer, function (e) {
                     if (e.type == 'start') this.setState({paused: false});
                     if (e.type == 'stop') this.setState({paused: true});
                 }.bind(this));
             }
-            else console.error('Error getting timer', err);  
+            else console.error('Error getting timer', err);
         }.bind(this));
     },
     getInitialState: function () {
