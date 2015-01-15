@@ -86,13 +86,14 @@ var ColourSettings = React.createClass({
             window.colourConfig = config;
             this.coloursConfig = config;
             this.setState(config.getAttributes());
-            this.cancelListen = config.listen(function (n) {
+            this.listen(config, function () {
                 this.setState(config.getAttributes());
             }.bind(this));
         }.bind(this)).catch(function (err) {
             console.error('Error getting pomodoro settings', err);
         });
     },
+    
     getInitialState: function () {
         return {};
     },
