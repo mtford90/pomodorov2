@@ -1,11 +1,19 @@
 var React = require('react')
-    , Config = require('./../data').Config
+    , data = require('./../data')
+    , PomodoroTimer = require('./../pomodoroTimer')
+    , SiestaMixin = require('../../../react-siesta').SiestaMixin
     , _ = require('underscore');
 
 // Navbar that reacts to color changes.
 var NavBar = React.createClass({
+    mixins: [SiestaMixin],
     render: function () {
-        var style = this.state.color ? {backgroundColor: this.state.color} : {};
+        var color;
+        console.log('state', this.state.state);
+        if (this.state.state === PomodoroTimer.State.Pomodoro) color = this.state.colours.primary;
+        else if (this.state.state === PomodoroTimer.State.LongBreak) color = this.state.colours.longBreak;
+        else if (this.state.state === PomodoroTimer.State.ShortBreak) color = this.state.colours.shortBreak;
+        var style = color ? {backgroundColor: color} : {};
         var comp = (
             <div id="navbar" className="navbar navbar-inverse navbar-static-top" role="navigation" style={style}>
                 {this.props.children}
@@ -16,27 +24,13 @@ var NavBar = React.createClass({
         return comp;
     },
     componentDidMount: function () {
-        Config.one().then(function (config) {
-            this.setState({
-                color: config.colours.primary
-            });
-            this.cancelListen = config.colours.listen(function (n) {
-                if (n.field == 'primary') {
-                    this.setState({
-                        color: n.new
-                    });
-                }
-            }.bind(this))
-        }.bind(this)).catch(function (err) {
-            console.error('Error getting config for nav bar', err);
-        });
+        this.listenAndSet(data.ColourConfig, 'colours');
+        this.listenAndSet(PomodoroTimer, {fields: ['state']});
     },
-    componentWillUnmount: function () {
-        this.cancelListen();
-    },
+
     getInitialState: function () {
         return {
-            color: null
+            colours: {}
         }
     }
 });

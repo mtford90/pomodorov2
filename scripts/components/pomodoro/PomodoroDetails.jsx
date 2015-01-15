@@ -1,4 +1,7 @@
-var React = require('react');
+var React = require('react'),
+    SiestaMixin = require('../../../../react-siesta').SiestaMixin,
+    data = require('../../data'),
+    PomodoroTimer = require('../../pomodoroTimer');
 
 var Num = React.createClass({
     render: function () {
@@ -15,16 +18,31 @@ var Num = React.createClass({
         _.extend(comp, this.props);
         return comp;
     }
+
 });
 
 var PomodoroDetails = React.createClass({
+    mixins: [SiestaMixin],
     render: function () {
         return (
             <div>
-                <Num className="" divisor={1} dividend={4} description="Current Round"/>
-                <Num className="" divisor={1} dividend={12} description="Target Rounds"/>
+            {this.state.roundLength ?
+                (<div>
+                    <Num className="" divisor={(this.state.completed % this.state.roundLength) + 1} dividend={this.state.roundLength} description="Current Round"/>
+                    <Num className="" divisor={this.state.completed} dividend={12} description="Target Rounds"/>
+                </div>) : ''}
             </div>
         );
+    },
+    componentDidMount: function () {
+        this.listenAndSet(PomodoroTimer, {fields: ['completed']});
+        this.listenAndSet(data.PomodoroConfig, {fields: ['roundLength']});
+    },
+    getInitialState: function () {
+        return {
+            completed: 0,
+            roundLength: null
+        }
     }
 });
 
