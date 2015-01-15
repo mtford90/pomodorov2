@@ -29,7 +29,7 @@ var PomodoroTimer = Pomodoro.model('PomodoroTimer', {
         // the interval is that this options leaves open the possibility of modifying seconds outside of the model
         // instance.
         this.listen(function (n) {
-            if (n.field == 'seconds' && n.new == 0) this.transition();
+            if (n.field == 'seconds' && n.new == 0 && n.new != n.old) this.transition();
         }.bind(this));
         console.log('starting');
         data.PomodoroConfig.one()

@@ -66,11 +66,14 @@ var Seeker = React.createClass({
         if (e.field == 'seconds')this.moveSeekerToCorrectPosition();
     },
     componentDidMount: function () {
-        this.moveSeekerToCorrectPosition();
-        // TODO: Is there a more clever way to handle scaling of the seeker? i.e. incorporate into responsiveness?
-        this.resizeHandler = this.moveSeekerToCorrectPosition.bind(this);
-        $(window).resize(this.resizeHandler);
-        this.listen(PomodoroTimer, this.handleTimerEvent.bind(this));
+        PomodoroTimer.one().then(function (timer) {
+            this.timer = timer;
+            this.moveSeekerToCorrectPosition();
+            // TODO: Is there a more clever way to handle scaling of the seeker? i.e. incorporate into responsiveness?
+            this.resizeHandler = this.moveSeekerToCorrectPosition.bind(this);
+            $(window).resize(this.resizeHandler);
+            this.listen(timer, this.handleTimerEvent.bind(this));
+        }.bind(this));
     },
     componentWillUnmount: function () {
         $(window).off('resize', this.resizeHandler);
@@ -79,6 +82,7 @@ var Seeker = React.createClass({
         document.body.removeChild(this.empty);
     },
     onDragStart: function (e) {
+        this.timer.stop();
         this.x = e.pageX;
         this.empty = document.createElement('span');
         this.empty.setAttribute('style',

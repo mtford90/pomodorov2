@@ -12,6 +12,7 @@ describe('pomodoro', function () {
 
     beforeEach(function (done) {
         siesta.resetData(function () {
+            console.log('???');
             PomodoroTimer.one()
                 .then(function (_timer) {
                     assert.ok(_timer, 'Should get singleton instance');
@@ -52,7 +53,8 @@ describe('pomodoro', function () {
 
     it('timer works', function (done) {
         timer.listenOnce(function (n) {
-            assert.equal(n.field, 'seconds');
+            assert.equal(n.type, 'start');
+            timer.stop();
             done();
         });
         timer.start();
