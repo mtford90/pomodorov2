@@ -6,7 +6,8 @@
  */
 
 var React = require('React'),
-    PomodoroTimer = require('../../pomodoroTimer');
+    PomodoroTimer = require('../../pomodoroTimer'),
+    SiestaMixin = require('../../../../react-siesta').SiestaMixin;
 
 // See timeline.ai smart guides for the values.
 var SVG_NATIVE_WIDTH = 1833,
@@ -18,6 +19,7 @@ var SVG_NATIVE_WIDTH = 1833,
     ZERO_MODIFIER = (1 - ZERO_PERC);
 
 var Seeker = React.createClass({
+    mixins: [SiestaMixin],
     render: function () {
         var svgStyle = {left: this.state.deltaX};
         return (
@@ -60,11 +62,15 @@ var Seeker = React.createClass({
                 console.error('Error initialising seeker', err);
             });
     },
+    handleTimerEvent: function (e) {
+        if (e.field == 'seconds')this.moveSeekerToCorrectPosition();
+    },
     componentDidMount: function () {
         this.moveSeekerToCorrectPosition();
         // TODO: Is there a more clever way to handle scaling of the seeker? i.e. incorporate into responsiveness?
         this.resizeHandler = this.moveSeekerToCorrectPosition.bind(this);
         $(window).resize(this.resizeHandler);
+        this.listen(PomodoroTimer, this.handleTimerEvent.bind(this));
     },
     componentWillUnmount: function () {
         $(window).off('resize', this.resizeHandler);
