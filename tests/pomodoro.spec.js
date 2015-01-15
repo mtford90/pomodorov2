@@ -65,7 +65,16 @@ describe('pomodoro', function () {
         describe('transition to short break', function () {
             beforeEach(function (done) {
                 timer.seconds = 0;
-                siesta.notify(done);
+                this.cancelListen = timer.listen(function (n) {
+                    if (n.type == 'start') {
+                        this.cancelListen();
+                        done();
+                    }
+                }.bind(this));
+                timer.start();
+            });
+            afterEach(function () {
+                timer.stop();
             });
             it('should increment completed', function () {
                 assert.equal(timer.completed, 1);
@@ -81,10 +90,17 @@ describe('pomodoro', function () {
             beforeEach(function (done) {
                 timer.completed = 1;
                 timer.state = PomodoroTimer.State.ShortBreak;
-                siesta.notify(function () {
-                    timer.seconds = 0;
-                    siesta.notify(done);
-                });
+                timer.seconds = 0;
+                this.cancelListen = timer.listen(function (n) {
+                    if (n.type == 'start') {
+                        this.cancelListen();
+                        done();
+                    }
+                }.bind(this));
+                timer.start();
+            });
+            afterEach(function () {
+                timer.stop();
             });
             it('completetd shouls stay the same', function () {
                 assert.equal(timer.completed, 1);
@@ -101,10 +117,17 @@ describe('pomodoro', function () {
                 beforeEach(function (done) {
                     timer.completed = timer.pomodoroConfig.roundLength - 1;
                     timer.state = PomodoroTimer.State.Pomodoro;
-                    siesta.notify(function () {
-                        timer.seconds = 0;
-                        siesta.notify(done);
-                    });
+                    timer.seconds = 0;
+                    this.cancelListen = timer.listen(function (n) {
+                        if (n.type == 'start') {
+                            this.cancelListen();
+                            done();
+                        }
+                    }.bind(this));
+                    timer.start();
+                });
+                afterEach(function () {
+                    timer.stop();
                 });
                 it('completed should increment', function () {
                     assert.equal(timer.completed, timer.pomodoroConfig.roundLength);
@@ -120,10 +143,17 @@ describe('pomodoro', function () {
                 beforeEach(function (done) {
                     timer.completed = ( timer.pomodoroConfig.roundLength * 2) - 1;
                     timer.state = PomodoroTimer.State.Pomodoro;
-                    siesta.notify(function () {
-                        timer.seconds = 0;
-                        siesta.notify(done);
-                    });
+                    timer.seconds = 0;
+                    this.cancelListen = timer.listen(function (n) {
+                        if (n.type == 'start') {
+                            this.cancelListen();
+                            done();
+                        }
+                    }.bind(this));
+                    timer.start();
+                });
+                afterEach(function () {
+                    timer.stop();
                 });
                 it('completed should increment', function () {
                     assert.equal(timer.completed, timer.pomodoroConfig.roundLength * 2);
@@ -140,10 +170,17 @@ describe('pomodoro', function () {
             beforeEach(function (done) {
                 timer.completed = timer.pomodoroConfig.roundLength * 2;
                 timer.state = PomodoroTimer.State.LongBreak;
-                siesta.notify(function () {
-                    timer.seconds = 0;
-                    siesta.notify(done);
-                });
+                timer.seconds = 0;
+                this.cancelListen = timer.listen(function (n) {
+                    if (n.type == 'start') {
+                        this.cancelListen();
+                        done();
+                    }
+                }.bind(this));
+                timer.start();
+            });
+            afterEach(function () {
+                timer.stop();
             });
             it('completetd shouls stay the same', function () {
                 assert.equal(timer.completed, timer.pomodoroConfig.roundLength * 2);
