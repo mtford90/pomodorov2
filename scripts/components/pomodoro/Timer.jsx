@@ -2,17 +2,30 @@ var React = require('react'),
     SiestaMixin = require('../../../../react-siesta').SiestaMixin,
     PomodoroTimer = require('../../pomodoroTimer');
 
+function pad(num, size) {
+    var s = num + "";
+    while (s.length < size) s = "0" + s;
+    return s;
+}
+
 var Timer = React.createClass({
     mixins: [SiestaMixin],
     render: function () {
+        var minutes, seconds;
+        if (this.state.seconds != null) {
+            minutes = Math.floor(this.state.seconds / 60);
+            seconds = pad(Math.round(((this.state.seconds / 60) % 1) * 60), 2);
+        }
         var comp = (
             <div>
                 <span className="timer">
-                    <span id="minute"
-                        className="segment">{this.state.seconds ? this.state.seconds / 60 : ''}</span>
-                    :
-                    <span id="seconds"
-                        className="segment">00</span>
+                    <span id="minute" className="segment">
+                        {minutes}
+                    </span>
+                    <span>:</span>
+                    <span id="seconds"className="segment">
+                        {seconds}
+                    </span>
                 </span>
             </div>
         );
