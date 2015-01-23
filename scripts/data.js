@@ -21,6 +21,17 @@ DEFAULT_COLOURS = {
     longBreak: '#292f37'
 };
 
+siesta.registerComparator('isToday', function (opts) {
+    var value = opts.object[opts.field];
+    if (value instanceof Date) {
+        var d = new Date();
+        return value.getDate() == value.getDate() && value.getMonth() == value.getMonth() && value.getFullYear() == d.getFullYear();
+    }
+    else {
+        throw new Error('Must be a date field to use isToday comparator');
+    }
+});
+
 var Task = Pomodoro.model(Type.Task, {
         attributes: [
             'title',
@@ -29,6 +40,14 @@ var Task = Pomodoro.model(Type.Task, {
             'editing',
             'index'
         ]
+    }),
+    Round = Pomodoro.model('Round', {
+        attributes: ['date', 'time'],
+        statics: {
+            todaysRounds: function () {
+                return this.reactiveQuery({date__isToday: true});
+            }
+        }
     }),
     Config = Pomodoro.model('Config', {
         relationships: {
@@ -59,6 +78,7 @@ var Task = Pomodoro.model(Type.Task, {
             }
         }
     }),
+
     PomodoroConfig = Pomodoro.model('PomodoroConfig', {
         attributes: [
             {
@@ -115,6 +135,7 @@ module.exports = {
     Pomodoro: Pomodoro,
     Task: Task,
     Config: Config,
+    Round: Round,
     PomodoroConfig: PomodoroConfig,
     ColourConfig: ColourConfig,
     incompleteTasks: incompleteTasks

@@ -5,6 +5,7 @@
 var chai = require('chai'),
     assert = chai.assert,
     data = require('../scripts/data'),
+    Round = data.Round,
     PomodoroTimer = require('../scripts/pomodoroTimer');
 
 describe('pomodoro', function () {
@@ -65,12 +66,13 @@ describe('pomodoro', function () {
         describe('transition to short break', function () {
             beforeEach(function (done) {
                 timer.seconds = 0;
-                this.cancelListen = timer.listen(function (n) {
-                    if (n.type == 'start') {
-                        this.cancelListen();
+                var cancelListen;
+                cancelListen = timer.listen(function (n) {
+                    if (n.field == 'state') {
+                        cancelListen();
                         done();
                     }
-                }.bind(this));
+                });
                 timer.start();
             });
             afterEach(function () {
@@ -88,21 +90,25 @@ describe('pomodoro', function () {
         });
         describe('transition from short break', function () {
             beforeEach(function (done) {
-                timer.completed = 1;
-                timer.state = PomodoroTimer.State.ShortBreak;
-                timer.seconds = 0;
-                this.cancelListen = timer.listen(function (n) {
-                    if (n.type == 'start') {
-                        this.cancelListen();
-                        done();
-                    }
-                }.bind(this));
-                timer.start();
+                data.Round.graph({date: new Date()})
+                    .then(function () {
+                        timer.state = PomodoroTimer.State.ShortBreak;
+                        timer.seconds = 0;
+                        var cancelListen;
+                        cancelListen = timer.listen(function (n) {
+                            if (n.field == 'state') {
+                                cancelListen();
+                                done();
+                            }
+                        });
+                        timer.start();
+                    }).catch(done);
+
             });
             afterEach(function () {
                 timer.stop();
             });
-            it('completetd shouls stay the same', function () {
+            it('completed shouls stay the same', function () {
                 assert.equal(timer.completed, 1);
             });
             it('should reset seconds', function () {
@@ -115,16 +121,20 @@ describe('pomodoro', function () {
         describe('transition to long break', function () {
             describe('first time', function () {
                 beforeEach(function (done) {
-                    timer.completed = timer.pomodoroConfig.roundLength - 1;
-                    timer.state = PomodoroTimer.State.Pomodoro;
-                    timer.seconds = 0;
-                    this.cancelListen = timer.listen(function (n) {
-                        if (n.type == 'start') {
-                            this.cancelListen();
-                            done();
-                        }
-                    }.bind(this));
-                    timer.start();
+                    Round.graph(_.times(timer.pomodoroConfig.roundLength - 1, function () {
+                        return {date: new Date()}
+                    })).then(function () {
+                        timer.state = PomodoroTimer.State.Pomodoro;
+                        timer.seconds = 0;
+                        var cancelListen;
+                        cancelListen = timer.listen(function (n) {
+                            if (n.field == 'state') {
+                                cancelListen();
+                                done();
+                            }
+                        });
+                        timer.start();
+                    }).catch(done);
                 });
                 afterEach(function () {
                     timer.stop();
@@ -141,16 +151,20 @@ describe('pomodoro', function () {
             });
             describe('second time', function () {
                 beforeEach(function (done) {
-                    timer.completed = ( timer.pomodoroConfig.roundLength * 2) - 1;
-                    timer.state = PomodoroTimer.State.Pomodoro;
-                    timer.seconds = 0;
-                    this.cancelListen = timer.listen(function (n) {
-                        if (n.type == 'start') {
-                            this.cancelListen();
-                            done();
-                        }
-                    }.bind(this));
-                    timer.start();
+                    Round.graph(_.times((timer.pomodoroConfig.roundLength * 2) - 1, function () {
+                        return {date: new Date()}
+                    })).then(function () {
+                        timer.state = PomodoroTimer.State.Pomodoro;
+                        timer.seconds = 0;
+                        var cancelListen;
+                        cancelListen = timer.listen(function (n) {
+                            if (n.field == 'state') {
+                                cancelListen();
+                                done();
+                            }
+                        });
+                        timer.start();
+                    }).catch(done);
                 });
                 afterEach(function () {
                     timer.stop();
@@ -168,16 +182,20 @@ describe('pomodoro', function () {
         });
         describe('transition from long break', function () {
             beforeEach(function (done) {
-                timer.completed = timer.pomodoroConfig.roundLength * 2;
-                timer.state = PomodoroTimer.State.LongBreak;
-                timer.seconds = 0;
-                this.cancelListen = timer.listen(function (n) {
-                    if (n.type == 'start') {
-                        this.cancelListen();
-                        done();
-                    }
-                }.bind(this));
-                timer.start();
+                Round.graph(_.times(timer.pomodoroConfig.roundLength * 2, function () {
+                    return {date: new Date()}
+                })).then(function () {
+                    timer.state = PomodoroTimer.State.LongBreak;
+                    timer.seconds = 0;
+                    var cancelListen;
+                    cancelListen = timer.listen(function (n) {
+                        if (n.field == 'state') {
+                            cancelListen();
+                            done();
+                        }
+                    });
+                    timer.start();
+                });
             });
             afterEach(function () {
                 timer.stop();

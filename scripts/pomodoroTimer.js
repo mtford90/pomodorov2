@@ -11,19 +11,15 @@ var State = {
         stop: 'stop'
     };
 
+
 var PomodoroTimer = Pomodoro.model('PomodoroTimer', {
     attributes: [
         'seconds',
-        {
-            name: 'completed',
-            default: 0
-        },
         {
             name: 'state',
             default: State.Pomodoro
         }
     ],
-
     init: function (fromStorage, done) {
         // Setup listeners.
         // Note: The reason why we listen to self rather than simply execute logic when we decrement seconds in
@@ -42,8 +38,17 @@ var PomodoroTimer = Pomodoro.model('PomodoroTimer', {
                     this.seconds = pomodoroLength * 60;
                 }
                 done();
-            }.bind(this))
-            .catch(done);
+            }.bind(this)).catch(done);
+        this.rq = data.Round.todaysRounds();
+        var setCompleted = function () {
+            this.completed = this.rq.results.length;
+        }.bind(this);
+        this.rq.init(setCompleted);
+        this.rq.listen(setCompleted);
+    },
+
+    remove: function () {
+        this.rq.terminate();
     },
 
     methods: {
@@ -52,15 +57,21 @@ var PomodoroTimer = Pomodoro.model('PomodoroTimer', {
         },
         transition: function () {
             if (this.state == State.Pomodoro) {
-                this.completed++;
-                if (!(this.completed % this.pomodoroConfig.roundLength)) {
-                    this.seconds = this.pomodoroConfig.longBreakLength * 60;
-                    this.state = State.LongBreak;
-                }
-                else {
-                    this.seconds = this.pomodoroConfig.shortBreakLength * 60;
-                    this.state = State.ShortBreak;
-                }
+                // New round.
+                data.Round.graph({date: new Date()})
+                    .then(function () {
+                        console.log('yo!');
+                        console.log('completed', this.completed);
+                        if (!(this.completed % this.pomodoroConfig.roundLength)) {
+                            this.seconds = this.pomodoroConfig.longBreakLength * 60;
+                            this.state = State.LongBreak;
+                        }
+                        else {
+                            console.log('yay');
+                            this.seconds = this.pomodoroConfig.shortBreakLength * 60;
+                            this.state = State.ShortBreak;
+                        }
+                    }.bind(this));
             }
             else if (this.state == State.ShortBreak || this.state == State.LongBreak) {
                 this.seconds = this.pomodoroConfig.pomodoroLength * 60;
@@ -109,10 +120,16 @@ var PomodoroTimer = Pomodoro.model('PomodoroTimer', {
             get: function () {
                 return !this.running;
             }
+        },
+        completed: {
+            get: function () {
+                return this.rq.results.length;
+            }
         }
     },
     singleton: true
 });
+
 
 _.extend(PomodoroTimer, {
     State: State,

@@ -53,13 +53,15 @@ $padding: 20px;
     margin-top: 20px;
     padding: 10px;
   }
-  .title {
-    display: inline;
+  .title-wrapper {
     padding: 5px;
-    &:focus {
-      outline: 0;
+    .title {
+      &:focus {
+        outline: 0;
+      }
     }
   }
+
   .buttons {
     position: absolute;
     right: 0;

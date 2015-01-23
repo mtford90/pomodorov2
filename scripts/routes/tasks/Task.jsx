@@ -38,13 +38,14 @@ var Task = React.createClass({
         var contentEditableStyle = {};
         if (this.state.color) contentEditableStyle.backgroundColor = hexToRgbString(this.state.color, 0.1);
         if (isEditing) className += ' task-editing';
-
         var contentEditiable = (
-                <ContentEditable ref="title"
-                    className="title"
-                    onChange={this.onTitleChange}
-                    text={task.title}
-                    style={contentEditableStyle}/>
+                <div className="title-wrapper" style={contentEditableStyle}>
+                    <ContentEditable ref="title"
+                        className="title"
+                        onChange={this.onTitleChange}
+                        text={task.title}/>
+                </div>
+
             ),
             span = <span>{task.title}</span>;
         return (

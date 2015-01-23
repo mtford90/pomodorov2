@@ -24,23 +24,24 @@ var Num = React.createClass({
 var PomodoroDetails = React.createClass({
     mixins: [SiestaMixin],
     render: function () {
+        var numCompleted = this.state.rounds.length;
         return (
             <div>
             {this.state.roundLength ?
                 (<div>
-                    <Num className="" divisor={(this.state.completed % this.state.roundLength) + 1} dividend={this.state.roundLength} description="Current Round"/>
-                    <Num className="" divisor={this.state.completed} dividend={12} description="Target Rounds"/>
+                    <Num className="" divisor={(numCompleted % this.state.roundLength) + 1} dividend={this.state.roundLength} description="Current Round"/>
+                    <Num className="" divisor={numCompleted} dividend={12} description="Target Rounds"/>
                 </div>) : ''}
             </div>
         );
     },
     componentDidMount: function () {
-        this.listenAndSetState(PomodoroTimer, {fields: ['completed']});
+        this.listenAndSetState(data.Round.todaysRounds(), 'rounds');
         this.listenAndSetState(data.PomodoroConfig, {fields: ['roundLength']});
     },
     getInitialState: function () {
         return {
-            completed: 0,
+            rounds: [],
             roundLength: null
         }
     }
