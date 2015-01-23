@@ -1,6 +1,5 @@
 var React = require('react'),
     _ = require('underscore'),
-    Tagger = require('./../../components/tag/Tagger'),
     FilterConfig = require('./FilterConfig');
 
 var TagsFilter = React.createClass({
@@ -9,7 +8,6 @@ var TagsFilter = React.createClass({
             <FilterConfig
                 icon={"fa fa-tags"}
                 className="tags-filter">
-                <Tagger/>
             </FilterConfig>
         );
         _.extend(elem.props, this.props);

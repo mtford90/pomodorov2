@@ -4,6 +4,7 @@ var React = require('react')
     , RouteHandler = router.RouteHandler
     , location = require('./location')
     , Timer = require('./components/pomodoro/Timer')
+    , RightNavbar = require('./components/RightNavbar')
     , Link = router.Link
     , modalPlaceholder = require('./components/modal/actions').placeholder
     , NavBar = require('./components/NavBar');
@@ -25,7 +26,9 @@ var ContentWrapper = React.createClass({
                                 <Link to="Settings">Settings</Link>
                             </li>
                         </ul>
-                        <Timer className="pull-right"/>
+                        <div className="pull-right">
+                            <RightNavbar/>
+                        </div>
                     </div>
                 </NavBar>
                 <div id="main-content" role="main">

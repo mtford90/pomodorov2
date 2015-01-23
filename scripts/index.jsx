@@ -37,7 +37,6 @@ var app = {
     initializeStyling: function () {
         require('./styles/vendor');
         require('./styles/custom');
-        require('./styles/dev');
     },
     /**
      * Listen to cordova device events

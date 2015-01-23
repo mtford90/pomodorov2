@@ -13,6 +13,8 @@ var React = require('react')
     , router = require('react-router')
     , Link = router.Link
     , Spinner = require('../../components/Spinner')
+    , rightNav = require('../../components/RightNavbar')
+    , RightNavbar = rightNav.RightNavbar
     , data = require('../../data')
     , incompleteTasks = data.incompleteTasks
     , SiestaMixin = require('../../../../react-siesta/index').SiestaMixin
@@ -33,12 +35,12 @@ var Tasks = React.createClass({
                 <DocumentTitle title={config.brand}>
                 </DocumentTitle>
                 <div id="tasks" className="container">
+                    <RightNavbar>
+                        <Filters/>
+                    </RightNavbar>
                     <Spinner ref="spinner" finishedLoading={incompleteTasks.initialised}>
                         <Row>
-                            <Col xs={12} sm={1}>
-                                <Filters/>
-                            </Col>
-                            <Col xs={12} sm={11}>
+                            <Col xs={12} sm={12}>
                                 <ul onDragOver={this.dragOver}>
                                     {this.state.tasks.map(function (o, i) {
                                         console.log('render task', o);

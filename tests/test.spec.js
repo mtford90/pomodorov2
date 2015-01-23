@@ -5,7 +5,7 @@ var chai = require('chai'),
 
 
 
-describe('xyz', function () {
+describe('RightNavbarPlaceholder', function () {
     it('123', function () {
     });
     it('456', function () {

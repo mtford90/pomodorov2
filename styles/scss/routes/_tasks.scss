@@ -8,76 +8,31 @@ $padding: 20px;
     margin: 0;
     padding: 0;
   }
+}
 
-  //noinspection CssOptimizeSimilarProperties
-  .filter-config {
-    position: absolute;
-    left: 0;
-    .content {
-      background-color: white;
-      position: fixed;
-      padding-left: 10px;
-      margin-left: -10px;
-      padding-top: 5px;
-      margin-top: -5px;
-      margin-bottom: -3px;
-      padding-bottom: 3px;
-      padding-right: 10px;
-      border-style: solid;
-      border-width: 1px;
-      border-color: black;
-      i {
-        font-size: 18px;
-        cursor: pointer;
-      }
-
-      z-index: 13;
-    }
-    &.tags-filter {
-      input {
-        margin-left: 20px;
-        position: relative;
-        bottom: 1px;
-        // Pad out to ensure no cut off
-        padding-left: 6px;
-        padding-right: 6px;
-        overflow: visible;
-      }
-    }
-
-  }
-
+.navbar {
   #filters {
-    position: fixed;
-    height: 100%;
-    padding-top: 20px;
-
+    margin-top: 12px;
+    font-size: 18px;
+    text-align: right;
+    color: white;
     #inner-filters {
-      height: 100%;
-      border: 0 solid $tertiary;
-      border-right-width: 2px;
-      padding-right: 10px;
-      font-size: 18px;
-      overflow: visible;
-      .logo {
-        color: #aaaaaa;
-        position: absolute;
-        left: 25px;
-        top: -4px;
-        font-size: 14px;
-      }
       .filter {
-        margin-bottom: 6px;
-        color: grey;
+        display: inline-block;
         cursor: pointer;
+        margin-right: 18px;
+        &:last-child {
+          margin-right: 0 !important;
+        }
+        i {
+          color: white;
+        }
         &:hover {
           i {
             color: black;
           }
-
         }
       }
-
     }
 
   }
