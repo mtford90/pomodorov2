@@ -7,8 +7,9 @@ var ContentEditable = React.createClass({
             <ComponentClass className={"content-editable " + this.props.className}
                 onInput={this.emitChange}
                 onBlur={this.emitChange}
+                style={this.props.style || {}}
                 contentEditable>{this.props.text}</ComponentClass>
-        )
+        );
     },
 
     getDefaultProps: function () {

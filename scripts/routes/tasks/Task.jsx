@@ -5,6 +5,25 @@ var React = require('react'),
     PomodoroColourMixin = require('../../components/pomodoro/PomodoroColourMixin'),
     ContentEditable = require('../../components/ContentEditable');
 
+/**
+ *
+ * @param hex
+ * @param alpha
+ * @returns {string}
+ */
+function hexToRgbString(hex, alpha) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    var rgb = '(' + parseInt(result[1], 16) + ',' + parseInt(result[2], 16) + ',' + parseInt(result[3], 16);
+    if (alpha) {
+        rgb = 'rgba' + rgb + ',' + alpha;
+    }
+    else {
+        rgb = 'rgb' + rgb + ',' + alpha;
+    }
+    rgb += ')';
+    return rgb;
+}
+
 // TODO: Once ReactJS has the ability to perform inline hover styles, we can get rid of the awkward mouseout/mouseover handlers
 var Task = React.createClass({
     mixins: [PomodoroColourMixin],
@@ -16,16 +35,25 @@ var Task = React.createClass({
             style = shouldColor ? {borderColor: color} : {},
             self = this,
             className = 'task';
-        console.log('color', color);
+        var contentEditableStyle = {};
+        if (this.state.color) contentEditableStyle.backgroundColor = hexToRgbString(this.state.color, 0.1);
         if (isEditing) className += ' task-editing';
+
+        var contentEditiable = (
+                <ContentEditable ref="title"
+                    className="title"
+                    onChange={this.onTitleChange}
+                    text={task.title}
+                    style={contentEditableStyle}/>
+            ),
+            span = <span>{task.title}</span>;
         return (
             <div className={className}
                 onMouseOver={self.onMouseOver}
                 onMouseOut={self.onMouseOut}
                 onClick={this.onClick}
                 style={style}>
-            {isEditing ? <ContentEditable ref="title" className="title" onChange={this.onTitleChange} text={task.title}>
-            </ContentEditable> : <span>{task.title}</span>}
+                {isEditing ? contentEditiable : span}
                 {task.asana ? <img className="tag-asana tag" src="img/asana-minimal.png"/> : ''}
                 <div className="buttons">
                     <div>
@@ -33,7 +61,6 @@ var Task = React.createClass({
                         <i className="fa fa-times-circle-o cancel" ref="cancelButton" title="Hide"></i>
                     </div>
                 </div>
-                {this.renderEditing()}
             </div>
         )
     },
