@@ -34,7 +34,10 @@ var Timer = React.createClass({
         return comp;
     },
     componentDidMount: function () {
-        this.listenAndSet(PomodoroTimer, {fields: ['seconds']});
+        this.listenAndSetState(PomodoroTimer, {fields: ['seconds']})
+            .then(function (timer) {
+                if (timer.seconds < 0) timer.seconds = 0; // Just in case.
+            })
     },
     getInitialState: function () {
         return {seconds: null}

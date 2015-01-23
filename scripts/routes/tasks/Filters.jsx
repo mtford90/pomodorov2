@@ -37,7 +37,7 @@ var Filters = React.createClass({
         }
     },
     onNewPressed: function () {
-        Task.map({title: 'A new task!', completed: false, editing: true})
+        Task.graph({title: 'A new task!', completed: false, editing: true})
             .then(function () {
                 console.log('new task created');
             })

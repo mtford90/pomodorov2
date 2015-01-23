@@ -18,7 +18,7 @@ var ColorPicker = React.createClass({
                     id="code"
                     onChange={this.onChange}
                     value={this.state.color}></ComponentClass>
-                {validColor ? '' : <i className="fa fa-times-circle"></i>}
+                {validColor ? '' : <i className="fa fa-exclamation-circle"></i>}
             </div>
         )
     },

@@ -41,21 +41,15 @@ var Home = React.createClass({
                                 </Col>
                             </Row>
                         {currentTask ? (
-                            <div>
-                                <Row >
-                                    <Col sm={12} >
-                                        <h3>Current</h3>
-                                    </Col>
-                                </Row>
                                 <Row >
                                     <Col sm={12} >
                                         <Task task={currentTask}/>
                                     </Col>
                                 </Row>
-                            </div>) : ''}
+                            ) : ''}
                         {restOfTasks.length ? ( <Row >
                             <Col sm={12} >
-                                <h3>Coming Up</h3>
+                                <h3>Next</h3>
                             </Col>
                         </Row>) : '' }
                         {restOfTasks.map(function (o, i) {
@@ -75,7 +69,7 @@ var Home = React.createClass({
     },
     componentDidMount: function () {
         if (!incompleteTasks.initialised) this.refs.spinner.startTimer();
-        this.listenAndSet(incompleteTasks, 'tasks')
+        this.listenAndSetState(incompleteTasks, 'tasks')
             .then(function () {
                 this.refs.spinner.finishLoading();
                 this.setState({

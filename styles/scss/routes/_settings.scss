@@ -23,8 +23,6 @@
     }
   }
 
-
-
   .settings-logo {
     width: 14px;
     &.pomodoro-logo {
@@ -77,7 +75,20 @@
     }
   }
 
+  @mixin fa {
+    .fa {
+      position: absolute;
+      right: 12px;
+      top: 12px;
+      font-size: 20px;
+    }
+    .fa-exclamation-circle, .fa-times-circle {
+      color: #DF423C;
+    }
+  }
+
   .color-picker {
+    @include fa;
     position: relative;
     #color {
       width: 20px;
@@ -87,12 +98,17 @@
       right: 12px;
       top: 12px;
     }
-    .fa-times-circle {
-      color: $primary;
-      position: absolute;
-      right: 12px;
-      top: 12px;
-      font-size: 20px;
-    }
+
   }
+
+  .api-key {
+    @include fa;
+
+    position: relative;
+    .fa-check-circle {
+      color: green;
+    }
+
+  }
+
 }

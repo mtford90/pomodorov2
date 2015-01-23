@@ -6,7 +6,6 @@ var q = require('q'),
     });
 
 
-
 siesta.autosave = true;
 siesta.autosaveDuration = 1000;
 
@@ -84,21 +83,27 @@ var Task = Pomodoro.model(Type.Task, {
             }
         ],
         singleton: true
+    }),
+    AsanaConfig = Pomodoro.model('AsanaConfig', {
+        attributes: [
+
+        ]
     });
 
 
 var incompleteTasks = Task.arrangedReactiveQuery({completed: false, __order: 'index'});
 incompleteTasks.insertionPolicy = siesta.InsertionPolicy.Front;
 // Only one task should be editing at a time.
-incompleteTasks.listen(function (results, n) {
+incompleteTasks.listen(function (n) {
     if (n.field == 'editing') {
         var task = n.obj;
         console.log('n', n);
         if (task.editing) {
-            _.each(incompleteTasks.results, function (t) {
-                 if (t != task) {
-                     t.editing = false;
-                 }
+            var results = incompleteTasks.results;
+            _.each(results, function (t) {
+                if (t != task) {
+                    t.editing = false;
+                }
             });
         }
     }

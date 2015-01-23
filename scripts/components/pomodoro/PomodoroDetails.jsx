@@ -35,8 +35,8 @@ var PomodoroDetails = React.createClass({
         );
     },
     componentDidMount: function () {
-        this.listenAndSet(PomodoroTimer, {fields: ['completed']});
-        this.listenAndSet(data.PomodoroConfig, {fields: ['roundLength']});
+        this.listenAndSetState(PomodoroTimer, {fields: ['completed']});
+        this.listenAndSetState(data.PomodoroConfig, {fields: ['roundLength']});
     },
     getInitialState: function () {
         return {

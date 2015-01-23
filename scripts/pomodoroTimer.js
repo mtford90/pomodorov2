@@ -24,7 +24,7 @@ var PomodoroTimer = Pomodoro.model('PomodoroTimer', {
         }
     ],
 
-    init: function (done) {
+    init: function (fromStorage, done) {
         // Setup listeners.
         // Note: The reason why we listen to self rather than simply execute logic when we decrement seconds in
         // the interval is that this options leaves open the possibility of modifying seconds outside of the model
@@ -37,12 +37,15 @@ var PomodoroTimer = Pomodoro.model('PomodoroTimer', {
             .then(function (config) {
                 this.pomodoroConfig = config;
                 config.listen(this.onConfigChange.bind(this));
-                var pomodoroLength = this.pomodoroConfig.pomodoroLength;
-                this.seconds = pomodoroLength * 60;
+                if (!fromStorage) {
+                    var pomodoroLength = this.pomodoroConfig.pomodoroLength;
+                    this.seconds = pomodoroLength * 60;
+                }
                 done();
             }.bind(this))
             .catch(done);
     },
+
     methods: {
         checkIfShouldTransition: function () {
             if (this.seconds == 0) this.transition();
