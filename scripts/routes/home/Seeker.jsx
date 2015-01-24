@@ -5,7 +5,7 @@
  * @module routes.home.Clock
  */
 
-var React = require('React'),
+var React = require('react'),
     PomodoroTimer = require('../../pomodoroTimer'),
     SiestaMixin = require('../../../../react-siesta').SiestaMixin;
 

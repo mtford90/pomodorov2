@@ -21,16 +21,7 @@ DEFAULT_COLOURS = {
     longBreak: '#292f37'
 };
 
-siesta.registerComparator('isToday', function (opts) {
-    var value = opts.object[opts.field];
-    if (value instanceof Date) {
-        var d = new Date();
-        return value.getDate() == value.getDate() && value.getMonth() == value.getMonth() && value.getFullYear() == d.getFullYear();
-    }
-    else {
-        throw new Error('Must be a date field to use isToday comparator');
-    }
-});
+
 
 var Task = Pomodoro.model(Type.Task, {
         attributes: [
@@ -108,9 +99,7 @@ var Task = Pomodoro.model(Type.Task, {
         singleton: true
     }),
     AsanaConfig = Pomodoro.model('AsanaConfig', {
-        attributes: [
-
-        ]
+        attributes: []
     });
 
 

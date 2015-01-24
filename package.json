@@ -66,7 +66,7 @@
     "mocha-loader": "^0.7.0",
     "nodemon": "~1.2.1",
     "open": "0.0.5",
-    "pouchdb": "^3.2.0",
+    "pouchdb": "^3.2.1",
     "proxy-middleware": "^0.7.0",
     "react-hot-loader": "^0.5.0",
     "react-tools": "^0.12.0",

@@ -12,6 +12,28 @@ var State = {
     };
 
 
+console.log('registering...');
+
+
+siesta.registerComparator('isToday', function (opts) {
+    var value = opts.object[opts.field];
+    console.log('isToday value', value);
+    if (value) {
+        if (value instanceof Date) {
+            var d = new Date();
+            return value.getDate() == value.getDate() && value.getMonth() == value.getMonth() && value.getFullYear() == d.getFullYear();
+        }
+        else {
+            throw new Error('Must be a date field to use isToday comparator');
+        }
+    }
+    return false;
+
+});
+
+console.log('Query.comparators', siesta._internal.Query.comparators);
+
+
 var PomodoroTimer = Pomodoro.model('PomodoroTimer', {
     attributes: [
         'seconds',
@@ -41,9 +63,13 @@ var PomodoroTimer = Pomodoro.model('PomodoroTimer', {
             }.bind(this)).catch(done);
         this.rq = data.Round.todaysRounds();
         var setCompleted = function () {
-            this.completed = this.rq.results.length;
+            var results = this.rq.results;
+            console.log('isToday results', results);
+            this.completed = results.length;
         }.bind(this);
-        this.rq.init(setCompleted);
+        this.rq.init(setCompleted).catch(function (err) {
+            console.error('Error setting up pomodoro timer rounds...', err);
+        });
         this.rq.listen(setCompleted);
     },
 
