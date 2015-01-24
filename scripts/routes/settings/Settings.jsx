@@ -32,11 +32,6 @@ var Settings = React.createClass({
                             <ColourSettings/>
                         </Col>
                     </Row>
-                    <Row >
-                        <Col xs={12} sm={12} md={6} lg={6} className="right-padded" >
-                            <AsanaSettings/>
-                        </Col>
-                    </Row>
                 </div>
             </div>
         );
