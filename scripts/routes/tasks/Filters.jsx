@@ -15,7 +15,7 @@ var Filters = React.createClass({
                 <div id="filters">
                     <div id="inner-filters">
                         <div className="filter tags-filter">
-                            <i className="fa fa-filter"></i>
+                            <i className="fa fa-filter" onClick={this.props.onFilterPressed || function () {}}></i>
                         </div>
                         <div className="filter" onClick={this.onNewPressed}>
                             <i className="fa fa-plus"></i>

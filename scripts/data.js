@@ -49,6 +49,9 @@ var Task = Pomodoro.model(Type.Task, {
             }
         }
     }),
+    Tag = Pomodoro.model('Tag', {
+        attributes: ['text']
+    }),
     Config = Pomodoro.model('Config', {
         relationships: {
             pomodoro: {model: 'PomodoroConfig'},

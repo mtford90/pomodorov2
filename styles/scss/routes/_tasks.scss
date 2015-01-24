@@ -8,6 +8,20 @@ $padding: 20px;
     margin: 0;
     padding: 0;
   }
+
+}
+
+.filter-pane {
+  position: fixed;
+  width: 100%;
+  top: $navbar-height;
+  background-color: white;
+  z-index: 10;
+  min-height: $navbar-height;
+  height: auto;
+  border-bottom-style: solid;
+  border-bottom-color: black;
+  border-bottom-width: 1px;
 }
 
 .navbar {

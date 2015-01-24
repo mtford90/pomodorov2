@@ -13,14 +13,17 @@ var React = require('react'),
  */
 function hexToRgbString(hex, alpha) {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    var rgb = '(' + parseInt(result[1], 16) + ',' + parseInt(result[2], 16) + ',' + parseInt(result[3], 16);
-    if (alpha) {
-        rgb = 'rgba' + rgb + ',' + alpha;
+    var rgb;
+    if (result) {
+        rgb = '(' + parseInt(result[1], 16) + ',' + parseInt(result[2], 16) + ',' + parseInt(result[3], 16);
+        if (alpha) {
+            rgb = 'rgba' + rgb + ',' + alpha;
+        }
+        else {
+            rgb = 'rgb' + rgb + ',' + alpha;
+        }
+        rgb += ')';
     }
-    else {
-        rgb = 'rgb' + rgb + ',' + alpha;
-    }
-    rgb += ')';
     return rgb;
 }
 
@@ -36,7 +39,10 @@ var Task = React.createClass({
             self = this,
             className = 'task';
         var contentEditableStyle = {};
-        if (this.state.color) contentEditableStyle.backgroundColor = hexToRgbString(this.state.color, 0.1);
+        if (this.state.color) {
+            var newBackgroundColor = hexToRgbString(this.state.color, 0.1);
+            if (newBackgroundColor) contentEditableStyle.backgroundColor = newBackgroundColor;
+        }
         if (isEditing) className += ' task-editing';
         var contentEditiable = (
                 <div className="title-wrapper" style={contentEditableStyle}>
@@ -56,12 +62,12 @@ var Task = React.createClass({
                 style={style}>
                 {isEditing ? contentEditiable : span}
                 {task.asana ? <img className="tag-asana tag" src="img/asana-minimal.png"/> : ''}
-                <div className="buttons">
+                {!isEditing ? <div className="buttons">
                     <div>
                         <i className="fa fa-check-circle-o done" ref="completeButton" title="Complete"></i>
                         <i className="fa fa-times-circle-o cancel" ref="cancelButton" title="Hide"></i>
                     </div>
-                </div>
+                </div> : ''}
             </div>
         )
     },
@@ -97,28 +103,29 @@ var Task = React.createClass({
         e.preventDefault();
         var task = this.props.task,
             target = e.target;
-        switch (target) {
-            case this.refs.cancelButton.getDOMNode():
-                task.remove();
-                break;
-            case this.refs.completeButton.getDOMNode():
-                task.completed = true;
-                break;
-            default:
-                var $target = $(e.nativeEvent.target);
-                if (this.props.task.editing) {
-                    if ($target.hasClass('description')) {
-                        // If the user clicks in the padding around the description summernote, we want to start editing.
-                        this.refs.summernote.focus();
-                    }
-                    else if ($target.hasClass('task')) {
-                        task.editing = false;
-                    }
-                }
-                else {
+        if (!this.props.task.editing) {
+            switch (target) {
+                case this.refs.cancelButton.getDOMNode():
+                    task.remove();
+                    break;
+                case this.refs.completeButton.getDOMNode():
+                    task.completed = true;
+                    break;
+                default:
                     task.editing = true;
-                }
+            }
         }
+        else {
+            var $target = $(e.nativeEvent.target);
+            if ($target.hasClass('description')) {
+                // If the user clicks in the padding around the description summernote, we want to start editing.
+                this.refs.summernote.focus();
+            }
+            else if ($target.hasClass('task')) {
+                task.editing = false;
+            }
+        }
+
     },
     onMouseOver: function () {
         // No need to rerender if editing, as the border is already set.

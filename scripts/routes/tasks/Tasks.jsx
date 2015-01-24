@@ -18,6 +18,7 @@ var React = require('react')
     , data = require('../../data')
     , incompleteTasks = data.incompleteTasks
     , SiestaMixin = require('../../../../react-siesta/index').SiestaMixin
+    , Insignia = require('../../components/Insignia')
     , Task = require('./Task');
 
 
@@ -34,11 +35,21 @@ var Tasks = React.createClass({
             <div>
                 <DocumentTitle title={config.brand}>
                 </DocumentTitle>
+                {this.state.showFilter ? <div className="filter-pane">
+                    <div className="container">
+                        <Row>
+                            <Col xs={12}>
+                                <Insignia/>
+                            </Col>
+                        </Row>
+                    </div>
+                </div> : ''}
                 <div id="tasks" className="container">
                     <RightNavbar>
-                        <Filters/>
+                        <Filters onFilterPressed={this.onFilterPressed}/>
                     </RightNavbar>
                     <Spinner ref="spinner" finishedLoading={incompleteTasks.initialised}>
+
                         <Row>
                             <Col xs={12} sm={12}>
                                 <ul onDragOver={this.dragOver}>
@@ -79,8 +90,14 @@ var Tasks = React.createClass({
     getInitialState: function () {
         return {
             tasks: incompleteTasks.results || [],
-            loaded: false
+            loaded: false,
+            showFilter: false
         }
+    },
+    onFilterPressed: function () {
+        this.setState({
+            showFilter: !this.state.showFilter
+        })
     },
     dragEnd: function (e) {
         this.dragged.style.display = "block";

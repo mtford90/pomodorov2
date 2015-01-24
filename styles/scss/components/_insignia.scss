@@ -1,0 +1,50 @@
+@import "../_variables";
+
+.insignia {
+  .filter {
+    float: left;
+    width: 2%;
+    height: 100%;
+    padding: 0;
+    margin: 3px 0 0;
+    font-size: 16px;
+    .inner-filter {
+      vertical-align: middle;
+    }
+  }
+
+  .insignia-wrapper {
+    display: inline-block;
+    width: 98%;
+    margin: 0;
+    padding: 0;
+  }
+  .nsg-editor {
+    background-color: transparent;
+    .nsg-input {
+      border-style: none;
+      background-color: transparent;
+      &:focus {
+        outline: 0;
+      }
+    }
+    .nsg-tag {
+      color: white;
+      border-style: none;
+      padding-left: 4px;
+      padding-right: 4px;
+      .nsg-tag-remove {
+        margin-left: 8px;
+        cursor: pointer;
+        &:hover {
+          color: black;
+        }
+        &:after {
+          background-color: transparent;
+          content: '';
+          padding: 0;
+        }
+      }
+    }
+  }
+}

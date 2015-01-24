@@ -30,6 +30,7 @@ html {
   }
 }
 
+
 @import "shared";
 @import "routes/home";
 @import "routes/settings";
@@ -40,6 +41,7 @@ html {
 @import "components/seeker";
 @import "components/button";
 @import "components/modal";
+@import "components/insignia";
 @import "nav";
 @import "colorPicker";
 @import "asana";
