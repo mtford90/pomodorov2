@@ -3,4 +3,4 @@
  */
 
 require("../../vendor/bootstrap-sass-official/assets/stylesheets/_bootstrap.scss");
-require("../../node_modules/insignia/dist/insignia.css");
+require("../../../insignia/dist/insignia.css");

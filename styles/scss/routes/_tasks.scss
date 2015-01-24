@@ -19,9 +19,8 @@ $padding: 20px;
   z-index: 10;
   min-height: $navbar-height;
   height: auto;
-  border-bottom-style: solid;
-  border-bottom-color: black;
-  border-bottom-width: 1px;
+  border-bottom: 2px solid $tertiary;
+
 }
 
 .navbar {
@@ -46,6 +45,7 @@ $padding: 20px;
             color: black;
           }
         }
+
       }
     }
 

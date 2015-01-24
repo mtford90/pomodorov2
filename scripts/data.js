@@ -50,7 +50,7 @@ var Task = Pomodoro.model(Type.Task, {
         }
     }),
     Tag = Pomodoro.model('Tag', {
-        attributes: ['text']
+        id: 'text'
     }),
     Config = Pomodoro.model('Config', {
         relationships: {
@@ -136,6 +136,7 @@ module.exports = {
     siesta: siesta,
     Type: Type,
     Pomodoro: Pomodoro,
+    Tag: Tag,
     Task: Task,
     Config: Config,
     Round: Round,

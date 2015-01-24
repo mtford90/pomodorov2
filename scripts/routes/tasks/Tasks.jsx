@@ -39,7 +39,7 @@ var Tasks = React.createClass({
                     <div className="container">
                         <Row>
                             <Col xs={12}>
-                                <Insignia/>
+                                <Insignia onNewTag={this.onNewTag} tags={this.rq.results}/>
                             </Col>
                         </Row>
                     </div>
@@ -49,7 +49,6 @@ var Tasks = React.createClass({
                         <Filters onFilterPressed={this.onFilterPressed}/>
                     </RightNavbar>
                     <Spinner ref="spinner" finishedLoading={incompleteTasks.initialised}>
-
                         <Row>
                             <Col xs={12} sm={12}>
                                 <ul onDragOver={this.dragOver}>
@@ -78,6 +77,11 @@ var Tasks = React.createClass({
             </div>
         )
     },
+    onNewTag: function (newTag) {
+        data.Tag.graph({
+            text: newTag
+        });
+    },
     componentDidMount: function () {
         if (!incompleteTasks.initialised) this.refs.spinner.startTimer();
         this.listenAndSetState(incompleteTasks, 'tasks', function (err) {
@@ -86,6 +90,10 @@ var Tasks = React.createClass({
                 loaded: true
             });
         }.bind(this));
+        this.rq = data.Tag.reactiveQuery({});
+    },
+    componentWillUnmount: function () {
+        this.rq.terminate();
     },
     getInitialState: function () {
         return {
@@ -95,9 +103,11 @@ var Tasks = React.createClass({
         }
     },
     onFilterPressed: function () {
-        this.setState({
-            showFilter: !this.state.showFilter
-        })
+        this.rq.init().then(function () {
+            this.setState({
+                showFilter: !this.state.showFilter
+            })
+        }.bind(this))
     },
     dragEnd: function (e) {
         this.dragged.style.display = "block";

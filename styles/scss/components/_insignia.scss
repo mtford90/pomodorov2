@@ -1,5 +1,6 @@
 @import "../_variables";
 
+$color: #9c9c9c;
 .insignia {
   .filter {
     float: left;
@@ -10,6 +11,9 @@
     font-size: 16px;
     .inner-filter {
       vertical-align: middle;
+      .fa {
+        color: $color !important;
+      }
     }
   }
 
@@ -29,10 +33,15 @@
       }
     }
     .nsg-tag {
-      color: white;
-      border-style: none;
+      color: $color;
+      border-style: solid;
+      border-width: 2px;
       padding-left: 4px;
       padding-right: 4px;
+      &:hover {
+        border-color: black !important;
+        color: black !important;
+      }
       .nsg-tag-remove {
         margin-left: 8px;
         cursor: pointer;
