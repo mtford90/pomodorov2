@@ -27,6 +27,9 @@ var colors = ["Red", "Green", "Blue", "Yellow", "Black", "White", "Orange"];
 var placeholder = document.createElement("li");
 placeholder.className = "placeholder";
 
+
+
+
 var Tasks = React.createClass({
     mixins: [SiestaMixin],
     render: function () {
@@ -35,15 +38,6 @@ var Tasks = React.createClass({
             <div>
                 <DocumentTitle title={config.brand}>
                 </DocumentTitle>
-                {this.state.showFilter ? <div className="filter-pane">
-                    <div className="container">
-                        <Row>
-                            <Col xs={12}>
-                                <Insignia onNewTag={this.onNewTag} tags={this.rq.results}/>
-                            </Col>
-                        </Row>
-                    </div>
-                </div> : ''}
                 <div id="tasks" className="container">
                     <RightNavbar>
                         <Filters onFilterPressed={this.onFilterPressed}/>
