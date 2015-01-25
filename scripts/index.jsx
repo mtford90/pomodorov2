@@ -31,6 +31,7 @@ var app = {
         this.initializeStyling();
         data.siesta.install(this.startReact);
     },
+
     /**
      * Inject webpack styles.
      */

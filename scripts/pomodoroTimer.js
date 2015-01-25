@@ -12,8 +12,6 @@ var State = {
     };
 
 
-console.log('registering...');
-
 
 siesta.registerComparator('isToday', function (opts) {
     var value = opts.object[opts.field];
@@ -30,8 +28,6 @@ siesta.registerComparator('isToday', function (opts) {
     return false;
 
 });
-
-console.log('Query.comparators', siesta._internal.Query.comparators);
 
 
 var PomodoroTimer = Pomodoro.model('PomodoroTimer', {

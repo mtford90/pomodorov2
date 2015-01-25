@@ -3,3 +3,12 @@
   letter-spacing: 1.5px;
   text-transform: uppercase;
 }
+
+@mixin selectable() {
+  -webkit-touch-callout: default;
+  -webkit-user-select: text;
+  -khtml-user-select: default;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}

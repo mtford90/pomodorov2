@@ -1,9 +1,8 @@
 var q = require('q'),
     _ = require('underscore'),
-    siesta = require('../../rest/core/index')({
-        http: require('../../rest/http/index'),
-        storage: require('../../rest/storage/index')
-    });
+    siesta = require('../../rest/core/index');
+
+require('../../rest/performance/index');
 
 
 siesta.autosave = true;

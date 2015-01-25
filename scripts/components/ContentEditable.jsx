@@ -24,6 +24,9 @@ var ContentEditable = React.createClass({
 
     componentDidUpdate: function () {
         var $node = $(this.getDOMNode());
+        $node[0].onselectstart = function () {
+            return false;
+        };
         if (this.props.text !== $node.text()) {
             $node.text(this.props.text);
         }

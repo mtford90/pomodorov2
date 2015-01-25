@@ -8,7 +8,7 @@ ext = ext.concat('');
 
 module.exports = {
     entry: [
-        'webpack-dev-server/client?http://localhost:' + conf.webPack.port.toString(),
+        'webpack-dev-server/client?http://0.0.0.0:' + conf.webPack.port.toString(),
         'webpack/hot/dev-server',
         conf.entry
     ],
@@ -16,7 +16,7 @@ module.exports = {
     output: {
         path: __dirname,
         filename: 'bundle.js',
-        publicPath: 'http://localhost:' + conf.webPack.port.toString() + '/' + conf.scripts + '/'
+        publicPath: 'http://0.0.0.0:' + conf.webPack.port.toString() + '/' + conf.scripts + '/'
     },
 
     plugins: [

@@ -11,6 +11,7 @@ var gulp = require('gulp'),
     taskListing = require('gulp-task-listing'),
     gulpWebpack = require('gulp-webpack'),
     _ = require('underscore'),
+    connect = require('gulp-connect'),
     replace = require('gulp-replace'),
     open = require('gulp-open'),
     nodemon = require('nodemon'),
@@ -89,6 +90,14 @@ gulp.task('test-bundle', function () {
         .pipe(livereload())
 });
 
+gulp.task('serve', function () {
+    connect.server({
+        root: 'bin/public',
+        livereload: false,
+        host: '0.0.0.0'
+    })
+});
+
 var build = function (uglify) {
     return function () {
         var webpackConf = require('./webpack.config.js'),
@@ -96,15 +105,12 @@ var build = function (uglify) {
             buildDir = dest + '/public/',
             cordovaBuildDir = './app/www';
 
-        // No need for sourcemaps for compiled app.
         delete webpackConf.devtool;
-        // The webpack uglify plugin will uglify both the JS and the embedded styles.
         if (uglify) {
             var UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
             webpackConf.plugins.push(new UglifyJsPlugin());
         }
-        // Ensure that dev-only styles are not applied in the compiled application. By default these styles
-        // apply css transitions to everything, so that hot replacements look awesome ;)
+
         webpackConf.plugins.push(new webpack.DefinePlugin({
             dev: 'false'
         }));
@@ -117,6 +123,7 @@ var build = function (uglify) {
         // Rename bundle.js to configured name.
         gulp.src(HTML_FILES)
             .pipe(replace('http://localhost:' + conf.webPack.port + '/scripts/bundle.js', conf.compilation.name))
+            .pipe(replace('<script src="node_modules/source-map-support/browser-source-map-support.js"></script>', ''))
             .pipe(gulp.dest(buildDir));
 
         gulp.src('./img/**/*', {base: '.'})
