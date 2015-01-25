@@ -41,12 +41,12 @@ var Home = React.createClass({
                                 </Col>
                             </Row>
                         {currentTask ? (
-                                <Row >
-                                    <Col sm={12} >
-                                        <Task task={currentTask}/>
-                                    </Col>
-                                </Row>
-                            ) : ''}
+                            <Row >
+                                <Col sm={12} >
+                                    <Task task={currentTask}/>
+                                </Col>
+                            </Row>
+                        ) : ''}
                         {restOfTasks.length ? ( <Row >
                             <Col sm={12} >
                                 <h3>Next</h3>
@@ -83,6 +83,9 @@ var Home = React.createClass({
             loaded: false,
             spinnerFinished: false
         }
+    },
+    componentDidEnter: function (callback) {
+        console.log('componentDidenter');
     }
 });
 

@@ -4,3 +4,4 @@
 
 require("../../vendor/bootstrap-sass-official/assets/stylesheets/_bootstrap.scss");
 require("../../../insignia/dist/insignia.css");
+require("../../../PageTransitions/css/animations.css");

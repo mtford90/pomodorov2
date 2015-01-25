@@ -28,8 +28,6 @@ var placeholder = document.createElement("li");
 placeholder.className = "placeholder";
 
 
-
-
 var Tasks = React.createClass({
     mixins: [SiestaMixin],
     render: function () {
