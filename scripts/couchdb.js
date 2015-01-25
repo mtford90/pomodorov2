@@ -1,9 +1,12 @@
 /**
+ * This module uses jquery ajax to provide full interaction with CouchDB as a backend.
+ *
  * @param {String} baseURL - Base URL of CouchDB
  * @returns {Object}
+ * @module
  */
 module.exports = function (baseURL) {
-    baseURL = baseURL || 'http://127.0.0.1:5984';
+    baseURL = baseURL || 'http://localhost:5984';
     if (baseURL.length) {
         if (baseURL[baseURL.length - 1] == '/') {
             baseURL = baseURL.substring(0, baseURL.length - 1);
@@ -42,7 +45,8 @@ module.exports = function (baseURL) {
     var http = function (opts, cb) {
         cb = cb || function () {};
         opts = _.extend({
-            type: 'GET'
+            type: 'GET',
+            dataType: 'json'
         }, opts || {});
         var path = opts.path || '';
         opts.url = baseURL + (path.length ? (path[0] == '/' ? '' : '/') : '') + path;
