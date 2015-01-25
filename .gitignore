@@ -39,3 +39,6 @@ landing/css
 app
 
 bin/test
+
+#Couch
+erl_crash.dump
