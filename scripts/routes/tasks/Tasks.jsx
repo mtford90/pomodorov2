@@ -27,6 +27,65 @@ var colors = ["Red", "Green", "Blue", "Yellow", "Black", "White", "Orange"];
 var placeholder = document.createElement("li");
 placeholder.className = "placeholder";
 
+var TaskList = React.createClass({
+    render: function () {
+        return (
+            <ul ref="sortable">
+                {this.state.tasks.map(function (o, i) {
+                    console.log('render task', o);
+                    return (
+                        <Row componentClass={React.DOM.li}
+                            data-id={i}
+                            key={i}>
+                            <Col sm={12} md={12} lg={12} >
+                                <Task task={o}
+                                    key={o._id}
+                                    index={i}/>
+                            </Col>
+                        </Row>
+                    )
+                })}
+            </ul>
+        );
+    },
+    getInitialState: function () {
+        return {
+            tasks: this.props.tasks || []
+        }
+    },
+    componentWillReceiveProps: function (nextProps) {
+        if (nextProps.tasks) {
+            this.setState({
+                tasks: nextProps.tasks
+            })
+        }
+    },
+    componentDidMount: function () {
+        var sortable = this.refs.sortable;
+        if (sortable) {
+            var $sortable = $(sortable.getDOMNode());
+            var x = $sortable.sortable({
+                axis: 'y',
+                revert: true,
+                scroll: false,
+                cursor: 'move'
+            });
+            $sortable.disableSelection();
+            function getAllEvents(element) {
+                var result = [];
+                for (var key in element) {
+                    if (key.indexOf('on') === 0) {
+                        result.push(key);
+                    }
+                }
+                return result.join(' ');
+            }
+
+            console.log('events', getAllEvents(x));
+        }
+    }
+});
+
 
 var Tasks = React.createClass({
     mixins: [SiestaMixin],
@@ -43,25 +102,7 @@ var Tasks = React.createClass({
                     <Spinner ref="spinner" finishedLoading={incompleteTasks.initialised}>
                         <Row>
                             <Col xs={12} sm={12}>
-                                <ul onDragOver={this.dragOver}>
-                                    {this.state.tasks.map(function (o, i) {
-                                        console.log('render task', o);
-                                        return (
-                                            <Row componentClass={React.DOM.li}
-                                                data-id={i}
-                                                key={i}
-                                                draggable="true"
-                                                onDragEnd={self.dragEnd}
-                                                onDragStart={self.dragStart}>
-                                                <Col sm={12} md={12} lg={12} >
-                                                    <Task task={o}
-                                                        key={o._id}
-                                                        index={i}/>
-                                                </Col>
-                                            </Row>
-                                        )
-                                    })}
-                                </ul>
+                                <TaskList tasks={this.state.tasks}/>
                             </Col>
                         </Row>
                     </Spinner>
@@ -118,6 +159,7 @@ var Tasks = React.createClass({
         // Firefox requires dataTransfer data to be set
         e.dataTransfer.setData("text/html", e.currentTarget);
     },
+
     dragOver: function (e) {
         console.log('dragOver', e.target);
         e.preventDefault();

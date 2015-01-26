@@ -37,9 +37,7 @@ var ReactApp = React.createClass({
                         </div>
                     </NavBar>
                     <div id="main-content" role="main">
-                        <TransitionGroup component="div" transitionName="example">
-                            <RouteHandler ref="handler" key={name}/>
-                        </TransitionGroup>
+                        <RouteHandler ref="handler" key={name}/>
                     </div>
                 </div>
                 {modalPlaceholder}
@@ -47,5 +45,6 @@ var ReactApp = React.createClass({
         )
     }
 });
+
 
 module.exports = ReactApp;

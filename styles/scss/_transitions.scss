@@ -6,19 +6,11 @@ $transition-time: 0.2s;
   transition: all $transition-time ease;
 }
 
-.example-enter {
-	animation: moveToTop .6s ease both;
-}
-
-.example-enter.example-enter-active {
-	animation: moveToTop .6s ease both;
-}
-
 .example-leave {
-	animation: moveToBottomFade .7s ease both;
+  opacity: 1;
+  transition: opacity .3s ease-in-out;
 }
 
 .example-leave.example-leave-active {
-	animation: moveToBottomFade .7s ease both;
+  opacity: 0.01;
 }
-

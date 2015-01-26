@@ -30,7 +30,7 @@ var Home = React.createClass({
                 <DocumentTitle title={config.brand}>
                 </DocumentTitle>
                 <div id="home">
-                    <div className="container">
+                    <div className="container" >
                         <Spinner ref="spinner" finishedLoading={incompleteTasks.initialised}>
                             <Row className="timer-row" >
                                 <Col sm={12} >

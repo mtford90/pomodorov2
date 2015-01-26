@@ -46,14 +46,16 @@ var Spinner = React.createClass({
                     time = this.props['minimumTime'] || defaultMinimumTime;
                 setTimeout(function () {
                     var timerEnded = this.props['timerEnded'];
-                    this.setState({
-                        timing: false
-                    }, function () {
-                        if (timerEnded) timerEnded();
-                        console.log('Done!');
-                        this.deferred.resolve();
-                        this.deferred = null;
-                    });
+                    if (this.isMounted()) {
+                        this.setState({
+                            timing: false
+                        }, function () {
+                            if (timerEnded) timerEnded();
+                            console.log('Done!');
+                            this.deferred.resolve();
+                            this.deferred = null;
+                        });
+                    }
                 }.bind(this), time);
             });
         }
