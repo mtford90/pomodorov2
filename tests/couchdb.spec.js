@@ -32,6 +32,7 @@ describe.only('CouchDB integration tests', function () {
             }, function (err) {
                 console.log('err', err);
                 assert.notOk(err);
+                done();
             });
         });
     });

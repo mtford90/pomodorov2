@@ -1,17 +1,18 @@
 /**
  * This module uses jquery ajax to provide full interaction with CouchDB as a backend.
  *
- * @param {String} baseURL - Base URL of CouchDB
+ * @param {String} host - Base URL of CouchDB
  * @returns {Object}
  * @module
  */
-module.exports = function (baseURL) {
-    baseURL = baseURL || 'http://localhost:5984';
-    if (baseURL.length) {
-        if (baseURL[baseURL.length - 1] == '/') {
-            baseURL = baseURL.substring(0, baseURL.length - 1);
+module.exports = function (host) {
+    host = host || 'http://localhost:5984';
+    if (host.length) {
+        if (host[host.length - 1] == '/') {
+            host = host.substring(0, host.length - 1);
         }
     }
+    host = host.replace('http://', '');
 
     /**
      * Encapsulates auth strategy e.g. session, token. Used in every HTTP request to couch.
@@ -77,7 +78,7 @@ module.exports = function (baseURL) {
     /**
      * Send a HTTP request
      * @param {Object} opts - The usual jquery opts +
-     * @param {Object} opts.path - Path to append to baseURL
+     * @param {Object} opts.path - Path to append to host
      * @param {Function} [cb]
      */
     var http = function (opts, cb) {
@@ -99,7 +100,11 @@ module.exports = function (baseURL) {
         }
         _configureAuth(opts);
         var path = opts.path || '';
-        opts.url = baseURL + (path.length ? (path[0] == '/' ? '' : '/') : '') + path;
+        if (opts.path != null) delete opts.path;
+        if (!opts.url) {
+            var protocol = 'http://';
+            opts.url = protocol + host + (path.length ? (path[0] == '/' ? '' : '/') : '') + path;
+        }
         console.log('ajax opts', opts);
         $.ajax(opts).done(function (data) {
             cb(null, data);
@@ -187,12 +192,36 @@ module.exports = function (baseURL) {
         });
     };
 
-    var deleteAllUsers = function (cb) {
-        http({
+    /**
+     * @param [opts]
+     * @param [opts.username]
+     * @param [opts.password]
+     * @param cb
+     */
+    var deleteAllUsers = function (opts, cb) {
+        var httpOpts = {
             path: '_users/',
             type: 'DELETE'
-        }, cb)
+        };
+        _configureAuth(httpOpts, {
+            method: AUTH_METHOD.BASIC,
+            username: opts.username || DEFAULT_ADMIN,
+            password: opts.password || DEFAULT_ADMIN
+        });
+        http(httpOpts, cb)
     };
+
+    function optsOrCallback(optsOrCb, cb) {
+        var opts;
+        if (optsOrCb instanceof Function) {
+            cb = optsOrCb;
+            opts = {};
+        }
+        else {
+            opts = optsOrCb;
+        }
+        return {opts: opts, cb: cb};
+    }
 
     var API = {
         info: _.partial(http, {path: ''}),
@@ -212,25 +241,10 @@ module.exports = function (baseURL) {
              * @param cb
              */
             reset: function (optsOrCb, cb) {
-                var opts;
-                if (optsOrCb instanceof Function) {
-                    cb = optsOrCb;
-                    opts = {};
-                }
-                else {
-                    opts = optsOrCb;
-                }
-                cb = cb || function () {};
-                basicAuth({
-                    username: opts.username || DEFAULT_ADMIN,
-                    password: opts.password || DEFAULT_ADMIN
-                }, function (err) {
-                    if (err) cb(err);
-                    else {
-                        auth = null;
-                        deleteAllUsers(cb);
-                    }
-                })
+                var __ret = optsOrCallback(optsOrCb, cb);
+                var opts = __ret.opts;
+                cb = __ret.cb;
+                deleteAllUsers(opts, cb);
             }
         },
         HTTP_STATUS: {
