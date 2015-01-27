@@ -37,7 +37,7 @@
         JSON: 'application/json'
     };
 
-    var DEFAULT_ADMIN = 'mtford';
+    var DEFAULT_ADMIN = 'admin';
 
     /**
      * @param arr
