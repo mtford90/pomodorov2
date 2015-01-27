@@ -62,11 +62,15 @@ module.exports = function (host) {
     function _configureAuth(opts, _auth) {
         var a = _auth || auth;
         if (a) {
-            if (a.method == AUTH_METHOD.BASIC) {
-                // Note: jQuery >=1.7 has username/password options. I do this simply for backwards
-                // compatibility.
-                opts.headers = opts.headers || {};
-                opts.headers.Authorization = 'Basic ' + btoa(a.username + ':' + a.password);
+            var headers = opts.headers || {};
+            opts.headers = headers;
+            // Allow for authorization overrides.
+            if (!headers.Authorization) {
+                if (a.method == AUTH_METHOD.BASIC) {
+                    // Note: jQuery >=1.7 has username/password options. I do this simply for backwards
+                    // compatibility.
+                    headers.Authorization = 'Basic ' + btoa(a.username + ':' + a.password);
+                }
             }
         }
     }
@@ -197,22 +201,38 @@ module.exports = function (host) {
     };
 
     /**
+     * Configure the ajax options with admin username + password
+     * @param ajaxOptsOrOpts
+     * @param [ajaxOptsOrOpts.username]
+     * @param [ajaxOptsOrOpts.password]
+     * @param [ajaxOpts] - O
+     * @private
+     */
+    function _configureAjaxOptsForAdmin(ajaxOptsOrOpts, ajaxOpts) {
+        if (!ajaxOpts) {
+            ajaxOpts = ajaxOptsOrOpts;
+            ajaxOptsOrOpts = {};
+        }
+        ajaxOptsOrOpts = ajaxOptsOrOpts || {};
+        _configureAuth(ajaxOpts, {
+            method: AUTH_METHOD.BASIC,
+            username: ajaxOptsOrOpts.username || DEFAULT_ADMIN,
+            password: ajaxOptsOrOpts.password || DEFAULT_ADMIN
+        });
+        return ajaxOpts;
+    }
+
+    /**
      * @param [opts]
      * @param [opts.username]
      * @param [opts.password]
      * @param cb
      */
     var deleteAllUsers = function (opts, cb) {
-        var httpOpts = {
+        http(_configureAjaxOptsForAdmin(opts, {
             path: '_users/',
             type: 'DELETE'
-        };
-        _configureAuth(httpOpts, {
-            method: AUTH_METHOD.BASIC,
-            username: opts.username || DEFAULT_ADMIN,
-            password: opts.password || DEFAULT_ADMIN
-        });
-        http(httpOpts, cb)
+        }), cb)
     };
 
     function optsOrCallback(optsOrCb, cb) {
@@ -227,11 +247,15 @@ module.exports = function (host) {
         return {opts: opts, cb: cb};
     }
 
-    var API = {
+    /**
+     * Public API providing access to the backing CouchDB instance.
+     */
+    var API;
+    API = {
         info: _.partial(http, {path: ''}),
         createUser: createUser,
         basicAuth: basicAuth,
-        resetAuth: function () {
+        logout: function () {
             auth = null;
         },
         admin: {
@@ -248,7 +272,10 @@ module.exports = function (host) {
                 var __ret = optsOrCallback(optsOrCb, cb);
                 var opts = __ret.opts;
                 cb = __ret.cb;
-                deleteAllUsers(opts, cb);
+                deleteAllUsers(opts, function (err) {
+                    if (!err) API.logout();
+                    cb(err);
+                });
             }
         },
         HTTP_STATUS: {
@@ -260,7 +287,12 @@ module.exports = function (host) {
     Object.defineProperty(API, 'auth', {
         get: function () {
             return auth;
-        }
+        },
+        set: function (_auth) {
+            auth = _auth
+        },
+        configurable: false,
+        enumerable: true
     });
 
     return API
