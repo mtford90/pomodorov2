@@ -160,27 +160,31 @@ module.exports = function (host) {
     };
 
     /**
+     * Verify that username/password combination is correct by hitting the _session endpoint.
+     * If this is the case, configure future authorisation method accordingly.
      * @param authOpts
      * @param authOpts.username
      * @param authOpts.password
      * @param cb
      */
     var basicAuth = function (authOpts, cb) {
-        var potentialAuth = {
-            method: AUTH_METHOD.BASIC,
-            username: authOpts.username,
-            password: authOpts.password
-        };
+        var username = authOpts.username,
+            password = authOpts.password;
         var httpOpts = {
             path: '_session',
             type: 'POST',
-            contentType: "application/x-www-form-urlencoded"
+            contentType: "application/x-www-form-urlencoded",
+            data: 'name=' + username + '&password=' + password
         };
-        _configureAuth(httpOpts, potentialAuth);
         http(httpOpts, function (err, data) {
             if (!err) {
                 if (data.ok) {
-                    auth = potentialAuth;
+                    auth = {
+                        method: AUTH_METHOD.BASIC,
+                        username: username,
+                        password: password
+                    };
+                    cb();
                 }
                 else {
                     cb(new CouchError(data));
@@ -249,7 +253,8 @@ module.exports = function (host) {
         },
         HTTP_STATUS: {
             UNAUTHORISED: 401
-        }
+        },
+        AUTH_METHOD: AUTH_METHOD
     };
 
     Object.defineProperty(API, 'auth', {

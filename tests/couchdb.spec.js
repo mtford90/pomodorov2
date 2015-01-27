@@ -1,38 +1,51 @@
 var chai = require('chai'),
     assert = chai.assert;
 
-var couchdb = require('../scripts/couchdb')();
+var couch = require('../scripts/couchdb')();
 
 describe.only('CouchDB integration tests', function () {
     it('info', function (done) {
-        couchdb.info(function (err, data) {
+        couch.info(function (err, data) {
             console.log('data', data);
             done(err);
         });
     });
     describe('auth', function () {
         beforeEach(function (done) {
-            couchdb.admin.reset(done);
+            couch.admin.reset(done);
         });
         it('fail', function (done) {
-            couchdb.basicAuth({
+            couch.basicAuth({
                 username: 'bob',
                 password: 'yo'
             }, function (err) {
                 assert.ok(err, 'Should be an error');
                 assert.ok(err.isHttpError);
-                assert.equal(err.status, couchdb.HTTP_STATUS.UNAUTHORISED);
+                assert.equal(err.status, couch.HTTP_STATUS.UNAUTHORISED);
+                assert.notOk(couch.auth);
                 done();
             })
         });
-        it('succeed', function (done) {
-            couchdb.createUser({
-                username: 'mike',
-                password: 'mike'
+        it('success', function (done) {
+            var username = 'mike',
+                password = 'mike';
+            couch.createUser({
+                username: username,
+                password: password
             }, function (err) {
-                console.log('err', err);
                 assert.notOk(err);
-                done();
+                assert.notOk(couch.auth);
+                couch.basicAuth({
+                    username: username,
+                    password: password
+                }, function (err) {
+                    console.log('err', err);
+                    assert.notOk(err);
+                    assert.equal(couch.auth.method, couch.AUTH_METHOD.BASIC);
+                    assert.equal(couch.auth.username, username);
+                    assert.equal(couch.auth.password, password);
+                    done();
+                });
             });
         });
     });
