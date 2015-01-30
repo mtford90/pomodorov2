@@ -27,8 +27,12 @@ var gulp = require('gulp'),
 var minimist = require('minimist');
 
 var JS_FILES = (function () {
-        var glob = _.map(conf.ext.js, function (x) { return './' + conf.scripts + '/**/*.' + x; });
-        _.each(conf.ext.spec, function (x) { glob.push('./' + conf.tests + '/**/*.' + x) });
+        var glob = _.map(conf.ext.js, function (x) {
+            return './' + conf.scripts + '/**/*.' + x;
+        });
+        _.each(conf.ext.spec, function (x) {
+            glob.push('./' + conf.tests + '/**/*.' + x)
+        });
         glob = glob.concat('!' + './' + conf.tests + '/support/preprocessor.js');
         glob = glob.concat('../rest/core/**/*.js');
         glob = glob.concat('../rest/storage/**/*.js');
@@ -68,13 +72,11 @@ gulp.task('watch-server', function () {
     nodemon({
         script: 'devServer.js',
         ignore: ignore
-    })
-        .on('restart', function () {
-            console.log('restarting node server');
-        })
-        .on('crash', function () {
-            console.log('\nNode has crashed  will restart after next save.');
-        });
+    }).on('restart', function () {
+        console.log('restarting node server');
+    }).on('crash', function () {
+        console.log('\nNode has crashed  will restart after next save.');
+    });
 });
 
 gulp.task('test-bundle', function () {
